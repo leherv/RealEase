@@ -53,7 +53,16 @@ TODOs:
   * use application wide errors https://enterprisecraftsmanship.com/posts/advanced-error-handling-techniques/
     * Remove exception gunk
 
+### Due to Heroku
+Transform ASP.NET Core ReleaseNotifierApp to a console app as hosting an admin interface from the same app (by using process type web) is not possible as the 
+web dyno idles after 30 minutes. The original plan was to do it in the same app... Maybe we will stick with the current setup and host somewhere else when/should
+an interface follow.
 
-* and of course also functional requirements
-  * adding a media via workflow (defining name, sources (ScrapeEndpoints))
-  * unsubscribing
+Possible solution with heroku: We could create a second app ReleaseNotifierWebApp after transforming ReleaseNotifierApp to console based. This WebApp 
+defines only the parts needed for the web interface in a second Dockerfile which is then deployed to Heroku as well. (so completely or almost completely different app but hosted in the same heroku app)
+
+Maybe add an additional Dockerfile instead of copying it to the root. Heroku CLI in deploy_heroku_*.yml does not
+support targeting a specific stage of the Dockerfile. Therefore unnecessary stages are executed when building the image
+on github. Also it is not possible to call docker build from the project root when building it with Heroku CLI therefore
+the copy step is currently necessary.
+
