@@ -1,0 +1,14 @@
+version: '3.7'
+
+services:
+  releaseNotifier:
+    container_name: release_notifier
+    image: release_notifier:latest
+    build:
+      context: ..
+      dockerfile: build/Dockerfile
+      target: runProd
+    environment:
+      ASPNETCORE_ENVIRONMENT: Production
+      RN_CONNECTIONSTRINGS__DEFAULT: "${RN_CONNECTIONSTRINGS__DEFAULT}"
+      RN_DISCORDSETTINGS__TOKEN: "${RN_DISCORDSETTINGS__TOKEN}"

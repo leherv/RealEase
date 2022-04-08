@@ -1,0 +1,24 @@
+version: '3.7'
+
+services:
+  releaseNotifier:
+    build:
+      target: test
+    volumes:
+      - ../test-results:/app/test-results
+    environment:
+      ASPNETCORE_ENVIRONMENT: Docker
+      RN_CONNECTIONSTRINGS__DEFAULT: "Host=release_notifier_db;Port=5432;Database=releasenotifier;Username=postgres;Password=admin"
+    depends_on:
+      - release_notifier_db
+
+  release_notifier_db:
+    container_name: release_notifier_db
+    image: library/postgres:13.0
+    ports:
+      - "54332:5432"
+    environment:
+      POSTGRES_DB: "releasenotifier"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "admin"
+    restart: always

@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <IsPublishable>false</IsPublishable>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+    
+    <ItemGroup>
+      <ProjectReference Include="..\..\..\src\Application\Application.csproj" />
+      <ProjectReference Include="..\..\..\src\Infrastructure.DB\Infrastructure.DB.csproj" />
+    </ItemGroup>
+
+</Project>
