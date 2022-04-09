@@ -44,7 +44,7 @@ Values for the environment variables mentioned in the docker-compose files have 
 the ${} with values directly or by setting environment values on the machine.
 
 ___
-TODOs:
+## TODOs
 * It would be nice to use IQuery<TQueryResult>/ICommand<TCommandResult> so the generics do not have to be specified each time
   * MediatR does this but the Dispatchers seem to have to be way more complicated
     * see discussion (https://cezarypiatek.github.io/post/why-i-dont-use-mediatr-for-cqrs/)
@@ -52,6 +52,19 @@ TODOs:
 * Define ApplicationResult maybe using the same Result classes used in the domain?
   * use application wide errors https://enterprisecraftsmanship.com/posts/advanced-error-handling-techniques/
     * Remove exception gunk
+* Use a more functional approach in the Application services (Handlers), like csharpfunctionalextensions
+
+### Notes 
+Media
+NewestRelease (keine Liste von Releases weil irrelevant und spart Table rows)
+
+PublishNewRelease(Release release) {
+NewReleasePublished (Event)
+}
+
+Add todo try masstransit
+
+Lokal für docker setup ein sql script einbinden, dass Media und ScrapeTargets einfügt damit nicht jedes mal manuell nötig
 
 ### Due to Heroku
 Transform ASP.NET Core ReleaseNotifierApp to a console app as hosting an admin interface from the same app (by using process type web) is not possible as the 
