@@ -23,11 +23,11 @@ public record ReleaseNumber
             .ValidateAndCreate(() => new ReleaseNumber(major, minor));
     }
 
-    public bool IsNewerOrEqualTo(ReleaseNumber other)
+    public bool IsNewerThan(ReleaseNumber other)
     {
         if (Major > other.Major)
             return true;
 
-        return Major == other.Major && Minor >= other.Minor;
+        return Major == other.Major && Minor > other.Minor;
     }
 }

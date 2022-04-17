@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.Base;
+using Application.UseCases.Base.CQS;
 
 namespace ReleaseNotifierApp;
 

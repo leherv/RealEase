@@ -1,3 +1,5 @@
+using Domain.Model;
+
 namespace Domain.ApplicationErrors;
 
 public static class Errors
@@ -28,14 +30,22 @@ public static class Errors
     public static class General
     {
         public const string NotFoundErrorCode = "entity.not.found";
-        public static Error NotFound(string entityName)
-            => new Error(NotFoundErrorCode, $"'{entityName}' not found.");
+        public static Error NotFound(string entityName) => 
+            new(NotFoundErrorCode, $"'{entityName}' not found.");
     }
 
     public static class Subscriber
     {
         public const string UnsubscribeFailedErrorCode = "unsubsribe.failed";
         public static Error UnsubscribeFailedError(string mediaName)
-            => new Error(UnsubscribeFailedErrorCode, $"Unsubscribing from '{mediaName}' failed.");
+            => new(UnsubscribeFailedErrorCode, $"Unsubscribing from '{mediaName}' failed.");
+    }
+
+    public static class Media
+    {
+        public const string PublishNewReleaseErrorCode = "publish.release.failed";
+
+        public static Error PublishNewReleaseFailedError(Release release)
+            => new(PublishNewReleaseErrorCode, $"Publishing new release {release} failed.");
     }
 }

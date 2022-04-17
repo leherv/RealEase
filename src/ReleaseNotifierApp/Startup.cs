@@ -2,6 +2,7 @@
 using Application.Ports.Persistence.Read;
 using Application.Ports.Persistence.Write;
 using Application.UseCases.Base;
+using Application.UseCases.Base.CQS;
 using Application.UseCases.Media;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
@@ -13,6 +14,7 @@ using Infrastructure.DB;
 using Infrastructure.DB.Adapters;
 using Infrastructure.DB.Adapters.Repositories.Read;
 using Infrastructure.DB.Adapters.Repositories.Write;
+using Infrastructure.DB.DomainEvent;
 using Infrastructure.Discord;
 using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
@@ -74,6 +76,10 @@ public class Startup
         services
             .AddTransient<ITimeProvider, TimeProvider>()
             .AddTransient<IApplicationLogger, ApplicationLogger>();
+        
+        // DomainEvent
+        services
+            .AddScoped<IDomainEventPublisher, DomainEventPublisher>();
 
         services.AddDbContext<DatabaseContext>(options =>
             options.UseNpgsql(GetDbConnectionString(),

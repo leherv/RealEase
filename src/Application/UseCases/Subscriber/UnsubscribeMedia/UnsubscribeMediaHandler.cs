@@ -1,5 +1,6 @@
 ﻿using Application.Ports.Persistence.Write;
 using Application.UseCases.Base;
+using Application.UseCases.Base.CQS;
 using Domain.ApplicationErrors;
 using Domain.Results;
 
@@ -22,7 +23,7 @@ public sealed class UnsubscribeMediaHandler : ICommandHandler<UnsubscribeMediaCo
         
         var subscriber = await _unitOfWork.SubscriberRepository.GetByExternalId(externalIdentifier);
         if (subscriber == null)
-            return Result.Failure(Errors.General.NotFound(nameof(Domain.Model.Subscriber))); 
+            return Errors.General.NotFound(nameof(Domain.Model.Subscriber)); 
                 
         var media = await _unitOfWork.MediaRepository.GetByName(mediaName);
         if(media == null)

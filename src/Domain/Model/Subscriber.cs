@@ -6,7 +6,7 @@ using Domain.Results;
 
 namespace Domain.Model;
 
-public class Subscriber : Entity
+public class Subscriber : AggregateRoot
 {
     public string ExternalIdentifier { get; }
 

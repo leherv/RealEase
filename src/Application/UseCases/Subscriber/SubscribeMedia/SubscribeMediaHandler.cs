@@ -1,5 +1,6 @@
 ﻿using Application.Ports.Persistence.Write;
 using Application.UseCases.Base;
+using Application.UseCases.Base.CQS;
 using Domain.ApplicationErrors;
 using Domain.Results;
 using Domain.Results.Extensions;

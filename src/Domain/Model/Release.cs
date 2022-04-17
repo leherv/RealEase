@@ -1,18 +1,32 @@
-﻿namespace Domain.Model;
+using Domain.Invariants;
+using Domain.Invariants.Extensions;
+using Domain.Results;
 
-public class Release
+namespace Domain.Model;
+
+public record Release
 {
     public ReleaseNumber ReleaseNumber { get; }
-    public Media Media { get; }
+    public string Link { get; }
 
-    public Release(ReleaseNumber releaseNumber, Media media)
+    private Release(ReleaseNumber releaseNumber, string link)
     {
         ReleaseNumber = releaseNumber;
-        Media = media;
+        Link = link;
+    }
+    
+    // only for ef core
+    private Release() {}
+
+    public static Result<Release> Create(ReleaseNumber releaseNumber, string link)
+    {
+        return Invariant.Create
+            .NotNullOrWhiteSpace(link, nameof(link))
+            .ValidateAndCreate(() => new Release(releaseNumber, link));
     }
 
-    public static Release Create(ReleaseNumber releaseNumber, Media media)
+    public bool IsNewerThan(Release release)
     {
-        return new Release(releaseNumber, media);
+        return ReleaseNumber.IsNewerThan(release.ReleaseNumber);
     }
 }

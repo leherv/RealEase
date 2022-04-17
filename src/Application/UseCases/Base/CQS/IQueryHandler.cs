@@ -1,4 +1,4 @@
-﻿namespace Application.UseCases.Base;
+﻿namespace Application.UseCases.Base.CQS;
 
 public interface IQueryHandler<in TQuery, TQueryResult>
 {
