@@ -14,11 +14,12 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Quartz.Extensions.DependencyInjection" Version="3.4.0" />
+        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.4.0" />
     </ItemGroup>
 
 </Project>

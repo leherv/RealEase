@@ -1,9 +1,8 @@
-﻿using System;
-using Domain.Results;
+﻿using Domain.Results;
 
 namespace Application.Test.Fixture.Thens;
 
-public class Then : IDisposable
+public class Then
 {
     public ThenTheDatabase TheDatabase { get; }
     public ThenTheApplication TheApplication { get; }
@@ -17,10 +16,5 @@ public class Then : IDisposable
     public ThenTheResult TheResult(Result response)
     {
         return new ThenTheResult(response);
-    }
-
-    public void Dispose()
-    {
-        TheDatabase.Dispose();
     }
 }

@@ -1,8 +1,7 @@
-﻿using System;
-
+﻿
 namespace Application.Test.Fixture.Givens;
 
-public class Given : IDisposable
+public class Given
 {
     public GivenTheData A { get; }
     public GivenTheData An { get; }
@@ -22,10 +21,5 @@ public class Given : IDisposable
 
         TheApplication = givenTheApplication;
         TheDatabase = givenTheDatabase;
-    }
-
-    public void Dispose()
-    {
-        TheApplication.Dispose();
     }
 }

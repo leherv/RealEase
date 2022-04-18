@@ -1,9 +1,9 @@
 ﻿using Application.Ports.General;
 using Application.Ports.Persistence.Read;
 using Application.Ports.Persistence.Write;
-using Application.UseCases.Base;
 using Application.UseCases.Base.CQS;
 using Application.UseCases.Media;
+using Application.UseCases.Scrape;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
@@ -19,6 +19,7 @@ using Infrastructure.Discord;
 using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
 using Microsoft.EntityFrameworkCore;
+using ReleaseNotifierApp.Extensions;
 
 namespace ReleaseNotifierApp;
 
@@ -33,7 +34,7 @@ public class Startup
         HostEnvironment = hostingEnvironment;
     }
 
-    public void ConfigureServices(IServiceCollection services)
+    public virtual void ConfigureServices(IServiceCollection services)
     {
         // Settings
         services.Configure<DiscordSettings>(Configuration.GetSection(nameof(DiscordSettings)));
@@ -59,7 +60,8 @@ public class Startup
         // Commands
         services
             .AddScoped<ICommandHandler<SubscribeMediaCommand, Result>, SubscribeMediaHandler>()
-            .AddScoped<ICommandHandler<UnsubscribeMediaCommand, Result>, UnsubscribeMediaHandler>();
+            .AddScoped<ICommandHandler<UnsubscribeMediaCommand, Result>, UnsubscribeMediaHandler>()
+            .AddScoped<ICommandHandler<ScrapeNewReleasesCommand, Result>, ScrapeNewReleasesHandler>();
         
         // Repositories(Write)
         services
@@ -84,6 +86,9 @@ public class Startup
         services.AddDbContext<DatabaseContext>(options =>
             options.UseNpgsql(GetDbConnectionString(),
                 o => { o.MigrationsAssembly(typeof(DatabaseAssemblyMarker).Assembly.GetName().Name); }));
+        
+        // Jobs
+        services.AddQuartzJobs(Configuration);
     }
     
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

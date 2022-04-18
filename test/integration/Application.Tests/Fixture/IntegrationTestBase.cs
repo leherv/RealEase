@@ -12,13 +12,14 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     protected readonly Given Given;
     protected readonly When When;
     protected readonly Then Then;
+    private readonly IntegrationTestWebApplicationFactory _webApplicationFactory;
 
     protected IntegrationTestBase()
     {
-        var webApplicationFactory = new IntegrationTestWebApplicationFactory();
-        Given = CreateGiven(webApplicationFactory);
-        When = CreateWhen(webApplicationFactory);
-        Then = CreateThen(webApplicationFactory);
+        _webApplicationFactory = new IntegrationTestWebApplicationFactory();
+        Given = CreateGiven();
+        When = CreateWhen();
+        Then = CreateThen();
     }
     
     public async Task InitializeAsync()
@@ -26,25 +27,25 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         await Given.TheDatabase.IsCleared();
     }
 
-    private static Given CreateGiven(IntegrationTestWebApplicationFactory webApplicationFactory)
+    private Given CreateGiven()
     {
         var givenTheData = new GivenTheData();
-        var givenTheApplication = new GivenTheApplication(webApplicationFactory);
+        var givenTheApplication = new GivenTheApplication(_webApplicationFactory);
         var givenTheDatabase = new GivenTheDatabase(givenTheData, givenTheApplication);
 
         return new Given(givenTheData, givenTheApplication, givenTheDatabase);
     }
 
-    private static When CreateWhen(IntegrationTestWebApplicationFactory webApplicationFactory)
+    private When CreateWhen()
     {
-        var whenTheApplication = new WhenTheApplication(webApplicationFactory);
+        var whenTheApplication = new WhenTheApplication(_webApplicationFactory);
 
         return new When(whenTheApplication);
     }
 
-    private static Then CreateThen(IntegrationTestWebApplicationFactory webApplicationFactory)
+    private Then CreateThen()
     {
-        var thenTheApplication = new ThenTheApplication(webApplicationFactory);
+        var thenTheApplication = new ThenTheApplication(_webApplicationFactory);
         var thenTheDatabase = new ThenTheDatabase(thenTheApplication);
 
         return new Then(thenTheDatabase, thenTheApplication);
@@ -52,9 +53,6 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     
     public async Task DisposeAsync()
     {
-        await Given.TheDatabase.IsCleared();
-        Given.Dispose();
-        When.Dispose();
-        Then.Dispose();
+        await _webApplicationFactory.DisposeAsync();
     }
 }
