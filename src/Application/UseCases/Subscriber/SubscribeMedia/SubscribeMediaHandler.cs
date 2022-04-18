@@ -1,6 +1,5 @@
 ﻿using Application.Ports.Persistence.Write;
 using Application.UseCases.Base;
-using Application.UseCases.Base.CQS;
 using Domain.ApplicationErrors;
 using Domain.Results;
 using Domain.Results.Extensions;
@@ -18,9 +17,9 @@ public sealed class SubscribeMediaHandler : ICommandHandler<SubscribeMediaComman
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(SubscribeMediaCommand subscribeMediaCommand, CancellationToken cancellationToken)
+    public async Task<Result> Handle(SubscribeMediaCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
     {
-        var (externalIdentifier, mediaName) = subscribeMediaCommand;
+        var (externalIdentifier, mediaName) = scrapeNewReleasesCommand;
 
         var mediaResult = await GetMedia(mediaName)
             .ToResult(Errors.General.NotFound(nameof(Domain.Model.Media)));

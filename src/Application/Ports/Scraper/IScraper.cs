@@ -4,5 +4,5 @@ namespace Application.Ports.Scraper;
 
 public interface IScraper
 {
-    Task<Result<ScrapeResult>> Scrape(ScrapeInstruction scrapeInstruction);
+    Task<Result<ScrapedMediaRelease>> Scrape(ScrapeInstruction scrapeInstruction);
 }

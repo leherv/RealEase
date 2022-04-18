@@ -25,4 +25,14 @@ public class SubscriberRepository : ISubscriberRepository
     {
         await _databaseContext.SubscriberDbSet.AddAsync(subscriber);
     }
+
+    public async Task<IReadOnlyCollection<Subscriber>> GetAllSubscribedToMediaWithId(Guid mediaId)
+    {
+        return await _databaseContext.Subscribers
+            .Include(subscriber => subscriber.Subscriptions)
+            .ThenInclude(subscription => subscription.Media)
+            .Where(subscriber =>
+                subscriber.SubscribedToMedia.Any(subscribedToMedia => subscribedToMedia.Id == mediaId))
+            .ToListAsync();
+    }
 }

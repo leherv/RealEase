@@ -1,6 +1,5 @@
 ﻿using Application.Ports.Persistence.Write;
 using Application.UseCases.Base;
-using Application.UseCases.Base.CQS;
 using Domain.ApplicationErrors;
 using Domain.Results;
 
@@ -17,9 +16,9 @@ public sealed class UnsubscribeMediaHandler : ICommandHandler<UnsubscribeMediaCo
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(UnsubscribeMediaCommand subscribeMediaCommand, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UnsubscribeMediaCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
     {
-        var (externalIdentifier, mediaName) = subscribeMediaCommand;
+        var (externalIdentifier, mediaName) = scrapeNewReleasesCommand;
         
         var subscriber = await _unitOfWork.SubscriberRepository.GetByExternalId(externalIdentifier);
         if (subscriber == null)

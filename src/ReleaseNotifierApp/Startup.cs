@@ -1,7 +1,8 @@
 ﻿using Application.Ports.General;
+using Application.Ports.Notification;
 using Application.Ports.Persistence.Read;
 using Application.Ports.Persistence.Write;
-using Application.UseCases.Base.CQS;
+using Application.UseCases.Base;
 using Application.UseCases.Media;
 using Application.UseCases.Scrape;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
@@ -44,7 +45,8 @@ public class Startup
             .AddHostedService<DiscordService>()
             .AddSingleton<DiscordSocketClient>()
             .AddSingleton<CommandService>()
-            .AddSingleton<CommandHandlingService>();
+            .AddSingleton<CommandHandlingService>()
+            .AddScoped<INotificationService, DiscordNotificationService>();
 
         // Use Cases
         // Base

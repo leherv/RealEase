@@ -17,4 +17,9 @@ public class MediaRepository : IMediaRepository
     {
         return await _databaseContext.Media.SingleOrDefaultAsync(media => media.Name == mediaName);
     }
+
+    public async Task<IReadOnlyCollection<Media>> GetAll()
+    {
+        return await _databaseContext.Media.ToListAsync();
+    }
 }

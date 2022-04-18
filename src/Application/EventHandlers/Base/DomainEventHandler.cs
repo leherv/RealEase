@@ -1,6 +1,6 @@
 using Domain.Model.Base;
 
-namespace Application.UseCases.Base.DomainEvent;
+namespace Application.EventHandlers.Base;
 
 public abstract class DomainEventHandler<TDomainEvent> : IDomainEventHandler where TDomainEvent : IDomainEvent
 {

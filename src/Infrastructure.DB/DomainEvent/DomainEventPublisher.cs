@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Base.DomainEvent;
+﻿using Application.EventHandlers.Base;
 using Domain.Model.Base;
 using Microsoft.Extensions.DependencyInjection;
 

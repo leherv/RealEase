@@ -37,8 +37,9 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         var givenTheData = new GivenTheData();
         var givenTheApplication = new GivenTheApplication(_webApplicationFactory);
         var givenTheDatabase = new GivenTheDatabase(givenTheData, givenTheApplication);
+        var givenTheScraper = new GivenTheScraper(_webApplicationFactory.IntegrationTestScraper);
 
-        return new Given(givenTheData, givenTheApplication, givenTheDatabase);
+        return new Given(givenTheData, givenTheApplication, givenTheDatabase, givenTheScraper);
     }
 
     private When CreateWhen()
@@ -52,7 +53,9 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     {
         var thenTheApplication = new ThenTheApplication(_webApplicationFactory);
         var thenTheDatabase = new ThenTheDatabase(thenTheApplication);
+        var thenTheNotificationService =
+            new ThenTheNotificationService(_webApplicationFactory.IntegrationTestNotificationService);
 
-        return new Then(thenTheDatabase, thenTheApplication);
+        return new Then(thenTheDatabase, thenTheApplication, thenTheNotificationService);
     }
 }

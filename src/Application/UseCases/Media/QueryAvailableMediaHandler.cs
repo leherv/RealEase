@@ -1,6 +1,5 @@
 ﻿using Application.Ports.Persistence.Read;
 using Application.UseCases.Base;
-using Application.UseCases.Base.CQS;
 
 namespace Application.UseCases.Media;
 

@@ -1,4 +1,4 @@
-﻿namespace Application.UseCases.Base.CQS;
+﻿namespace Application.UseCases.Base;
 
 // interface with 1 impl right now - PipelineBehaviours can be added later
 public interface ICommandDispatcher

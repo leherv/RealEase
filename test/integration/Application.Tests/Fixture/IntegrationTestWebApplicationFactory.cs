@@ -1,14 +1,22 @@
 ﻿using System.IO;
+using Application.Ports.Notification;
+using Application.Ports.Scraper;
+using FakeItEasy;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using ReleaseNotifierApp;
 
 namespace Application.Test.Fixture;
 
 public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Startup>
 {
+    public readonly IScraper IntegrationTestScraper = A.Fake<IScraper>();
+    public readonly INotificationService IntegrationTestNotificationService = A.Fake<INotificationService>();
+
     protected override IWebHostBuilder CreateWebHostBuilder() => WebHost
         .CreateDefaultBuilder()
         .ConfigureAppConfiguration((context, builder) => builder 
@@ -22,7 +30,12 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Startu
     {
         builder
             .UseContentRoot(Directory.GetCurrentDirectory())
-            .UseStartup<Startup>();
+            .UseStartup<Startup>()
+            .ConfigureTestServices(services =>
+            {
+                services.AddScoped(provider => IntegrationTestScraper);
+                services.AddScoped(provider => IntegrationTestNotificationService);
+            });
     }
     
 }

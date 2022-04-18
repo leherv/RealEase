@@ -2,7 +2,6 @@
 using System.Threading.Tasks;
 using Application.Test.Fixture.Shared;
 using Application.UseCases.Base;
-using Application.UseCases.Base.CQS;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Test.Fixture.Whens;

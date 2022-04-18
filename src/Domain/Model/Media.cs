@@ -29,7 +29,7 @@ public class Media : AggregateRoot
         if (NewestRelease == null || release.IsNewerThan(NewestRelease))
         {
             NewestRelease = release;
-            AddDomainEvent(new NewReleasePublished(release.Link, Name));
+            AddDomainEvent(new NewReleasePublished(Id, Name, release.Link));
             return Result.Success();
         }
 
