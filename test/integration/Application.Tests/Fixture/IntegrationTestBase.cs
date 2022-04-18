@@ -27,6 +27,11 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         await Given.TheDatabase.IsCleared();
     }
 
+    public Task DisposeAsync()
+    {
+        return Task.CompletedTask;
+    }
+
     private Given CreateGiven()
     {
         var givenTheData = new GivenTheData();
@@ -49,10 +54,5 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         var thenTheDatabase = new ThenTheDatabase(thenTheApplication);
 
         return new Then(thenTheDatabase, thenTheApplication);
-    }
-    
-    public async Task DisposeAsync()
-    {
-        await _webApplicationFactory.DisposeAsync();
     }
 }

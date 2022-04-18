@@ -38,7 +38,7 @@ public class Startup
     {
         // Settings
         services.Configure<DiscordSettings>(Configuration.GetSection(nameof(DiscordSettings)));
-        
+
         // Discord
         services
             .AddHostedService<DiscordService>()
