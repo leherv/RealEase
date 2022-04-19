@@ -7,7 +7,10 @@ public class GivenTheMedia
 {
     public List<Media> MediaList { get; }
     public Media WithoutSubscribersAndReleases { get; }
-    public Media WithoutReleases { get; }
+    public Media WithSubscriberWithoutReleases { get; }
+    public Media WithSubscriberWithRelease { get; }
+    public Release CurrentRelease { get; }
+    public Media WithSubscriberWithoutRelease { get; }
 
     public GivenTheMedia()
     {
@@ -19,8 +22,16 @@ public class GivenTheMedia
             Create(Guid.NewGuid(), "Naruto").Value
         };
 
-        WithoutSubscribersAndReleases = MediaList.First();
-        WithoutReleases = MediaList.Skip(1).First();
+        WithSubscriberWithoutRelease = MediaList.First();
+        WithSubscriberWithoutReleases = MediaList.Skip(1).First();
+        
+        
+        WithSubscriberWithRelease = MediaList.Skip(2).First();
+        CurrentRelease = GivenTheRelease.Create(
+            ReleaseNumber.Create(3, 0).Value, "https://www.thisIsATest.com/chapter/3"
+        ).Value;
+        WithSubscriberWithRelease.PublishNewRelease(CurrentRelease);
+        WithoutSubscribersAndReleases = MediaList.Skip(3).First();
     }
 
     public static Result<Media> Create(

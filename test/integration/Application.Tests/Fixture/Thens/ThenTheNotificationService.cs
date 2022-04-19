@@ -1,5 +1,4 @@
 ﻿using Application.Ports.Notification;
-using Domain.Model;
 using FakeItEasy;
 
 namespace Application.Test.Fixture.Thens;

@@ -17,4 +17,9 @@ public class ThenTheScraper
         A.CallTo(() => Scraper.Scrape(A<ScrapeInstruction>.That.Matches(instruction => instruction.Equals(scrapeInstruction))))
             .MustHaveHappenedOnceExactly();
     }
+
+    public void HasBeenCalledXTimes(int x)
+    {
+        A.CallTo(() => Scraper.Scrape(A<ScrapeInstruction>._)).MustHaveHappened(x, Times.Exactly);
+    }
 }

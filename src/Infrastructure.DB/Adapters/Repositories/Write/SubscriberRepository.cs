@@ -26,13 +26,12 @@ public class SubscriberRepository : ISubscriberRepository
         await _databaseContext.SubscriberDbSet.AddAsync(subscriber);
     }
 
-    public async Task<IReadOnlyCollection<Subscriber>> GetAllSubscribedToMediaWithId(Guid mediaId)
+    public async Task<IReadOnlyCollection<Subscriber>> GetAllSubscribersByMediaId(Guid mediaId)
     {
-        return await _databaseContext.Subscribers
+        return await  _databaseContext.Subscribers
             .Include(subscriber => subscriber.Subscriptions)
-            .ThenInclude(subscription => subscription.Media)
-            .Where(subscriber =>
-                subscriber.SubscribedToMedia.Any(subscribedToMedia => subscribedToMedia.Id == mediaId))
+                .ThenInclude(subscription => subscription.Media)
+            .Where(subscriber => subscriber.Subscriptions.Any(subscription => subscription.MediaId == mediaId))
             .ToListAsync();
     }
 }

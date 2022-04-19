@@ -7,16 +7,19 @@ public class Then
     public ThenTheDatabase TheDatabase { get; }
     public ThenTheApplication TheApplication { get; }
     public ThenTheNotificationService TheNotificationService { get; }
+    public ThenTheScraper TheScraper { get; }
     
     public Then(
         ThenTheDatabase theDatabase,
         ThenTheApplication theApplication,
-        ThenTheNotificationService theNotificationService
+        ThenTheNotificationService theNotificationService,
+        ThenTheScraper theScraper
     )
     {
         TheDatabase = theDatabase;
         TheApplication = theApplication;
         TheNotificationService = theNotificationService;
+        TheScraper = theScraper;
     }
     
     public ThenTheResult TheResult(Result response)

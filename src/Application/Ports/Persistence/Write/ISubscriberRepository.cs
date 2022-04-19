@@ -8,5 +8,5 @@ public interface ISubscriberRepository
 
     Task AddSubscriber(Subscriber subscriber);
 
-    Task<IReadOnlyCollection<Subscriber>> GetAllSubscribedToMediaWithId(Guid mediaId);
+    Task<IReadOnlyCollection<Subscriber>> GetAllSubscribersByMediaId(Guid mediaId);
 }

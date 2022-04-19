@@ -1,4 +1,6 @@
-﻿using Application.Ports.General;
+﻿using Application.EventHandlers;
+using Application.EventHandlers.Base;
+using Application.Ports.General;
 using Application.Ports.Notification;
 using Application.Ports.Persistence.Read;
 using Application.Ports.Persistence.Write;
@@ -83,7 +85,8 @@ public class Startup
         
         // DomainEvent
         services
-            .AddScoped<IDomainEventPublisher, DomainEventPublisher>();
+            .AddScoped<IDomainEventPublisher, DomainEventPublisher>()
+            .AddScoped<IDomainEventHandler, NewReleasePublishedEventHandler>();
 
         services.AddDbContext<DatabaseContext>(options =>
             options.UseNpgsql(GetDbConnectionString(),

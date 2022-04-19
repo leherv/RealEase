@@ -22,7 +22,7 @@ public class NewReleasePublishedEventHandler : DomainEventHandler<Domain.Model.E
     {
         var (mediaId, mediaName, linkToReleasedResource) = newReleasePublishedEvent;
         
-        var subscribers = await _subscriberRepository.GetAllSubscribedToMediaWithId(mediaId);
+        var subscribers = await _subscriberRepository.GetAllSubscribersByMediaId(mediaId);
         foreach (var subscriber in subscribers)
         {
             var releasePublishedNotification = new ReleasePublishedNotification(

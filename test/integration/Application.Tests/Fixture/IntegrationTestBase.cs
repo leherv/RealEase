@@ -55,7 +55,8 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         var thenTheDatabase = new ThenTheDatabase(thenTheApplication);
         var thenTheNotificationService =
             new ThenTheNotificationService(_webApplicationFactory.IntegrationTestNotificationService);
+        var thenTheScraper = new ThenTheScraper(_webApplicationFactory.IntegrationTestScraper);
 
-        return new Then(thenTheDatabase, thenTheApplication, thenTheNotificationService);
+        return new Then(thenTheDatabase, thenTheApplication, thenTheNotificationService, thenTheScraper);
     }
 }

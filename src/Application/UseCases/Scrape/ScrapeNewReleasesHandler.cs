@@ -2,7 +2,6 @@ using Application.Ports.Persistence.Write;
 using Application.Ports.Scraper;
 using Application.UseCases.Base;
 using Domain.ApplicationErrors;
-using Domain.Model;
 using Domain.Results;
 
 namespace Application.UseCases.Scrape;

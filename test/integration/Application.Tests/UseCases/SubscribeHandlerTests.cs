@@ -59,7 +59,7 @@ public class SubscribeHandlerTests : IntegrationTestBase
         var subscribeMediaResult = await When.TheApplication.ReceivesCommand<SubscribeMediaCommand, Result>(subscribeMediaCommand);
 
         Then.TheResult(subscribeMediaResult).IsAFailure();
-        Then.TheResult(subscribeMediaResult).ContainsError(Errors.General.NotFoundErrorCode);
+        Then.TheResult(subscribeMediaResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class SubscribeHandlerTests : IntegrationTestBase
         var subscribeMediaResult = await When.TheApplication.ReceivesCommand<SubscribeMediaCommand, Result>(subscribeMediaCommand);
         
         Then.TheResult(subscribeMediaResult).IsAFailure();
-        Then.TheResult(subscribeMediaResult).ContainsError(Errors.General.NotFoundErrorCode);
+        Then.TheResult(subscribeMediaResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
         
         var mediaSubscriptions = await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(newExternalIdentifier));
         mediaSubscriptions.SubscribedToMediaNames.Should().HaveCount(0);

@@ -18,4 +18,9 @@ public class GivenTheScraper
         A.CallTo(() => Scraper.Scrape(A<ScrapeInstruction>.That.Matches(scrapeInstruction => scrapeInstruction.MediaName.ToLower().Equals(mediaName.ToLower()))))
             .Returns(scrapeResult);
     }
+
+    public void ScrapeForAnyMediaReturns(Result<ScrapedMediaRelease> scrapeResult)
+    {
+        A.CallTo(() => Scraper.Scrape(A<ScrapeInstruction>._)).Returns(scrapeResult);
+    }
 }
