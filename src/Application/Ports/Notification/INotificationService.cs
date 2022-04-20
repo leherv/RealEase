@@ -1,6 +1,8 @@
-﻿namespace Application.Ports.Notification;
+﻿using Domain.Results;
+
+namespace Application.Ports.Notification;
 
 public interface INotificationService
 {
-    Task Notify(ReleasePublishedNotification releasePublishedNotification);
+    Task<Result> Notify(ReleasePublishedNotification releasePublishedNotification);
 }

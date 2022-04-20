@@ -5,24 +5,24 @@ namespace Application.Test.Fixture.Thens;
 
 public class ThenTheNotificationService
 {
-    public INotificationService NotificationService;
+    private readonly INotificationService _notificationService;
 
     public ThenTheNotificationService(INotificationService notificationService)
     {
-        NotificationService = notificationService;
+        _notificationService = notificationService;
     }
 
     public void HasBeenCalledWithReleasePublishedNotificationOnce(
         ReleasePublishedNotification releasePublishedNotification)
     {
         A.CallTo(() =>
-            NotificationService.Notify(A<ReleasePublishedNotification>.That.Matches(notification =>
+            _notificationService.Notify(A<ReleasePublishedNotification>.That.Matches(notification =>
                 notification.Equals(releasePublishedNotification))))
             .MustHaveHappenedOnceExactly();
     }
 
     public void HasNotBeenCalled()
     {
-        A.CallTo(() => NotificationService.Notify(A<ReleasePublishedNotification>._)).MustNotHaveHappened();
+        A.CallTo(() => _notificationService.Notify(A<ReleasePublishedNotification>._)).MustNotHaveHappened();
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Application.EventHandlers.Base;
+using Application.Ports.General;
 using Application.Ports.Notification;
 using Application.Ports.Persistence.Write;
 
@@ -8,14 +9,17 @@ public class NewReleasePublishedEventHandler : DomainEventHandler<Domain.Model.E
 {
     private readonly ISubscriberRepository _subscriberRepository;
     private readonly INotificationService _notificationService;
+    private readonly IApplicationLogger _applicationLogger;
 
     public NewReleasePublishedEventHandler(
         INotificationService notificationService,
-        ISubscriberRepository subscriberRepository
+        ISubscriberRepository subscriberRepository,
+        IApplicationLogger applicationLogger
     )
     {
         _notificationService = notificationService;
         _subscriberRepository = subscriberRepository;
+        _applicationLogger = applicationLogger;
     }
 
     protected override async Task Execute(Domain.Model.Events.NewReleasePublished newReleasePublishedEvent)
@@ -30,7 +34,11 @@ public class NewReleasePublishedEventHandler : DomainEventHandler<Domain.Model.E
                 mediaName,
                 linkToReleasedResource
             );
-            await _notificationService.Notify(releasePublishedNotification);
+            var notificationResult = await _notificationService.Notify(releasePublishedNotification);
+            if(notificationResult.IsFailure)
+                _applicationLogger.LogWarning(
+                    $"Notifying subscriber with externalIdentifier {subscriber.ExternalIdentifier} failed due to {notificationResult.Error}"
+                );
         }
     }
 }

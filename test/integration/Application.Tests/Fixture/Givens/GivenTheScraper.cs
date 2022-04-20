@@ -6,21 +6,21 @@ namespace Application.Test.Fixture.Givens;
 
 public class GivenTheScraper
 {
-    public IScraper Scraper;
+    private readonly IScraper _scraper;
 
     public GivenTheScraper(IScraper scraper)
     {
-        Scraper = scraper;
+        _scraper = scraper;
     }
 
     public void ScrapeForMediaWithNameReturns(string mediaName, Result<ScrapedMediaRelease> scrapeResult)
     {
-        A.CallTo(() => Scraper.Scrape(A<ScrapeInstruction>.That.Matches(scrapeInstruction => scrapeInstruction.MediaName.ToLower().Equals(mediaName.ToLower()))))
+        A.CallTo(() => _scraper.Scrape(A<ScrapeInstruction>.That.Matches(scrapeInstruction => scrapeInstruction.MediaName.ToLower().Equals(mediaName.ToLower()))))
             .Returns(scrapeResult);
     }
 
     public void ScrapeForAnyMediaReturns(Result<ScrapedMediaRelease> scrapeResult)
     {
-        A.CallTo(() => Scraper.Scrape(A<ScrapeInstruction>._)).Returns(scrapeResult);
+        A.CallTo(() => _scraper.Scrape(A<ScrapeInstruction>._)).Returns(scrapeResult);
     }
 }

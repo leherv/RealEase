@@ -73,6 +73,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
             1
         );
         Given.TheScraper.ScrapeForMediaWithNameReturns(mediaName, Result<ScrapedMediaRelease>.Success(scrapeResult));
+        Given.TheNotificationService.NotifyReturns(Result.Success());
         var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new List<string> { mediaName });
 
         var scrapeNewReleasesResult =
@@ -170,6 +171,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
             1
         );
         Given.TheScraper.ScrapeForMediaWithNameReturns(mediaName, Result<ScrapedMediaRelease>.Success(scrapeResult));
+        Given.TheNotificationService.NotifyReturns(Result.Success());
         var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new List<string> { mediaName });
 
         var scrapeNewReleasesResult =

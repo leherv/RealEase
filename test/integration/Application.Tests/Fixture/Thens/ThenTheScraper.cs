@@ -5,21 +5,21 @@ namespace Application.Test.Fixture.Thens;
 
 public class ThenTheScraper
 {
-    public IScraper Scraper;
+    private readonly IScraper _scraper;
 
     public ThenTheScraper(IScraper scraper)
     {
-        Scraper = scraper;
+        _scraper = scraper;
     }
 
     public void HasBeenCalledWithScrapeInstructionOnce(ScrapeInstruction scrapeInstruction)
     {
-        A.CallTo(() => Scraper.Scrape(A<ScrapeInstruction>.That.Matches(instruction => instruction.Equals(scrapeInstruction))))
+        A.CallTo(() => _scraper.Scrape(A<ScrapeInstruction>.That.Matches(instruction => instruction.Equals(scrapeInstruction))))
             .MustHaveHappenedOnceExactly();
     }
 
     public void HasBeenCalledXTimes(int x)
     {
-        A.CallTo(() => Scraper.Scrape(A<ScrapeInstruction>._)).MustHaveHappened(x, Times.Exactly);
+        A.CallTo(() => _scraper.Scrape(A<ScrapeInstruction>._)).MustHaveHappened(x, Times.Exactly);
     }
 }
