@@ -10,6 +10,7 @@ CMD sh -c 'chmod +x ./build/*.sh; ./build/wait-for.sh release_notifier_db:5432 -
 
 FROM base as publish
 COPY --from=base app/build/ out/
+#RUN pwsh /out/bin/Debug/netX/playwright.ps1 install
 RUN dotnet publish -c Release -o out --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 as run
