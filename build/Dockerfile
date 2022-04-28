@@ -10,13 +10,9 @@ CMD sh -c 'chmod +x ./build/*.sh; ./build/wait-for.sh release_notifier_db:5432 -
 
 FROM base as publish
 COPY --from=base app/build/ out/
-#RUN pwsh /out/bin/Debug/netX/playwright.ps1 install
 RUN dotnet publish -c Release -o out --no-restore
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0 as run
-#RUN apt-get update && apt-get -f install && apt-get -y install wget gnupg2 apt-utils
-#RUN apt-get install -y chromium fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst \
-#      --no-install-recommends
+FROM mcr.microsoft.com/playwright/dotnet:v1.21.0-focal as run
 WORKDIR /app
 COPY --from=publish /app/out .
 
