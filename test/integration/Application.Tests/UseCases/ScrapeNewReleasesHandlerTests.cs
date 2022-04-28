@@ -8,6 +8,7 @@ using Application.UseCases.Scrape;
 using Domain.ApplicationErrors;
 using Domain.Model;
 using Domain.Results;
+using FakeItEasy;
 using FluentAssertions;
 using Xunit;
 
@@ -25,7 +26,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
             .ToList();
         var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(mediaToScrape);
         Given.TheScraper.ScrapeForAnyMediaReturns(
-            Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError()));
+            Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError("")));
 
         await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
 
@@ -39,7 +40,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         var mediaToScrape = new List<string>();
         var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(mediaToScrape);
         Given.TheScraper.ScrapeForAnyMediaReturns(
-            Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError()));
+            Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError("")));
 
         await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
 
@@ -53,7 +54,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         var mediaToScrape = new List<string> { "non existent" };
         var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(mediaToScrape);
         Given.TheScraper.ScrapeForAnyMediaReturns(
-            Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError()));
+            Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError("")));
 
         var scrapeResult =
             await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);

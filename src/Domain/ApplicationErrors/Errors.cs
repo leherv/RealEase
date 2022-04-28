@@ -51,8 +51,8 @@ public static class Errors
     public static class Scraper
     {
         public const string ScrapeFailedErrorCode = "scrape.failed";
-        public static Error ScrapeFailedError() =>
-            new Error(ScrapeFailedErrorCode, "Scraping for new media release failed.");
+        public static Error ScrapeFailedError(string reason) =>
+            new Error(ScrapeFailedErrorCode, $"Scraping for new media release failed due to: {reason}.");
     }
 
     public static class Notification

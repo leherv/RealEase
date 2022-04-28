@@ -11,17 +11,24 @@ public class Media : AggregateRoot
 {
     public string Name { get; }
     public Release? NewestRelease { get; private set; }
-    
-    private Media(Guid id, string name) : base(id)
+    public ScrapeTarget? ScrapeTarget { get; }
+
+    // only for ef core
+    private Media(Guid id) : base(id)
     {
-        Name = name;
     }
 
-    public static Result<Media> Create(Guid id, string name)
+    private Media(Guid id, string name, ScrapeTarget? scrapeTarget) : base(id)
+    {
+        Name = name;
+        ScrapeTarget = scrapeTarget;
+    }
+
+    public static Result<Media> Create(Guid id, string name, ScrapeTarget? scrapeTarget)
     {
         return Invariant.Create
             .NotNullOrWhiteSpace(name, nameof(name))
-            .ValidateAndCreate(() => new Media(id, name));
+            .ValidateAndCreate(() => new Media(id, name, scrapeTarget));
     }
 
     public Result PublishNewRelease(Release release)

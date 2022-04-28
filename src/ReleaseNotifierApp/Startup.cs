@@ -4,6 +4,7 @@ using Application.Ports.General;
 using Application.Ports.Notification;
 using Application.Ports.Persistence.Read;
 using Application.Ports.Persistence.Write;
+using Application.Ports.Scraper;
 using Application.UseCases.Base;
 using Application.UseCases.Media;
 using Application.UseCases.Scrape;
@@ -21,6 +22,7 @@ using Infrastructure.DB.DomainEvent;
 using Infrastructure.Discord;
 using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
+using Infrastructure.Scraper;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotifierApp.Extensions;
 
@@ -77,6 +79,10 @@ public class Startup
         services
             .AddScoped<IMediaReadRepository, MediaReadRepository>()
             .AddScoped<ISubscriberReadRepository, SubscriberReadRepository>();
+        
+        // Scraper
+        services
+            .AddScoped<IScraper, PlaywrightScraper>();
         
         // General
         services

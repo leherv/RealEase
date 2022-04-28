@@ -38,6 +38,7 @@ public class DatabaseContext : DbContext
                 releaseNumberEntity.Property(releaseNumber => releaseNumber.Minor);
             });
         });
+        mediaEntity.HasOne(media => media.ScrapeTarget);
         mediaEntity
             .HasIndex(media => media.Name)
             .IsUnique();
@@ -65,7 +66,9 @@ public class DatabaseContext : DbContext
             .WithMany()
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
-        
+
+        var scrapeTargetEntity = modelBuilder.Entity<ScrapeTarget>();
+        scrapeTargetEntity.Property(scrapeTarget => scrapeTarget.Url);
         
         modelBuilder
             .UseConvention<DisableKeyValueGenerationConvention>()

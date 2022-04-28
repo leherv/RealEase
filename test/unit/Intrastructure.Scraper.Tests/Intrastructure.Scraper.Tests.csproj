@@ -3,16 +3,11 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
-        <IsPublishable>false</IsPublishable>
-        <IsPackable>false</IsPackable>
 
-        <RootNamespace>Application.Test</RootNamespace>
+        <IsPackable>false</IsPackable>
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="FakeItEasy" Version="7.3.1" />
-        <PackageReference Include="FluentAssertions" Version="6.6.0" />
-        <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="6.0.3" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.11.0" />
         <PackageReference Include="xunit" Version="2.4.1" />
         <PackageReference Include="xunit.runner.visualstudio" Version="2.4.3">
@@ -26,10 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\src\Application\Application.csproj" />
-      <ProjectReference Include="..\..\..\src\Infrastructure.DB\Infrastructure.DB.csproj" />
-      <ProjectReference Include="..\..\..\src\ReleaseNotifierApp\ReleaseNotifierApp.csproj" />
-      <ProjectReference Include="..\..\shared\Shared\Shared.csproj" />
+      <ProjectReference Include="..\..\..\src\Infrastructure.Scraper\Infrastructure.Scraper.csproj" />
     </ItemGroup>
 
 </Project>

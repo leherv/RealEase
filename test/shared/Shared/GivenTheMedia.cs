@@ -36,12 +36,14 @@ public class GivenTheMedia
 
     public static Result<Media> Create(
         Guid? id = null,
-        string? mediaName = null
+        string? mediaName = null,
+        ScrapeTarget? scrapeTarget = null
     )
     {
         return Media.Create(
             id ?? Guid.NewGuid(),
-            mediaName ?? "Hunter x Hunter"
+            mediaName ?? "Hunter x Hunter",
+            scrapeTarget
         );
     }
 }

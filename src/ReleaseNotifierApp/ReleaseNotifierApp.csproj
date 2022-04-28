@@ -11,6 +11,7 @@
       <ProjectReference Include="..\Infrastructure.DB\Infrastructure.DB.csproj" />
       <ProjectReference Include="..\Infrastructure.Discord\Infrastructure.Discord.csproj" />
       <ProjectReference Include="..\Infrastructure.General\Infrastructure.General.csproj" />
+      <ProjectReference Include="..\Infrastructure.Scraper\Infrastructure.Scraper.csproj" />
     </ItemGroup>
 
     <ItemGroup>

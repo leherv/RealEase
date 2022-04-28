@@ -19,9 +19,6 @@ public class Subscriber : AggregateRoot
 
     private Subscriber(Guid id, string externalIdentifier) : base(id)
     {
-        if (string.IsNullOrEmpty(externalIdentifier))
-            throw new ArgumentException($"{nameof(externalIdentifier)} must be set");
-
         ExternalIdentifier = externalIdentifier;
         _subscriptions = new List<Subscription>();
     }
