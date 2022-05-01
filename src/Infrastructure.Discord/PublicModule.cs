@@ -3,6 +3,7 @@ using Application.UseCases.Media;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
+using Application.UseCases.Website;
 using Discord.Commands;
 using Domain.Results;
 using Infrastructure.Discord.Extensions;
@@ -18,7 +19,8 @@ public class PublicModule : ModuleBase<SocketCommandContext>
         "!subscribe [mediaName]\n" +
         "!unsubscribe [mediaName]\n" +
         "!listAvailable\n" +
-        "!listSubscribed";
+        "!listSubscribed\n" +
+        "!listWebsites";
 
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
@@ -102,6 +104,21 @@ public class PublicModule : ModuleBase<SocketCommandContext>
             message = "Unsubscribe failed.";
         }
         
+        await Context.Message.Channel.SendMessageAsync(message);
+    }
+    
+    [Command("listWebsites")]
+    [Alias("lW")]
+    public async Task ListWebsites()
+    {
+        var availableWebsites =
+            await _queryDispatcher.Dispatch<AvailableWebsitesQuery, AvailableWebsites>(new AvailableWebsitesQuery());
+
+        var message = availableWebsites.Websites.Any()
+            ? "Available Websites:" +
+              availableWebsites.Websites.Aggregate("", (current, availableWebsite) => current + $"\n{availableWebsite.Name} Base URL: {availableWebsite.Url}")
+            : "\nNo websites available.";
+
         await Context.Message.Channel.SendMessageAsync(message);
     }
 }

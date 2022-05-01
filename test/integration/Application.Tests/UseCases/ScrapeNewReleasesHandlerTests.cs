@@ -8,7 +8,6 @@ using Application.UseCases.Scrape;
 using Domain.ApplicationErrors;
 using Domain.Model;
 using Domain.Results;
-using FakeItEasy;
 using FluentAssertions;
 using Xunit;
 
@@ -17,6 +16,7 @@ namespace Application.Test.UseCases;
 public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
 {
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Calls_Scraper_for_each_media_sent()
     {
         await Given.TheDatabase.IsSeeded();
@@ -34,6 +34,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Calls_Scraper_for_all_media_if_sent_empty()
     {
         await Given.TheDatabase.IsSeeded();
@@ -48,6 +49,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Does_not_call_Scraper_if_no_ScrapeTarget_set()
     {
         await Given.TheDatabase.IsSeeded();
@@ -60,6 +62,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Does_not_call_NotificationService_if_no_ScrapeTarget_set()
     {
         await Given.TheDatabase.IsSeeded();
@@ -72,6 +75,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Fails_if_media_that_does_not_exist_is_sent()
     {
         await Given.TheDatabase.IsSeeded();
@@ -88,6 +92,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Publishes_any_scraped_release_if_no_release_yet()
     {
         await Given.TheDatabase.IsSeeded();
@@ -112,6 +117,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Publishes_release_if_release_is_newer()
     {
         await Given.TheDatabase.IsSeeded();
@@ -138,6 +144,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Does_not_publish_release_if_it_is_not_newer()
     {
         await Given.TheDatabase.IsSeeded();
@@ -164,6 +171,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Does_not_call_notificationService_if_no_subscribers()
     {
         await Given.TheDatabase.IsSeeded();
@@ -184,6 +192,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     }
 
     [Fact]
+    [Trait("Category", "Integration")]
     public async Task Calls_notificationService_if_subscribers_are_found()
     {
         await Given.TheDatabase.IsSeeded();
