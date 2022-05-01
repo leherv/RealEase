@@ -11,6 +11,7 @@ public class GivenTheNotificationService
     public GivenTheNotificationService(INotificationService notificationService)
     {
         _notificationService = notificationService;
+        NotifyReturns(Result.Success());
     }
 
     public void NotifyReturns(Result result)

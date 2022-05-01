@@ -37,7 +37,15 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
             if (media == null)
                 return Errors.General.NotFound(nameof(Domain.Model.Media));
             
-            var scrapeInstruction = new ScrapeInstruction("test", mediaName.ToLower());
+            if(media.ScrapeTarget == null)
+                continue;
+            
+            var scrapeInstruction = new ScrapeInstruction(
+                media.Name,
+                media.ScrapeTarget.Website.Name,
+                media.ScrapeTarget.Website.Url,
+                media.ScrapeTarget.RelativeUrl
+            );
             var scrapeResult = await _scraper.Scrape(scrapeInstruction);
 
             if (scrapeResult.IsFailure)

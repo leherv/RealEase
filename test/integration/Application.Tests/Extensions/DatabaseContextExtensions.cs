@@ -3,6 +3,7 @@ using Application.Test.Fixture.Givens;
 using Domain.Model;
 using Infrastructure.DB;
 using Microsoft.EntityFrameworkCore;
+using Shared;
 
 namespace Application.Test.Extensions
 {
@@ -13,14 +14,17 @@ namespace Application.Test.Extensions
             return databaseContext
                 .DeleteAll<Subscriber>()
                 .DeleteAll<Media>()
+                .DeleteAll<Website>()
                 .DeleteAll();
         }
 
         public static DatabaseContext Seed(this DatabaseContext databaseContext, GivenTheData givenTheData)
         {
             databaseContext
+                .SeedWebsites(givenTheData)
                 .SeedMedia(givenTheData)
                 .SeedSubscribers(givenTheData);
+               
         
             return databaseContext;
         }
@@ -36,6 +40,14 @@ namespace Application.Test.Extensions
         private static DatabaseContext SeedSubscribers(this DatabaseContext databaseContext, GivenTheData givenTheData)
         {
             databaseContext.SubscriberDbSet.AddRange(givenTheData.Subscriber.Subscribers);
+            databaseContext.SaveChanges();
+        
+            return databaseContext;
+        }
+        
+        private static DatabaseContext SeedWebsites(this DatabaseContext databaseContext, GivenTheData givenTheData)
+        {
+            databaseContext.WebsiteDbSet.AddRange(givenTheData.Website.Websites);
             databaseContext.SaveChanges();
         
             return databaseContext;

@@ -15,7 +15,10 @@ public class MediaRepository : IMediaRepository
     
     public async Task<Media?> GetByName(string mediaName)
     {
-        return await _databaseContext.Media.SingleOrDefaultAsync(media => media.Name == mediaName);
+        return await _databaseContext.Media
+            .Include(media => media.ScrapeTarget)
+                .ThenInclude(scrapeTarget => scrapeTarget.Website)
+            .SingleOrDefaultAsync(media => media.Name == mediaName);
     }
 
     public async Task<IReadOnlyCollection<Media>> GetAll()

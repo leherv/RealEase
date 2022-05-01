@@ -16,13 +16,18 @@ public class ThenTheNotificationService
         ReleasePublishedNotification releasePublishedNotification)
     {
         A.CallTo(() =>
-            _notificationService.Notify(A<ReleasePublishedNotification>.That.Matches(notification =>
-                notification.Equals(releasePublishedNotification))))
+                _notificationService.Notify(A<ReleasePublishedNotification>.That.Matches(notification =>
+                    notification.Equals(releasePublishedNotification)))
+                )
             .MustHaveHappenedOnceExactly();
     }
 
-    public void HasNotBeenCalled()
+    public void HasNotBeenCalledForMediaWithName(string mediaName)
     {
-        A.CallTo(() => _notificationService.Notify(A<ReleasePublishedNotification>._)).MustNotHaveHappened();
+        A.CallTo(() => _notificationService.Notify(
+                A<ReleasePublishedNotification>.That.Matches(releasePublished =>
+                    releasePublished.MediaName.Equals(mediaName)))
+            )
+            .MustNotHaveHappened();
     }
 }

@@ -44,7 +44,31 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
 
         await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
 
-        Then.TheScraper.HasBeenCalledXTimes(Given.The.Media.MediaList.Count);
+        Then.TheScraper.HasBeenCalledXTimes(Given.The.Media.MediaWithScrapeTargets.Count);
+    }
+
+    [Fact]
+    public async Task Does_not_call_Scraper_if_no_ScrapeTarget_set()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var media = Given.A.Media.WithoutSubscribersWithoutReleasesWithoutScrapeTarget;
+        var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new[] { media.Name });
+
+        await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
+
+        Then.TheScraper.HasBeenCalledXTimes(0);
+    }
+
+    [Fact]
+    public async Task Does_not_call_NotificationService_if_no_ScrapeTarget_set()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var media = Given.A.Media.WithoutSubscribersWithoutReleasesWithoutScrapeTarget;
+        var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new[] { media.Name });
+
+        await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
+
+        Then.TheNotificationService.HasNotBeenCalledForMediaWithName(media.Name);
     }
 
     [Fact]
@@ -67,7 +91,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     public async Task Publishes_any_scraped_release_if_no_release_yet()
     {
         await Given.TheDatabase.IsSeeded();
-        var mediaName = Given.A.Media.WithSubscriberWithoutReleases.Name;
+        var mediaName = Given.A.Media.WithoutSubscriberWithoutReleases.Name;
         var scrapeResult = new ScrapedMediaRelease(
             mediaName,
             "https://www.test.com/chapter/1",
@@ -91,7 +115,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     public async Task Publishes_release_if_release_is_newer()
     {
         await Given.TheDatabase.IsSeeded();
-        var media = Given.A.Media.WithSubscriberWithRelease;
+        var media = Given.A.Media.WithSubscriberWithReleases;
         var mediaName = media.Name;
         var newReleaseNumber = media.NewestRelease!.ReleaseNumber.Major + 1;
         var scrapeResult = new ScrapedMediaRelease(
@@ -117,7 +141,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     public async Task Does_not_publish_release_if_it_is_not_newer()
     {
         await Given.TheDatabase.IsSeeded();
-        var media = Given.A.Media.WithSubscriberWithRelease;
+        var media = Given.A.Media.WithSubscriberWithReleases;
         var mediaName = media.Name;
         var newReleaseNumber = media.NewestRelease!.ReleaseNumber.Major;
         var scrapeResult = new ScrapedMediaRelease(
@@ -143,7 +167,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     public async Task Does_not_call_notificationService_if_no_subscribers()
     {
         await Given.TheDatabase.IsSeeded();
-        var mediaName = Given.A.Media.WithoutSubscribersAndReleases.Name;
+        var mediaName = Given.A.Media.WithoutSubscriberWithoutReleases.Name;
         var scrapeResult = new ScrapedMediaRelease(
             mediaName,
             "https://www.test.com/chapter/1",
@@ -156,7 +180,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
             await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
 
         Then.TheResult(scrapeNewReleasesResult).IsSuccessful();
-        Then.TheNotificationService.HasNotBeenCalled();
+        Then.TheNotificationService.HasNotBeenCalledForMediaWithName(mediaName);
     }
 
     [Fact]
@@ -181,6 +205,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         Then.TheResult(scrapeNewReleasesResult).IsSuccessful();
         var expectedReleasePublishedNotification =
             new ReleasePublishedNotification(subscriber.ExternalIdentifier, mediaName, linkToReleasedResource);
-        Then.TheNotificationService.HasBeenCalledWithReleasePublishedNotificationOnce(expectedReleasePublishedNotification);
+        Then.TheNotificationService.HasBeenCalledWithReleasePublishedNotificationOnce(
+            expectedReleasePublishedNotification);
     }
 }

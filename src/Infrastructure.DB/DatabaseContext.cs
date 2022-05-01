@@ -17,6 +17,9 @@ public class DatabaseContext : DbContext
     public DbSet<Subscription> SubscriptionDbSet { get; private set; } = null!;
     public IQueryable<Subscription> Subscriptions => SubscriptionDbSet.AsQueryable();
     
+    public DbSet<Website> WebsiteDbSet { get; private set; } = null!;
+    public IQueryable<Website> Websites => WebsiteDbSet.AsQueryable();
+    
     private readonly IDomainEventPublisher _domainEventPublisher;
     
     public DatabaseContext(DbContextOptions<DatabaseContext> options, IDomainEventPublisher domainEventPublisher)
@@ -27,6 +30,14 @@ public class DatabaseContext : DbContext
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
+        var websiteEntity = modelBuilder.Entity<Website>();
+        websiteEntity.Property(website => website.Name);
+        websiteEntity.Property(website => website.Url);
+        
+        var scrapeTargetEntity = modelBuilder.Entity<ScrapeTarget>();
+        scrapeTargetEntity.Property(scrapeTarget => scrapeTarget.RelativeUrl);
+        scrapeTargetEntity.HasOne(scrapeTarget => scrapeTarget.Website);
+        
         var mediaEntity = modelBuilder.Entity<Media>();
         mediaEntity.Property(media => media.Name);
         mediaEntity.OwnsOne(media => media.NewestRelease, releaseEntity =>
@@ -67,9 +78,6 @@ public class DatabaseContext : DbContext
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 
-        var scrapeTargetEntity = modelBuilder.Entity<ScrapeTarget>();
-        scrapeTargetEntity.Property(scrapeTarget => scrapeTarget.Url);
-        
         modelBuilder
             .UseConvention<DisableKeyValueGenerationConvention>()
             .UseConvention<EntityNamingConvention>();

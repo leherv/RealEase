@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.DB.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20220428160846_AddScrapeTarget")]
-    partial class AddScrapeTarget
+    [Migration("20220429094527_AddScrapeTargetAndWebsite")]
+    partial class AddScrapeTargetAndWebsite
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -51,11 +51,16 @@ namespace Infrastructure.DB.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Url")
+                    b.Property<string>("RelativeUrl")
                         .IsRequired()
                         .HasColumnType("text");
 
+                    b.Property<Guid>("WebsiteId")
+                        .HasColumnType("uuid");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("WebsiteId");
 
                     b.ToTable("ScrapeTarget");
                 });
@@ -96,6 +101,24 @@ namespace Infrastructure.DB.Migrations
                         .IsUnique();
 
                     b.ToTable("Subscription");
+                });
+
+            modelBuilder.Entity("Domain.Model.Website", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .HasColumnType("uuid");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Website");
                 });
 
             modelBuilder.Entity("Domain.Model.Media", b =>
@@ -146,6 +169,17 @@ namespace Infrastructure.DB.Migrations
                     b.Navigation("NewestRelease");
 
                     b.Navigation("ScrapeTarget");
+                });
+
+            modelBuilder.Entity("Domain.Model.ScrapeTarget", b =>
+                {
+                    b.HasOne("Domain.Model.Website", "Website")
+                        .WithMany()
+                        .HasForeignKey("WebsiteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Website");
                 });
 
             modelBuilder.Entity("Domain.Model.Subscription", b =>

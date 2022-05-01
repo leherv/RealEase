@@ -5,19 +5,26 @@ using Domain.Results;
 
 namespace Domain.Model;
 
-public class ScrapeTarget : AggregateRoot
+public class ScrapeTarget : Entity
 {
-    public string Url { get; }
+    public Website Website { get; }
+    public string RelativeUrl { get; }
+
+    // only for ef core
+    private ScrapeTarget(Guid id) : base(id) {}
     
-    private ScrapeTarget(Guid id, string url) : base(id)
+    private ScrapeTarget(Guid id, Website website, string relativeUrl) : base(id)
     {
-        Url = url;
+        Website = website;
+        RelativeUrl = relativeUrl;
     }
     
-    public static Result<ScrapeTarget> Create(Guid id, string url)
+    public static Result<ScrapeTarget> Create(Guid id, Website website, string relativeUrl)
     {
         return Invariant.Create
-            .NotNullOrWhiteSpace(url, nameof(url))
-            .ValidateAndCreate(() => new ScrapeTarget(id, url));
+            .NotNullOrWhiteSpace(relativeUrl, nameof(relativeUrl))
+            .ValidateAndCreate(() => new ScrapeTarget(id, website, relativeUrl));
     }
+
+    public string AbsoluteUrl => Path.Combine(Website.Url, RelativeUrl);
 }

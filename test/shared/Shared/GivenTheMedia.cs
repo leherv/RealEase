@@ -6,32 +6,56 @@ namespace Shared;
 public class GivenTheMedia
 {
     public List<Media> MediaList { get; }
-    public Media WithoutSubscribersAndReleases { get; }
-    public Media WithSubscriberWithoutReleases { get; }
-    public Media WithSubscriberWithRelease { get; }
+    public List<Media> MediaWithScrapeTargets { get; }
+    public Media WithoutSubscribersWithoutReleasesWithoutScrapeTarget { get; }
+    public Media WithoutSubscriberWithoutReleases { get; }
+    public Media WithSubscriberWithReleases { get; }
     public Release CurrentRelease { get; }
     public Media WithSubscriberWithoutRelease { get; }
 
-    public GivenTheMedia()
+    public GivenTheMedia(GivenTheScrapeTarget givenTheScrapeTarget)
     {
-        MediaList = new List<Media>
-        {
-            Create(Guid.NewGuid(), "Hunter x Hunter").Value,
-            Create(Guid.NewGuid(), "Solo Leveling").Value,
-            Create(Guid.NewGuid(), "Bleach").Value,
-            Create(Guid.NewGuid(), "Naruto").Value
-        };
-
-        WithSubscriberWithoutRelease = MediaList.First();
-        WithSubscriberWithoutReleases = MediaList.Skip(1).First();
+        WithSubscriberWithoutRelease = Create(
+            Guid.NewGuid(),
+            "Hunter x Hunter",
+            givenTheScrapeTarget.HunterXHunterEarlyManga
+        ).Value;
         
-        
-        WithSubscriberWithRelease = MediaList.Skip(2).First();
+        WithSubscriberWithReleases = Create(
+            Guid.NewGuid(),
+            "Martial Peak",
+            givenTheScrapeTarget.MartialPeakEarlyManga
+        ).Value;
         CurrentRelease = GivenTheRelease.Create(
             ReleaseNumber.Create(3, 0).Value, "https://www.thisIsATest.com/chapter/3"
         ).Value;
-        WithSubscriberWithRelease.PublishNewRelease(CurrentRelease);
-        WithoutSubscribersAndReleases = MediaList.Skip(3).First();
+        WithSubscriberWithReleases.PublishNewRelease(CurrentRelease);
+        
+        WithoutSubscriberWithoutReleases =  Create(
+            Guid.NewGuid(),
+            "Solo Leveling",
+            givenTheScrapeTarget.SoloLevelingEarlyManga
+        ).Value;
+        
+        WithoutSubscribersWithoutReleasesWithoutScrapeTarget = Create(
+            Guid.NewGuid(),
+            "Naruto"
+        ).Value;
+
+        MediaList = new List<Media>
+        {
+            WithSubscriberWithoutRelease,
+            WithSubscriberWithReleases,
+            WithoutSubscriberWithoutReleases,
+            WithoutSubscribersWithoutReleasesWithoutScrapeTarget
+        };
+
+        MediaWithScrapeTargets = new List<Media>
+        {
+            WithSubscriberWithoutRelease,
+            WithSubscriberWithReleases,
+            WithoutSubscriberWithoutReleases
+        };
     }
 
     public static Result<Media> Create(
