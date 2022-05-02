@@ -9,6 +9,7 @@ namespace Domain.Model;
 
 public class Media : AggregateRoot
 {
+    // TODO: make value object that always needs to be lowercase
     public string Name { get; }
     public Release? NewestRelease { get; private set; }
     public ScrapeTarget? ScrapeTarget { get; }

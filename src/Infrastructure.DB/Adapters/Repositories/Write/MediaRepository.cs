@@ -16,13 +16,18 @@ public class MediaRepository : IMediaRepository
     public async Task<Media?> GetByName(string mediaName)
     {
         return await _databaseContext.Media
-            .Include(media => media.ScrapeTarget)
+            .Include(media => media!.ScrapeTarget!)
                 .ThenInclude(scrapeTarget => scrapeTarget.Website)
-            .SingleOrDefaultAsync(media => media.Name == mediaName);
+            .SingleOrDefaultAsync(media => media!.Name == mediaName);
     }
 
     public async Task<IReadOnlyCollection<Media>> GetAll()
     {
         return await _databaseContext.Media.ToListAsync();
+    }
+
+    public async Task AddMedia(Media media)
+    {
+        await _databaseContext.MediaDbSet.AddAsync(media);
     }
 }

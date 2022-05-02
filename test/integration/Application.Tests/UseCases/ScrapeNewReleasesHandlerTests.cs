@@ -98,7 +98,6 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         await Given.TheDatabase.IsSeeded();
         var mediaName = Given.A.Media.WithoutSubscriberWithoutReleases.Name;
         var scrapeResult = new ScrapedMediaRelease(
-            mediaName,
             "https://www.test.com/chapter/1",
             1
         );
@@ -125,7 +124,6 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         var mediaName = media.Name;
         var newReleaseNumber = media.NewestRelease!.ReleaseNumber.Major + 1;
         var scrapeResult = new ScrapedMediaRelease(
-            mediaName,
             "https://www.test.com/chapter/1",
             newReleaseNumber
         );
@@ -152,7 +150,6 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         var mediaName = media.Name;
         var newReleaseNumber = media.NewestRelease!.ReleaseNumber.Major;
         var scrapeResult = new ScrapedMediaRelease(
-            mediaName,
             "https://www.test.com/chapter/1",
             newReleaseNumber
         );
@@ -177,7 +174,6 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         await Given.TheDatabase.IsSeeded();
         var mediaName = Given.A.Media.WithoutSubscriberWithoutReleases.Name;
         var scrapeResult = new ScrapedMediaRelease(
-            mediaName,
             "https://www.test.com/chapter/1",
             1
         );
@@ -200,7 +196,6 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         var subscriber = Given.A.Subscriber.WithSubscriptions;
         var linkToReleasedResource = "https://www.test.com/chapter/1";
         var scrapeResult = new ScrapedMediaRelease(
-            mediaName,
             linkToReleasedResource,
             1
         );

@@ -1,4 +1,5 @@
 ﻿using Application.UseCases.Base;
+using Application.UseCases.Media.AddMedia;
 using Application.UseCases.Media.QueryAvailableMedia;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
@@ -20,7 +21,9 @@ public class PublicModule : ModuleBase<SocketCommandContext>
         "!unsubscribe [mediaName]\n" +
         "!listAvailable\n" +
         "!listSubscribed\n" +
-        "!listWebsites";
+        "!listWebsites\n" +
+        "!addMedia [websiteName] [relativeUrl]\n"
+        +"\te.g.: !addMedia earlymanga /manga/tower-of-god";
 
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
@@ -119,6 +122,25 @@ public class PublicModule : ModuleBase<SocketCommandContext>
               availableWebsites.Websites.Aggregate("", (current, availableWebsite) => current + $"\n{availableWebsite.Name} Base URL: {availableWebsite.Url}")
             : "\nNo websites available.";
 
+        await Context.Message.Channel.SendMessageAsync(message);
+    }
+    
+    [Command("addMedia")]
+    [Alias("aM")]
+    public async Task AddMedia(string websiteName, string relativePath)
+    {
+        var addMediaCommand = new AddMediaCommand(websiteName, relativePath);
+        
+        var addMediaResult =
+            await _commandDispatcher.Dispatch<AddMediaCommand, Result>(addMediaCommand);
+
+        var message = "Media successfully added.";
+        if (addMediaResult.IsFailure)
+        {
+            _logger.LogWarning(addMediaResult.Error.ToString());
+            message = "Adding media failed";
+        }
+        
         await Context.Message.Channel.SendMessageAsync(message);
     }
 }

@@ -6,4 +6,5 @@ public interface IMediaRepository
 {
     Task<Media?> GetByName(string mediaName);
     Task<IReadOnlyCollection<Media>> GetAll();
+    Task AddMedia(Media media);
 }

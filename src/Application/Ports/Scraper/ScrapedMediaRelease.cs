@@ -4,7 +4,6 @@ using Domain.Results;
 namespace Application.Ports.Scraper;
 
 public record ScrapedMediaRelease(
-    string MediaName,
     string UrlToResource,
     int MajorReleaseNumber,
     int? MinorReleaseNumber = 0)

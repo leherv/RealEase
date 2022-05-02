@@ -9,6 +9,7 @@ public class Given
     public GivenTheDatabase TheDatabase { get; }
     public GivenTheApplication TheApplication { get; }
     public GivenTheScraper TheScraper { get; }
+    public GivenTheMediaNameScraper TheMediaNameScraper { get; }
     public GivenTheNotificationService TheNotificationService { get; }
     
     public Given(
@@ -16,7 +17,8 @@ public class Given
         GivenTheApplication givenTheApplication,
         GivenTheDatabase givenTheDatabase,
         GivenTheScraper theScraper,
-        GivenTheNotificationService theNotificationService
+        GivenTheNotificationService theNotificationService,
+        GivenTheMediaNameScraper theMediaNameScraper
     )
     {
         A = givenTheData;
@@ -27,5 +29,6 @@ public class Given
         TheDatabase = givenTheDatabase;
         TheScraper = theScraper;
         TheNotificationService = theNotificationService;
+        TheMediaNameScraper = theMediaNameScraper;
     }
 }

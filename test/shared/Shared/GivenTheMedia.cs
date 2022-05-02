@@ -59,7 +59,7 @@ public class GivenTheMedia
         };
 
         var notPersistedScrapeTarget = GivenTheScrapeTarget.Create(Guid.NewGuid(), givenTheWebsite.EarlyManga, "/manga/tower-of-god").Value;
-        NotPersistedMedia = Create(Guid.NewGuid(), "towerofgod", notPersistedScrapeTarget).Value;
+        NotPersistedMedia = Create(Guid.NewGuid(), "Tower of God", notPersistedScrapeTarget).Value;
     }
 
     public static Result<Media> Create(

@@ -53,6 +53,10 @@ public static class Errors
         public const string ScrapeFailedErrorCode = "scrape.failed";
         public static Error ScrapeFailedError(string reason) =>
             new Error(ScrapeFailedErrorCode, $"Scraping for new media release failed due to: {reason}.");
+        
+        public const string ScrapeMediaNameFailedErrorCode = "scrape.medianame.failed";
+        public static Error ScrapeMediaNameFailedError(string reason) =>
+            new Error(ScrapeMediaNameFailedErrorCode, $"Scraping for media name failed due to: {reason}.");
     }
 
     public static class Notification

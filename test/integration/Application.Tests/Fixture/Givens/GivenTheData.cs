@@ -14,7 +14,7 @@ public class GivenTheData
     {
         Website = new GivenTheWebsite();
         ScrapeTarget = new GivenTheScrapeTarget(Website);
-        Media = new GivenTheMedia(ScrapeTarget);
+        Media = new GivenTheMedia(ScrapeTarget, Website);
         Subscriber = new GivenTheSubscriber(Media);
         Release = new GivenTheRelease();
     }

@@ -8,18 +8,21 @@ public class Then
     public ThenTheApplication TheApplication { get; }
     public ThenTheNotificationService TheNotificationService { get; }
     public ThenTheScraper TheScraper { get; }
+    public ThenTheMediaNameScraper TheMediaNameScraper { get; }
     
     public Then(
         ThenTheDatabase theDatabase,
         ThenTheApplication theApplication,
         ThenTheNotificationService theNotificationService,
-        ThenTheScraper theScraper
+        ThenTheScraper theScraper,
+        ThenTheMediaNameScraper theMediaNameScraper
     )
     {
         TheDatabase = theDatabase;
         TheApplication = theApplication;
         TheNotificationService = theNotificationService;
         TheScraper = theScraper;
+        TheMediaNameScraper = theMediaNameScraper;
     }
     
     public ThenTheResult TheResult(Result response)

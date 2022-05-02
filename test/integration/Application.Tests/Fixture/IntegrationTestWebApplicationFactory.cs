@@ -15,6 +15,7 @@ namespace Application.Test.Fixture;
 public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Startup>
 {
     public readonly IScraper IntegrationTestScraper = A.Fake<IScraper>();
+    public readonly IMediaNameScraper IntegrationTestMediaNameScraper = A.Fake<IMediaNameScraper>();
     public readonly INotificationService IntegrationTestNotificationService = A.Fake<INotificationService>();
 
     protected override IWebHostBuilder CreateWebHostBuilder() => WebHost
@@ -35,6 +36,7 @@ public class IntegrationTestWebApplicationFactory : WebApplicationFactory<Startu
             {
                 services.AddScoped(provider => IntegrationTestScraper);
                 services.AddScoped(provider => IntegrationTestNotificationService);
+                services.AddScoped(provider => IntegrationTestMediaNameScraper);
             });
     }
     

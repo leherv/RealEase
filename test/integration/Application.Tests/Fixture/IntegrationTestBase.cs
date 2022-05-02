@@ -38,10 +38,19 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         var givenTheApplication = new GivenTheApplication(_webApplicationFactory);
         var givenTheDatabase = new GivenTheDatabase(givenTheData, givenTheApplication);
         var givenTheScraper = new GivenTheScraper(_webApplicationFactory.IntegrationTestScraper);
+        var givenTheMediaNameScraper =
+            new GivenTheMediaNameScraper(_webApplicationFactory.IntegrationTestMediaNameScraper);
         var givenTheNotificationService =
             new GivenTheNotificationService(_webApplicationFactory.IntegrationTestNotificationService);
 
-        return new Given(givenTheData, givenTheApplication, givenTheDatabase, givenTheScraper, givenTheNotificationService);
+        return new Given(
+            givenTheData,
+            givenTheApplication,
+            givenTheDatabase,
+            givenTheScraper,
+            givenTheNotificationService,
+            givenTheMediaNameScraper
+        );
     }
 
     private When CreateWhen()
@@ -58,7 +67,14 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         var thenTheNotificationService =
             new ThenTheNotificationService(_webApplicationFactory.IntegrationTestNotificationService);
         var thenTheScraper = new ThenTheScraper(_webApplicationFactory.IntegrationTestScraper);
+        var thenTheMediaNameScraper = new ThenTheMediaNameScraper(_webApplicationFactory.IntegrationTestMediaNameScraper);
 
-        return new Then(thenTheDatabase, thenTheApplication, thenTheNotificationService, thenTheScraper);
+        return new Then(
+            thenTheDatabase,
+            thenTheApplication,
+            thenTheNotificationService,
+            thenTheScraper,
+            thenTheMediaNameScraper
+        );
     }
 }

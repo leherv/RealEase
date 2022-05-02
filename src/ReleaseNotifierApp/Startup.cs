@@ -88,7 +88,8 @@ public class Startup
         
         // Scraper
         services
-            .AddScoped<IScraper, PlaywrightScraper>();
+            .AddScoped<IScraper, PlaywrightScraper>()
+            .AddScoped<IMediaNameScraper, PlaywrightMediaNameScraper>();
         
         // General
         services
