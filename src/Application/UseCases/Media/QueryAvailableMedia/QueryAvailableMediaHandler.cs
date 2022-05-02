@@ -1,7 +1,7 @@
 ﻿using Application.Ports.Persistence.Read;
 using Application.UseCases.Base;
 
-namespace Application.UseCases.Media;
+namespace Application.UseCases.Media.QueryAvailableMedia;
 
 public record AvailableMediaQuery;
 

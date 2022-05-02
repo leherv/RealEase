@@ -1,5 +1,5 @@
 ﻿using Application.UseCases.Base;
-using Application.UseCases.Media;
+using Application.UseCases.Media.QueryAvailableMedia;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;

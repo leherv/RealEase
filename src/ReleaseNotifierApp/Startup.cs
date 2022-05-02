@@ -6,7 +6,8 @@ using Application.Ports.Persistence.Read;
 using Application.Ports.Persistence.Write;
 using Application.Ports.Scraper;
 using Application.UseCases.Base;
-using Application.UseCases.Media;
+using Application.UseCases.Media.AddMedia;
+using Application.UseCases.Media.QueryAvailableMedia;
 using Application.UseCases.Scrape;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
@@ -69,13 +70,15 @@ public class Startup
         services
             .AddScoped<ICommandHandler<SubscribeMediaCommand, Result>, SubscribeMediaHandler>()
             .AddScoped<ICommandHandler<UnsubscribeMediaCommand, Result>, UnsubscribeMediaHandler>()
-            .AddScoped<ICommandHandler<ScrapeNewReleasesCommand, Result>, ScrapeNewReleasesHandler>();
+            .AddScoped<ICommandHandler<ScrapeNewReleasesCommand, Result>, ScrapeNewReleasesHandler>()
+            .AddScoped<ICommandHandler<AddMediaCommand, Result>, AddMediaHandler>();
         
         // Repositories(Write)
         services
             .AddScoped<IUnitOfWork, UnitOfWork>()
             .AddScoped<IMediaRepository, MediaRepository>()
-            .AddScoped<ISubscriberRepository, SubscriberRepository>();
+            .AddScoped<ISubscriberRepository, SubscriberRepository>()
+            .AddScoped<IWebsiteRepository, WebsiteRepository>();
         
         // Repositories(Read)
         services

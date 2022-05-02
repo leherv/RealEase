@@ -17,8 +17,8 @@ public class DatabaseContext : DbContext
     public DbSet<Subscription> SubscriptionDbSet { get; private set; } = null!;
     public IQueryable<Subscription> Subscriptions => SubscriptionDbSet.AsQueryable();
     
-    public DbSet<Website> WebsiteDbSet { get; private set; } = null!;
-    public IQueryable<Website> Websites => WebsiteDbSet.AsQueryable();
+    public DbSet<Website?> WebsiteDbSet { get; private set; } = null!;
+    public IQueryable<Website?> Websites => WebsiteDbSet.AsQueryable();
     
     private readonly IDomainEventPublisher _domainEventPublisher;
     

@@ -1,4 +1,4 @@
-using Application.UseCases.Media;
+using Application.UseCases.Media.QueryAvailableMedia;
 
 namespace Application.Ports.Persistence.Read;
 

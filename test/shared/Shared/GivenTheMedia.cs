@@ -12,8 +12,9 @@ public class GivenTheMedia
     public Media WithSubscriberWithReleases { get; }
     public Release CurrentRelease { get; }
     public Media WithSubscriberWithoutRelease { get; }
+    public Media NotPersistedMedia { get; }
 
-    public GivenTheMedia(GivenTheScrapeTarget givenTheScrapeTarget)
+    public GivenTheMedia(GivenTheScrapeTarget givenTheScrapeTarget, GivenTheWebsite givenTheWebsite)
     {
         WithSubscriberWithoutRelease = Create(
             Guid.NewGuid(),
@@ -56,6 +57,9 @@ public class GivenTheMedia
             WithSubscriberWithReleases,
             WithoutSubscriberWithoutReleases
         };
+
+        var notPersistedScrapeTarget = GivenTheScrapeTarget.Create(Guid.NewGuid(), givenTheWebsite.EarlyManga, "/manga/tower-of-god").Value;
+        NotPersistedMedia = Create(Guid.NewGuid(), "towerofgod", notPersistedScrapeTarget).Value;
     }
 
     public static Result<Media> Create(

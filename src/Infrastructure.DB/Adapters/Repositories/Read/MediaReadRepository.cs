@@ -1,5 +1,5 @@
 using Application.Ports.Persistence.Read;
-using Application.UseCases.Media;
+using Application.UseCases.Media.QueryAvailableMedia;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DB.Adapters.Repositories.Read;
