@@ -9,7 +9,7 @@ public class PlaywrightScraper : IScraper
 {
     public async Task<Result<ScrapedMediaRelease>> Scrape(ScrapeInstruction scrapeInstruction)
     {
-        Microsoft.Playwright.Program.Main(new[] {"install"});
+        // Program.Main(new[] {"install"});
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync();
         var page = await browser.NewPageAsync();
@@ -36,9 +36,16 @@ public class PlaywrightScraper : IScraper
 
         return new ScrapedMediaRelease(
             scrapeInstruction.MediaName,
-            scrapeInstruction.Url + relativeChapterUrl,
+            CombineUris(scrapeInstruction.Url, relativeChapterUrl),
             releaseNumbersResult.Value.Major,
             releaseNumbersResult.Value.Minor
         );
+    }
+
+    private static string CombineUris(string uri1, string uri2)
+    {
+        uri1 = uri1.TrimEnd('/');
+        uri2 = uri2.TrimStart('/');
+        return $"{uri1}/{uri2}";
     }
 }

@@ -7,6 +7,11 @@ Run the app locally
 and only start the database via docker 
 > docker-compose -f ./build/docker-compose.yml -f ./build/docker-compose.DEV.yml up release_notifier_db --build --abort-on-container-exit --force-recreate
 
+Do not forget that to set up playwright locally if you do not use docker. The simplest way is uncommenting the following line in PlaywrightScraper.cs:
+> Program.Main(new[] {"install"});
+
+this is not necessary when using Docker, as the image already contains Playwright.
+
 Run all tests
 > dotnet test
 
