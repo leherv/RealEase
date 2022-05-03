@@ -3,7 +3,6 @@ using Application.Test.Fixture.Givens;
 using Domain.Model;
 using Infrastructure.DB;
 using Microsoft.EntityFrameworkCore;
-using Shared;
 
 namespace Application.Test.Extensions
 {

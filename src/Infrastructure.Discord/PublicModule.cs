@@ -6,6 +6,7 @@ using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
 using Application.UseCases.Website;
 using Discord.Commands;
+using Domain.ApplicationErrors;
 using Domain.Results;
 using Infrastructure.Discord.Extensions;
 using Microsoft.Extensions.Logging;
@@ -137,8 +138,14 @@ public class PublicModule : ModuleBase<SocketCommandContext>
         var message = "Media successfully added.";
         if (addMediaResult.IsFailure)
         {
-            _logger.LogWarning(addMediaResult.Error.ToString());
             message = "Adding media failed";
+            _logger.LogWarning(addMediaResult.Error.ToString());
+            if (addMediaResult.Error.Code == Errors.Media.MediaWithNameExistsErrorCode)
+                message += " as media with this name already exists";
+            if (addMediaResult.Error.Code == Errors.Media.MediaWithScrapeTargetExistsErrorCode)
+                message += " as another media already is configured for this URL";
+            if (addMediaResult.Error.Code == Errors.General.NotFoundErrorCode)
+                message += $" as website with {websiteName} could not be found";
         }
         
         await Context.Message.Channel.SendMessageAsync(message);

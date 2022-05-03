@@ -24,7 +24,10 @@ public class AddMediaHandlerTests : IntegrationTestBase
             .IsAFailure()
             .Should()
             .BeTrue();
-        Then.TheResult(addMediaResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+        Then.TheResult(addMediaResult)
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
     }
 
     [Fact]
@@ -46,7 +49,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
-            Result<ScrapedMediaName>.Failure(Errors.Scraper.ScrapeFailedError(""))
+            Result<ScrapedMediaName>.Failure(Errors.Scraper.ScrapeMediaNameFailedError(""))
         );
         var mediaToAdd = Given.The.Media.NotPersistedMedia;
         var addMediaCommand = new AddMediaCommand(
@@ -60,7 +63,10 @@ public class AddMediaHandlerTests : IntegrationTestBase
             .IsAFailure()
             .Should()
             .BeTrue();
-        Then.TheResult(addMediaResult).ContainsErrorWithCode(Errors.Scraper.ScrapeMediaNameFailedErrorCode);
+        Then.TheResult(addMediaResult)
+            .ContainsErrorWithCode(Errors.Scraper.ScrapeMediaNameFailedErrorCode)
+            .Should()
+            .BeTrue();
     }
     
     [Fact]
@@ -91,7 +97,10 @@ public class AddMediaHandlerTests : IntegrationTestBase
             .IsAFailure()
             .Should()
             .BeTrue();
-        Then.TheResult(addMediaResult).ContainsErrorWithCode(Errors.Scraper.ScrapeFailedErrorCode);
+        Then.TheResult(addMediaResult)
+            .ContainsErrorWithCode(Errors.Scraper.ScrapeFailedErrorCode)
+            .Should()
+            .BeTrue();
     }
     
     [Fact]
@@ -135,44 +144,76 @@ public class AddMediaHandlerTests : IntegrationTestBase
     
     [Fact]
     [Trait("Category", "Integration")]
-    public async Task Adding_Media_fails_if_media_already_exists()
+    public async Task Adding_Media_fails_if_media_with_ScrapeTarget_already_exists()
     {
-        // await Given.TheDatabase.IsSeeded();
-        // var mediaToAdd = Given.The.Media.WithoutSubscriberWithoutReleases;
-        // var addMediaCommand = new AddMediaCommand(
-        //     mediaToAdd.ScrapeTarget.Website.Name,
-        //     mediaToAdd.ScrapeTarget.RelativeUrl
-        // );
-        // Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
-        //     Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaToAdd.Name))
-        // );
-        // var scrapedMediaRelease = new ScrapedMediaRelease(
-        //     $"{mediaToAdd.ScrapeTarget.Website.Url}tower-of-god/chapter-541",
-        //     541,
-        //     0
-        // );
-        // Given.TheScraper.ScrapeForMediaWithNameReturns(
-        //     mediaToAdd.Name,
-        //     Result<ScrapedMediaRelease>.Success(scrapedMediaRelease)
-        // );
-        //
-        // var addMediaResult = await When.TheApplication.ReceivesCommand<AddMediaCommand, Result>(addMediaCommand);
-        //
-        // Then.TheResult(addMediaResult)
-        //     .IsSuccessful()
-        //     .Should()
-        //     .BeTrue();
-        //
-        // var media =
-        //     await Then.TheDatabase.Query(unitOfWork => unitOfWork.MediaRepository.GetByName(mediaToAdd.Name));
-        // media.Should().NotBeNull();
-        // media.Name.Should().Be(mediaToAdd.Name);
-        // media.ScrapeTarget.Should().NotBeNull();
-        // media.ScrapeTarget.Website.Name.Should().Be(mediaToAdd.ScrapeTarget.Website.Name);
-        // media.ScrapeTarget.RelativeUrl.Should().Be(mediaToAdd.ScrapeTarget.RelativeUrl);
+        await Given.TheDatabase.IsSeeded();
+        var alreadyPersistedMedia = Given.The.Media.WithoutSubscriberWithoutReleases;
+        var addMediaCommand = new AddMediaCommand(
+            alreadyPersistedMedia.ScrapeTarget.Website.Name,
+            alreadyPersistedMedia.ScrapeTarget.RelativeUrl
+        );
+        Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
+            Result<ScrapedMediaName>.Success(new ScrapedMediaName(alreadyPersistedMedia.Name))
+        );
+        var scrapedMediaRelease = new ScrapedMediaRelease(
+            $"{alreadyPersistedMedia.ScrapeTarget.Website.Url}tower-of-god/chapter-541",
+            541,
+            0
+        );
+        Given.TheScraper.ScrapeForMediaWithNameReturns(
+            alreadyPersistedMedia.Name,
+            Result<ScrapedMediaRelease>.Success(scrapedMediaRelease)
+        );
+
+        var addMediaResult = await When.TheApplication.ReceivesCommand<AddMediaCommand, Result>(addMediaCommand);
+
+        Then.TheResult(addMediaResult)
+            .IsSuccessful()
+            .Should()
+            .BeFalse();
+        Then.TheResult(addMediaResult)
+            .ContainsErrorWithCode(Errors.Media.MediaWithScrapeTargetExistsErrorCode)
+            .Should()
+            .BeTrue();
     }
-    
-    
+
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Adding_Media_fails_if_media_with_name_already_exists()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var alreadyPersistedMedia = Given.The.Media.WithoutSubscriberWithoutReleases;
+        var deviatingRelativeUrl = alreadyPersistedMedia.ScrapeTarget.RelativeUrl + "/differs";
+        var addMediaCommand = new AddMediaCommand(
+            alreadyPersistedMedia.ScrapeTarget.Website.Name,
+            deviatingRelativeUrl
+        );
+        Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
+            Result<ScrapedMediaName>.Success(new ScrapedMediaName(alreadyPersistedMedia.Name))
+        );
+        var scrapedMediaRelease = new ScrapedMediaRelease(
+            $"{alreadyPersistedMedia.ScrapeTarget.Website.Url}tower-of-god/chapter-541",
+            541,
+            0
+        );
+        Given.TheScraper.ScrapeForMediaWithNameReturns(
+            alreadyPersistedMedia.Name,
+            Result<ScrapedMediaRelease>.Success(scrapedMediaRelease)
+        );
+
+        var addMediaResult = await When.TheApplication.ReceivesCommand<AddMediaCommand, Result>(addMediaCommand);
+
+        Then.TheResult(addMediaResult)
+            .IsSuccessful()
+            .Should()
+            .BeFalse();
+        Then.TheResult(addMediaResult)
+            .ContainsErrorWithCode(Errors.Media.MediaWithNameExistsErrorCode)
+            .Should()
+            .BeTrue();
+    }
+
+   
     
     
 }

@@ -46,6 +46,14 @@ public static class Errors
         public const string PublishNewReleaseErrorCode = "publish.release.failed";
         public static Error PublishNewReleaseFailedError(Release release)
             => new(PublishNewReleaseErrorCode, $"Publishing new release {release} failed.");
+
+        public const string MediaWithScrapeTargetExistsErrorCode = "media.with.scrapetarget.exists";
+        public static Error MediaWithScrapeTargetExistsError(string mediaName) =>
+            new Error(MediaWithScrapeTargetExistsErrorCode,$"Media with name {mediaName} already configured for URI.");
+        
+        public const string MediaWithNameExistsErrorCode = "media.with.name.exists";
+        public static Error MediaWithNameExistsError(string mediaName) =>
+            new Error(MediaWithNameExistsErrorCode,$"Media with name {mediaName} already exists.");
     }
 
     public static class Scraper
