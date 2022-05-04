@@ -1,3 +1,5 @@
+![CI](https://github.com/leherv/ReleaseNotifier/workflows/build/badge.svg)
+
 # Release Notifier (RN)
 
 ## Local Development
