@@ -53,10 +53,7 @@ ___
 * It would be nice to use IQuery<TQueryResult>/ICommand<TCommandResult> so the generics do not have to be specified each time
   * MediatR does this but the Dispatchers seem to have to be way more complicated
     * see discussion (https://cezarypiatek.github.io/post/why-i-dont-use-mediatr-for-cqrs/)
-* Aggregate creation errors in the domain and return to Application services (or use fail-fast with results)
-* Define ApplicationResult maybe using the same Result classes used in the domain?
-  * use application wide errors https://enterprisecraftsmanship.com/posts/advanced-error-handling-techniques/
-    * Remove exception gunk
+  * rethink application wide errors https://enterprisecraftsmanship.com/posts/advanced-error-handling-techniques/
 * Use a more functional approach in the Application services (Handlers), like csharpfunctionalextensions
 
 ### Notes 
