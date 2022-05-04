@@ -16,7 +16,7 @@ services:
     container_name: release_notifier_db
     image: library/postgres:13.0
     ports:
-      - "54332:5432"
+      - "5433:5432"
     environment:
       POSTGRES_DB: "releasenotifier"
       POSTGRES_USER: "postgres"
