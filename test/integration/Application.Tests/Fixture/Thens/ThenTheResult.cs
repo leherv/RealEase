@@ -21,7 +21,7 @@ public class ThenTheResult
         return _result.IsFailure;
     }
 
-    public bool ContainsError(string code)
+    public bool ContainsErrorWithCode(string code)
     {
         return _result.Error.Code.Equals(code);
     }

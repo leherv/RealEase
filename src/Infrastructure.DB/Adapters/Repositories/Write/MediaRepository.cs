@@ -15,6 +15,28 @@ public class MediaRepository : IMediaRepository
     
     public async Task<Media?> GetByName(string mediaName)
     {
-        return await _databaseContext.Media.SingleOrDefaultAsync(media => media.Name == mediaName);
+        return await _databaseContext.Media
+            .Include(media => media.ScrapeTarget!)
+                .ThenInclude(scrapeTarget => scrapeTarget.Website)
+            .SingleOrDefaultAsync(media => media!.Name.ToLower() == mediaName.ToLower());
+    }
+
+    public async Task<Media?> GetByUri(Website website, string relativeUrl)
+    {
+        return await _databaseContext.Media
+            .Include(media => media.ScrapeTarget!)
+            .ThenInclude(scrapeTarget => scrapeTarget.Website)
+            .SingleOrDefaultAsync(media => media.ScrapeTarget.Website.Id == website.Id &&
+                                           media.ScrapeTarget.RelativeUrl == relativeUrl);
+    }
+
+    public async Task<IReadOnlyCollection<Media>> GetAll()
+    {
+        return await _databaseContext.Media.ToListAsync();
+    }
+
+    public async Task AddMedia(Media media)
+    {
+        await _databaseContext.MediaDbSet.AddAsync(media);
     }
 }

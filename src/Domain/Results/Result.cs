@@ -35,4 +35,9 @@ public record Result
             ? Success()
             : Failure(error);
     }
+    
+    public static implicit operator Result(Error error)
+    {
+        return Failure(error);
+    }
 }

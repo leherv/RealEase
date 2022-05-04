@@ -78,7 +78,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
         var unSubscribeMediaResult = await When.TheApplication.ReceivesCommand<UnsubscribeMediaCommand, Result>(unsubscribeMediaCommand);
 
         Then.TheResult(unSubscribeMediaResult).IsAFailure();
-        Then.TheResult(unSubscribeMediaResult).ContainsError(Errors.General.NotFoundErrorCode);
+        Then.TheResult(unSubscribeMediaResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(subscriber.ExternalIdentifier));
         mediaSubscriptions.Should().NotBeNull();
@@ -97,7 +97,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
         var unSubscribeMediaResult = await When.TheApplication.ReceivesCommand<UnsubscribeMediaCommand, Result>(unsubscribeMediaCommand);
 
         Then.TheResult(unSubscribeMediaResult).IsAFailure();
-        Then.TheResult(unSubscribeMediaResult).ContainsError(Errors.General.NotFoundErrorCode);
+        Then.TheResult(unSubscribeMediaResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(nonExistentSubscriberExternalId));
         mediaSubscriptions.Should().NotBeNull();

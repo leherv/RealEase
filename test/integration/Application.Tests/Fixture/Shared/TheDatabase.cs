@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Test.Fixture.Shared;
 
-public abstract class TheDatabase : IDisposable
+public abstract class TheDatabase
 {
     protected readonly TheApplication TheApplication;
 
@@ -34,9 +34,4 @@ public abstract class TheDatabase : IDisposable
         => TheApplication.ExecuteScopeAsync(sp =>
             action(sp.GetService<DatabaseContext>()!)
         );
-
-    public void Dispose()
-    {
-        TheApplication.Dispose();
-    }
 }

@@ -12,13 +12,14 @@ public abstract class IntegrationTestBase : IAsyncLifetime
     protected readonly Given Given;
     protected readonly When When;
     protected readonly Then Then;
+    private readonly IntegrationTestWebApplicationFactory _webApplicationFactory;
 
     protected IntegrationTestBase()
     {
-        var webApplicationFactory = new IntegrationTestWebApplicationFactory();
-        Given = CreateGiven(webApplicationFactory);
-        When = CreateWhen(webApplicationFactory);
-        Then = CreateThen(webApplicationFactory);
+        _webApplicationFactory = new IntegrationTestWebApplicationFactory();
+        Given = CreateGiven();
+        When = CreateWhen();
+        Then = CreateThen();
     }
     
     public async Task InitializeAsync()
@@ -26,35 +27,54 @@ public abstract class IntegrationTestBase : IAsyncLifetime
         await Given.TheDatabase.IsCleared();
     }
 
-    private static Given CreateGiven(IntegrationTestWebApplicationFactory webApplicationFactory)
+    public Task DisposeAsync()
     {
-        var givenTheData = new GivenTheData();
-        var givenTheApplication = new GivenTheApplication(webApplicationFactory);
-        var givenTheDatabase = new GivenTheDatabase(givenTheData, givenTheApplication);
-
-        return new Given(givenTheData, givenTheApplication, givenTheDatabase);
+        return Task.CompletedTask;
     }
 
-    private static When CreateWhen(IntegrationTestWebApplicationFactory webApplicationFactory)
+    private Given CreateGiven()
     {
-        var whenTheApplication = new WhenTheApplication(webApplicationFactory);
+        var givenTheData = new GivenTheData();
+        var givenTheApplication = new GivenTheApplication(_webApplicationFactory);
+        var givenTheDatabase = new GivenTheDatabase(givenTheData, givenTheApplication);
+        var givenTheScraper = new GivenTheScraper(_webApplicationFactory.IntegrationTestScraper);
+        var givenTheMediaNameScraper =
+            new GivenTheMediaNameScraper(_webApplicationFactory.IntegrationTestMediaNameScraper);
+        var givenTheNotificationService =
+            new GivenTheNotificationService(_webApplicationFactory.IntegrationTestNotificationService);
+
+        return new Given(
+            givenTheData,
+            givenTheApplication,
+            givenTheDatabase,
+            givenTheScraper,
+            givenTheNotificationService,
+            givenTheMediaNameScraper
+        );
+    }
+
+    private When CreateWhen()
+    {
+        var whenTheApplication = new WhenTheApplication(_webApplicationFactory);
 
         return new When(whenTheApplication);
     }
 
-    private static Then CreateThen(IntegrationTestWebApplicationFactory webApplicationFactory)
+    private Then CreateThen()
     {
-        var thenTheApplication = new ThenTheApplication(webApplicationFactory);
+        var thenTheApplication = new ThenTheApplication(_webApplicationFactory);
         var thenTheDatabase = new ThenTheDatabase(thenTheApplication);
+        var thenTheNotificationService =
+            new ThenTheNotificationService(_webApplicationFactory.IntegrationTestNotificationService);
+        var thenTheScraper = new ThenTheScraper(_webApplicationFactory.IntegrationTestScraper);
+        var thenTheMediaNameScraper = new ThenTheMediaNameScraper(_webApplicationFactory.IntegrationTestMediaNameScraper);
 
-        return new Then(thenTheDatabase, thenTheApplication);
-    }
-    
-    public async Task DisposeAsync()
-    {
-        await Given.TheDatabase.IsCleared();
-        Given.Dispose();
-        When.Dispose();
-        Then.Dispose();
+        return new Then(
+            thenTheDatabase,
+            thenTheApplication,
+            thenTheNotificationService,
+            thenTheScraper,
+            thenTheMediaNameScraper
+        );
     }
 }

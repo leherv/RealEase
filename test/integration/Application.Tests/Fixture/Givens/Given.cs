@@ -1,19 +1,24 @@
-﻿using System;
-
+﻿
 namespace Application.Test.Fixture.Givens;
 
-public class Given : IDisposable
+public class Given
 {
     public GivenTheData A { get; }
     public GivenTheData An { get; }
     public GivenTheData The { get; }
     public GivenTheDatabase TheDatabase { get; }
     public GivenTheApplication TheApplication { get; }
+    public GivenTheScraper TheScraper { get; }
+    public GivenTheMediaNameScraper TheMediaNameScraper { get; }
+    public GivenTheNotificationService TheNotificationService { get; }
     
     public Given(
         GivenTheData givenTheData,
         GivenTheApplication givenTheApplication,
-        GivenTheDatabase givenTheDatabase
+        GivenTheDatabase givenTheDatabase,
+        GivenTheScraper theScraper,
+        GivenTheNotificationService theNotificationService,
+        GivenTheMediaNameScraper theMediaNameScraper
     )
     {
         A = givenTheData;
@@ -22,10 +27,8 @@ public class Given : IDisposable
 
         TheApplication = givenTheApplication;
         TheDatabase = givenTheDatabase;
-    }
-
-    public void Dispose()
-    {
-        TheApplication.Dispose();
+        TheScraper = theScraper;
+        TheNotificationService = theNotificationService;
+        TheMediaNameScraper = theMediaNameScraper;
     }
 }

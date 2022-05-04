@@ -7,16 +7,19 @@ public class UnitOfWork : IUnitOfWork
     private readonly DatabaseContext _databaseContext;
     public IMediaRepository MediaRepository { get; }
     public ISubscriberRepository SubscriberRepository { get; }
+    public IWebsiteRepository WebsiteRepository { get; }
 
     public UnitOfWork(
         DatabaseContext databaseContext,
         IMediaRepository mediaRepository,
-        ISubscriberRepository subscriberRepository
+        ISubscriberRepository subscriberRepository,
+        IWebsiteRepository websiteRepository
     )
     {
         _databaseContext = databaseContext;
         MediaRepository = mediaRepository;
         SubscriberRepository = subscriberRepository;
+        WebsiteRepository = websiteRepository;
     }
     
     public async Task<int> SaveAsync()

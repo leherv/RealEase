@@ -64,4 +64,9 @@ public record Result<T>
             ? Success(value)
             : Failure(error);
     }
+    
+    public static implicit operator Result<T>(Error error)
+    {
+        return Failure(error);
+    }
 }

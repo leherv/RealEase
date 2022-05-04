@@ -16,13 +16,13 @@ public sealed class UnsubscribeMediaHandler : ICommandHandler<UnsubscribeMediaCo
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(UnsubscribeMediaCommand subscribeMediaCommand, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UnsubscribeMediaCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
     {
-        var (externalIdentifier, mediaName) = subscribeMediaCommand;
+        var (externalIdentifier, mediaName) = scrapeNewReleasesCommand;
         
         var subscriber = await _unitOfWork.SubscriberRepository.GetByExternalId(externalIdentifier);
         if (subscriber == null)
-            return Result.Failure(Errors.General.NotFound(nameof(Domain.Model.Subscriber))); 
+            return Errors.General.NotFound(nameof(Domain.Model.Subscriber)); 
                 
         var media = await _unitOfWork.MediaRepository.GetByName(mediaName);
         if(media == null)

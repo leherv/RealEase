@@ -7,4 +7,6 @@ public interface ISubscriberRepository
     Task<Subscriber?> GetByExternalId(string externalId);
 
     Task AddSubscriber(Subscriber subscriber);
+
+    Task<IReadOnlyCollection<Subscriber>> GetAllSubscribersByMediaId(Guid mediaId);
 }

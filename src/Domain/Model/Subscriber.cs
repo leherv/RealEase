@@ -6,7 +6,7 @@ using Domain.Results;
 
 namespace Domain.Model;
 
-public class Subscriber : Entity
+public class Subscriber : AggregateRoot
 {
     public string ExternalIdentifier { get; }
 
@@ -19,9 +19,6 @@ public class Subscriber : Entity
 
     private Subscriber(Guid id, string externalIdentifier) : base(id)
     {
-        if (string.IsNullOrEmpty(externalIdentifier))
-            throw new ArgumentException($"{nameof(externalIdentifier)} must be set");
-
         ExternalIdentifier = externalIdentifier;
         _subscriptions = new List<Subscription>();
     }

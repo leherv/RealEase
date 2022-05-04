@@ -11,4 +11,9 @@ public class ApplicationLogger : IApplicationLogger
     {
         _logger = logger;
     }
+
+    public void LogWarning(string message)
+    {
+        _logger.LogWarning(message);
+    }
 }

@@ -4,7 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Test.Fixture.Shared;
 
-public abstract class TheApplication : IDisposable
+public abstract class TheApplication
 {
     protected readonly IntegrationTestWebApplicationFactory Factory;
     
@@ -29,10 +29,5 @@ public abstract class TheApplication : IDisposable
     {
         using var scope = GetServiceScopeFactory().CreateScope();
         await action(scope.ServiceProvider);
-    }
-    
-    public void Dispose()
-    {
-        Factory.Dispose();
     }
 }

@@ -11,14 +11,15 @@
       <ProjectReference Include="..\Infrastructure.DB\Infrastructure.DB.csproj" />
       <ProjectReference Include="..\Infrastructure.Discord\Infrastructure.Discord.csproj" />
       <ProjectReference Include="..\Infrastructure.General\Infrastructure.General.csproj" />
+      <ProjectReference Include="..\Infrastructure.Scraper\Infrastructure.Scraper.csproj" />
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="10.0.1" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
+        <PackageReference Include="Quartz.Extensions.Hosting" Version="3.4.0" />
     </ItemGroup>
 
 </Project>

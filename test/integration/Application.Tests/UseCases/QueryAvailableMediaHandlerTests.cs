@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using Application.Test.Fixture;
-using Application.UseCases.Media;
+using Application.UseCases.Media.QueryAvailableMedia;
 using FluentAssertions;
 using Xunit;
 
