@@ -69,8 +69,8 @@ public class PublicModule : ModuleBase<SocketCommandContext>
                 new MediaSubscriptionsQuery(Context.User.Id.ToString()));
 
         var message = mediaSubscriptions.SubscribedToMediaNames.Any()
-            ? "No subscriptions yet"
-            : $"Subscribed To:\n{string.Join("\n", mediaSubscriptions.SubscribedToMediaNames)}";
+            ? $"Subscribed To:\n{string.Join("\n", mediaSubscriptions.SubscribedToMediaNames)}"
+            : "No subscriptions yet";
 
         await Context.Message.Channel.SendMessageAsync(message);
     }
