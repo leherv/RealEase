@@ -18,8 +18,8 @@ public class PublicModule : ModuleBase<SocketCommandContext>
     private const string HelpText =
         "Welcome to Vik Release Notifier (VRN)!\n" +
         "The following commands are available:\n" +
-        "!subscribe [mediaName]\n" +
-        "!unsubscribe [mediaName]\n" +
+        "!subscribe \"[mediaName]\"\n" +
+        "!unsubscribe \"[mediaName]\"\n" +
         "!listAvailable\n" +
         "!listSubscribed\n" +
         "!listWebsites\n" +
