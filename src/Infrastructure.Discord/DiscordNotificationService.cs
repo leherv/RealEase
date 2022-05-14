@@ -60,7 +60,7 @@ public class DiscordNotificationService : INotificationService
     
     private Result<SocketUser> GetUser(string subscriberExternalIdentifier)
     {
-        if (ulong.TryParse(subscriberExternalIdentifier, out var userId))
+        if (!ulong.TryParse(subscriberExternalIdentifier, out var userId))
             return Errors.Notification.MalformedExternalIdentifierError(subscriberExternalIdentifier);
         var socketUser = _client.GetUser(userId);
 
