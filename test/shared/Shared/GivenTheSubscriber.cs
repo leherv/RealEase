@@ -27,7 +27,7 @@ public class GivenTheSubscriber
         WithSubscriptions = Create(SubscriberId1, SubscriberExternalId1).Value;
         foreach (var media in SubscribedToMedia)
         {
-            WithSubscriptions.Subscribe(media);
+            WithSubscriptions.Subscribe(media.Id);
         }
 
         WithoutSubscriptions = Create(SubscriberId2, SubscriberExternalId2).Value;

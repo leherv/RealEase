@@ -12,10 +12,10 @@ public class SubscriberTests
         var subscriber = GivenTheSubscriber.Create().Value;
         var media = GivenTheMedia.Create().Value;
 
-        subscriber.Subscribe(media);
+        subscriber.Subscribe(media.Id);
 
-        subscriber.SubscribedToMedia.Should().HaveCount(1);
-        subscriber.SubscribedToMedia.Should().Contain(media);
+        subscriber.SubscribedToMediaIds.Should().HaveCount(1);
+        subscriber.SubscribedToMediaIds.Should().Contain(media.Id);
     }
 
     [Fact]
@@ -23,12 +23,12 @@ public class SubscriberTests
     {
         var subscriber = GivenTheSubscriber.Create().Value;
         var media = GivenTheMedia.Create().Value;
-        subscriber.Subscribe(media);
+        subscriber.Subscribe(media.Id);
         
-        subscriber.Subscribe(media);
+        subscriber.Subscribe(media.Id);
 
-        subscriber.SubscribedToMedia.Should().HaveCount(1);
-        subscriber.SubscribedToMedia.Should().Contain(media);
+        subscriber.SubscribedToMediaIds.Should().HaveCount(1);
+        subscriber.SubscribedToMediaIds.Should().Contain(media.Id);
     }
 
     [Fact]
@@ -36,13 +36,13 @@ public class SubscriberTests
     {
         var subscriber = GivenTheSubscriber.Create().Value;
         var media = GivenTheMedia.Create().Value;
-        subscriber.Subscribe(media);
+        subscriber.Subscribe(media.Id);
 
-        var result = subscriber.Unsubscribe(media);
+        var result = subscriber.Unsubscribe(media.Id);
 
         result.IsSuccess.Should().BeTrue();
-        subscriber.SubscribedToMedia.Should().NotContain(media);
-        subscriber.SubscribedToMedia.Should().BeEmpty();
+        subscriber.SubscribedToMediaIds.Should().NotContain(media.Id);
+        subscriber.SubscribedToMediaIds.Should().BeEmpty();
     }
     
     [Fact]
@@ -51,11 +51,11 @@ public class SubscriberTests
         var subscriber = GivenTheSubscriber.Create().Value;
         var media = GivenTheMedia.Create().Value;
 
-        var result = subscriber.Unsubscribe(media);
+        var result = subscriber.Unsubscribe(media.Id);
 
         result.IsSuccess.Should().BeTrue();
-        subscriber.SubscribedToMedia.Should().NotContain(media);
-        subscriber.SubscribedToMedia.Should().BeEmpty();
+        subscriber.SubscribedToMediaIds.Should().NotContain(media.Id);
+        subscriber.SubscribedToMediaIds.Should().BeEmpty();
     }
     
     [Fact]
@@ -63,13 +63,13 @@ public class SubscriberTests
     {
         var subscriber = GivenTheSubscriber.Create().Value;
         var media = GivenTheMedia.Create().Value;
-        subscriber.Subscribe(media);
+        subscriber.Subscribe(media.Id);
         var otherMedia = GivenTheMedia.Create(mediaName: "Other media").Value;
 
-        var result = subscriber.Unsubscribe(otherMedia);
+        var result = subscriber.Unsubscribe(otherMedia.Id);
 
         result.IsSuccess.Should().BeTrue();
-        subscriber.SubscribedToMedia.Should().NotContain(otherMedia);
-        subscriber.SubscribedToMedia.Should().HaveCount(1);
+        subscriber.SubscribedToMediaIds.Should().NotContain(otherMedia.Id);
+        subscriber.SubscribedToMediaIds.Should().HaveCount(1);
     }
 }

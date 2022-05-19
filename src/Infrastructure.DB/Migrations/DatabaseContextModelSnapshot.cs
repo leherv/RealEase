@@ -41,7 +41,7 @@ namespace Infrastructure.DB.Migrations
 
                     b.HasIndex("ScrapeTargetId");
 
-                    b.ToTable("Media");
+                    b.ToTable("Media", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.ScrapeTarget", b =>
@@ -60,7 +60,7 @@ namespace Infrastructure.DB.Migrations
 
                     b.HasIndex("WebsiteId");
 
-                    b.ToTable("ScrapeTarget");
+                    b.ToTable("ScrapeTarget", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Subscriber", b =>
@@ -77,7 +77,7 @@ namespace Infrastructure.DB.Migrations
                     b.HasIndex("ExternalIdentifier")
                         .IsUnique();
 
-                    b.ToTable("Subscriber");
+                    b.ToTable("Subscriber", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Subscription", b =>
@@ -98,7 +98,7 @@ namespace Infrastructure.DB.Migrations
                     b.HasIndex("SubscriberId", "MediaId")
                         .IsUnique();
 
-                    b.ToTable("Subscription");
+                    b.ToTable("Subscription", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Website", b =>
@@ -116,7 +116,7 @@ namespace Infrastructure.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Website");
+                    b.ToTable("Website", (string)null);
                 });
 
             modelBuilder.Entity("Domain.Model.Media", b =>
@@ -125,7 +125,7 @@ namespace Infrastructure.DB.Migrations
                         .WithMany()
                         .HasForeignKey("ScrapeTargetId");
 
-                    b.OwnsOne("Domain.Model.Release", "NewestRelease", b1 =>
+                    b.OwnsOne("Domain.Model.Media.NewestRelease#Domain.Model.Release", "NewestRelease", b1 =>
                         {
                             b1.Property<Guid>("MediaId")
                                 .HasColumnType("uuid");
@@ -136,12 +136,12 @@ namespace Infrastructure.DB.Migrations
 
                             b1.HasKey("MediaId");
 
-                            b1.ToTable("Media");
+                            b1.ToTable("Media", (string)null);
 
                             b1.WithOwner()
                                 .HasForeignKey("MediaId");
 
-                            b1.OwnsOne("Domain.Model.ReleaseNumber", "ReleaseNumber", b2 =>
+                            b1.OwnsOne("Domain.Model.Media.NewestRelease#Domain.Model.Release.ReleaseNumber#Domain.Model.ReleaseNumber", "ReleaseNumber", b2 =>
                                 {
                                     b2.Property<Guid>("ReleaseMediaId")
                                         .HasColumnType("uuid");
@@ -154,7 +154,7 @@ namespace Infrastructure.DB.Migrations
 
                                     b2.HasKey("ReleaseMediaId");
 
-                                    b2.ToTable("Media");
+                                    b2.ToTable("Media", (string)null);
 
                                     b2.WithOwner()
                                         .HasForeignKey("ReleaseMediaId");
@@ -171,11 +171,13 @@ namespace Infrastructure.DB.Migrations
 
             modelBuilder.Entity("Domain.Model.ScrapeTarget", b =>
                 {
-                    b.HasOne("Domain.Model.Website", null)
+                    b.HasOne("Domain.Model.Website", "Website")
                         .WithMany()
                         .HasForeignKey("WebsiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Website");
                 });
 
             modelBuilder.Entity("Domain.Model.Subscription", b =>

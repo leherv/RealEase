@@ -28,7 +28,7 @@ public sealed class UnsubscribeMediaHandler : ICommandHandler<UnsubscribeMediaCo
         if(media == null)
             return Result.Failure(Errors.General.NotFound(nameof(Domain.Model.Media))); 
 
-        var result = subscriber.Unsubscribe(media);
+        var result = subscriber.Unsubscribe(media.Id);
         if (result.IsFailure)
             return result;
 

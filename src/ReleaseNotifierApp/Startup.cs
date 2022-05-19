@@ -83,7 +83,7 @@ public class Startup
         // Repositories(Read)
         services
             .AddScoped<IMediaReadRepository, MediaReadRepository>()
-            .AddScoped<ISubscriberReadRepository, SubscriberReadRepository>()
+            .AddScoped<IMediaSubscriptionsReadRepository, MediaSubscriptionsReadRepository>()
             .AddScoped<IWebsiteReadRepository, WebsiteReadRepository>();
         
         // Scraper

@@ -8,7 +8,6 @@ namespace Domain.Model;
 // then make this a record
 public class ScrapeTarget : Entity
 {
-    // TODO: make only id so other aggregate is not directly contained but only referenced
     public Guid WebsiteId { get; }
     public string RelativeUrl { get; }
 

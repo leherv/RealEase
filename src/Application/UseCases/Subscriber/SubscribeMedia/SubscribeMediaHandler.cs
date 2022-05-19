@@ -17,24 +17,23 @@ public sealed class SubscribeMediaHandler : ICommandHandler<SubscribeMediaComman
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(SubscribeMediaCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
+    public async Task<Result> Handle(SubscribeMediaCommand scrapeNewReleasesCommand,
+        CancellationToken cancellationToken)
     {
         var (externalIdentifier, mediaName) = scrapeNewReleasesCommand;
 
-        var mediaResult = await GetMedia(mediaName)
-            .ToResult(Errors.General.NotFound(nameof(Domain.Model.Media)));
-
-        if (mediaResult.IsFailure)
-            return mediaResult;
-
+        var media = await GetMedia(mediaName);
+        if (media == null)
+            return Errors.General.NotFound(nameof(Domain.Model.Media));
+        
         var subscriberResult = await GetOrCreateSubscriber(externalIdentifier);
         if (subscriberResult.IsFailure)
             return subscriberResult;
-        
-        subscriberResult.Value.Subscribe(mediaResult.Value);
-        
+
+        subscriberResult.Value.Subscribe(media.Id);
+
         await _unitOfWork.SaveAsync();
-        
+
         return Result.Success();
     }
 

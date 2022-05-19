@@ -59,7 +59,7 @@ public class DatabaseContext : DbContext
 
         var subscriberEntity = modelBuilder.Entity<Subscriber>();
         subscriberEntity.Property(subscriber => subscriber.ExternalIdentifier);
-        subscriberEntity.Ignore(subscriber => subscriber.SubscribedToMedia);
+        subscriberEntity.Ignore(subscriber => subscriber.SubscribedToMediaIds);
         subscriberEntity
             .HasIndex(subscriber => subscriber.ExternalIdentifier)
             .IsUnique();
@@ -76,8 +76,9 @@ public class DatabaseContext : DbContext
         subscriptionEntity.HasIndex(subscription => new { subscription.SubscriberId, subscription.MediaId })
             .IsUnique();
         subscriptionEntity
-            .HasOne(subscription => subscription.Media)
+            .HasOne<Media>()
             .WithMany()
+            .HasForeignKey(media => media.MediaId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 

@@ -37,8 +37,8 @@ public static class Errors
     public static class Subscriber
     {
         public const string UnsubscribeFailedErrorCode = "unsubsribe.failed";
-        public static Error UnsubscribeFailedError(string mediaName)
-            => new(UnsubscribeFailedErrorCode, $"Unsubscribing from '{mediaName}' failed.");
+        public static Error UnsubscribeFailedError(Guid mediaId)
+            => new(UnsubscribeFailedErrorCode, $"Unsubscribing from media with id'{mediaId}' failed.");
     }
 
     public static class Media
