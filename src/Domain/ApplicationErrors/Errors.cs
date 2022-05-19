@@ -54,6 +54,10 @@ public static class Errors
         public const string MediaWithNameExistsErrorCode = "media.with.name.exists";
         public static Error MediaWithNameExistsError(string mediaName) =>
             new Error(MediaWithNameExistsErrorCode,$"Media with name {mediaName} already exists.");
+        
+        public const string ScrapeTargetExistsErrorCode = "scrapeTarget.exists";
+        public static Error ScrapeTargetExistsError(string mediaName) =>
+            new Error(ScrapeTargetExistsErrorCode,$"ScrapeTarget already exists for media with name {mediaName}.");
     }
 
     public static class Scraper

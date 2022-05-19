@@ -37,10 +37,11 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
             if (media == null)
                 return Errors.General.NotFound(nameof(Domain.Model.Media));
             
-            if(media.ScrapeTarget == null)
+            if(!media.HasScrapeTargets)
                 continue;
 
-            var website = await _unitOfWork.WebsiteRepository.GetById(media.ScrapeTarget.WebsiteId);
+            var scrapeTarget = media.ScrapeTargets.First();
+            var website = await _unitOfWork.WebsiteRepository.GetById(scrapeTarget.WebsiteId);
             if(website == null)
                 continue;
 
@@ -48,7 +49,7 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
                 media.Name,
                 website.Name,
                 website.Url,
-                media.ScrapeTarget.RelativeUrl
+                scrapeTarget.RelativeUrl
             );
             var scrapeResult = await _scraper.Scrape(scrapeInstruction);
 

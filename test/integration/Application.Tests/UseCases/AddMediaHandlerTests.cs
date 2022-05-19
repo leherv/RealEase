@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Application.Ports.Scraper;
 using Application.Test.Fixture;
 using Application.UseCases.Media.AddMedia;
@@ -54,7 +55,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         var mediaToAdd = Given.The.Media.NotPersistedMedia;
         var addMediaCommand = new AddMediaCommand(
             Given.The.Website.EarlyManga.Name,
-            mediaToAdd.ScrapeTarget.RelativeUrl
+            mediaToAdd.ScrapeTargets.First().RelativeUrl
         );
         
         var addMediaResult = await When.TheApplication.ReceivesCommand<AddMediaCommand, Result>(addMediaCommand);
@@ -78,7 +79,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
             earlyManga.Name,
-            mediaToAdd.ScrapeTarget.RelativeUrl
+            mediaToAdd.ScrapeTargets.First().RelativeUrl
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaToAdd.Name))
@@ -113,7 +114,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
             earlyManga.Name,
-            mediaToAdd.ScrapeTarget.RelativeUrl
+            mediaToAdd.ScrapeTargets.First().RelativeUrl
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaToAdd.Name))
@@ -139,9 +140,11 @@ public class AddMediaHandlerTests : IntegrationTestBase
             await Then.TheDatabase.Query(unitOfWork => unitOfWork.MediaRepository.GetByName(mediaToAdd.Name));
         media.Should().NotBeNull();
         media.Name.Should().Be(mediaToAdd.Name);
-        media.ScrapeTarget.Should().NotBeNull();
-        media.ScrapeTarget.WebsiteId.Should().Be(earlyManga.Id);
-        media.ScrapeTarget.RelativeUrl.Should().Be(mediaToAdd.ScrapeTarget.RelativeUrl);
+        media.ScrapeTargets.Should().NotBeNull();
+        media.ScrapeTargets.Should().HaveCount(1);
+        var scrapeTarget = media.ScrapeTargets.First();
+        scrapeTarget.WebsiteId.Should().Be(earlyManga.Id);
+        scrapeTarget.RelativeUrl.Should().Be(mediaToAdd.ScrapeTargets.First().RelativeUrl);
     }
     
     [Fact]
@@ -153,7 +156,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
             earlyManga.Name,
-            alreadyPersistedMedia.ScrapeTarget.RelativeUrl
+            alreadyPersistedMedia.ScrapeTargets.First().RelativeUrl
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(alreadyPersistedMedia.Name))
@@ -187,7 +190,8 @@ public class AddMediaHandlerTests : IntegrationTestBase
         await Given.TheDatabase.IsSeeded();
         var alreadyPersistedMedia = Given.The.Media.WithoutSubscriberWithoutReleases;
         var earlyManga = Given.The.Website.EarlyManga;
-        var deviatingRelativeUrl = alreadyPersistedMedia.ScrapeTarget.RelativeUrl + "/differs";
+        var scrapeTarget = alreadyPersistedMedia.ScrapeTargets.First();
+        var deviatingRelativeUrl = scrapeTarget.RelativeUrl + "/differs";
         var addMediaCommand = new AddMediaCommand(
             earlyManga.Name,
             deviatingRelativeUrl

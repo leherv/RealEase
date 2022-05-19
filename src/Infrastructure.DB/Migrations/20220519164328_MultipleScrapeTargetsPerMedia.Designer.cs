@@ -3,6 +3,7 @@ using System;
 using Infrastructure.DB;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.DB.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20220519164328_MultipleScrapeTargetsPerMedia")]
+    partial class MultipleScrapeTargetsPerMedia
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,7 +38,7 @@ namespace Infrastructure.DB.Migrations
                     b.HasIndex("Name")
                         .IsUnique();
 
-                    b.ToTable("Media", (string)null);
+                    b.ToTable("Media");
                 });
 
             modelBuilder.Entity("Domain.Model.ScrapeTarget", b =>
@@ -60,7 +62,7 @@ namespace Infrastructure.DB.Migrations
 
                     b.HasIndex("WebsiteId");
 
-                    b.ToTable("ScrapeTarget", (string)null);
+                    b.ToTable("ScrapeTarget");
                 });
 
             modelBuilder.Entity("Domain.Model.Subscriber", b =>
@@ -77,7 +79,7 @@ namespace Infrastructure.DB.Migrations
                     b.HasIndex("ExternalIdentifier")
                         .IsUnique();
 
-                    b.ToTable("Subscriber", (string)null);
+                    b.ToTable("Subscriber");
                 });
 
             modelBuilder.Entity("Domain.Model.Subscription", b =>
@@ -98,7 +100,7 @@ namespace Infrastructure.DB.Migrations
                     b.HasIndex("SubscriberId", "MediaId")
                         .IsUnique();
 
-                    b.ToTable("Subscription", (string)null);
+                    b.ToTable("Subscription");
                 });
 
             modelBuilder.Entity("Domain.Model.Website", b =>
@@ -116,12 +118,12 @@ namespace Infrastructure.DB.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Website", (string)null);
+                    b.ToTable("Website");
                 });
 
             modelBuilder.Entity("Domain.Model.Media", b =>
                 {
-                    b.OwnsOne("Domain.Model.Media.NewestRelease#Domain.Model.Release", "NewestRelease", b1 =>
+                    b.OwnsOne("Domain.Model.Release", "NewestRelease", b1 =>
                         {
                             b1.Property<Guid>("MediaId")
                                 .HasColumnType("uuid");
@@ -132,12 +134,12 @@ namespace Infrastructure.DB.Migrations
 
                             b1.HasKey("MediaId");
 
-                            b1.ToTable("Media", (string)null);
+                            b1.ToTable("Media");
 
                             b1.WithOwner()
                                 .HasForeignKey("MediaId");
 
-                            b1.OwnsOne("Domain.Model.Media.NewestRelease#Domain.Model.Release.ReleaseNumber#Domain.Model.ReleaseNumber", "ReleaseNumber", b2 =>
+                            b1.OwnsOne("Domain.Model.ReleaseNumber", "ReleaseNumber", b2 =>
                                 {
                                     b2.Property<Guid>("ReleaseMediaId")
                                         .HasColumnType("uuid");
@@ -150,7 +152,7 @@ namespace Infrastructure.DB.Migrations
 
                                     b2.HasKey("ReleaseMediaId");
 
-                                    b2.ToTable("Media", (string)null);
+                                    b2.ToTable("Media");
 
                                     b2.WithOwner()
                                         .HasForeignKey("ReleaseMediaId");

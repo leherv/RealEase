@@ -18,26 +18,26 @@ public class GivenTheMedia
     {
         WithSubscriberWithoutRelease = Create(
             Guid.NewGuid(),
-            "Hunter x Hunter",
-            givenTheScrapeTarget.HunterXHunterEarlyManga
+            "Hunter x Hunter"
         ).Value;
-        
+        WithSubscriberWithoutRelease.AddScrapeTarget(givenTheScrapeTarget.HunterXHunterEarlyManga);
+
         WithSubscriberWithReleases = Create(
             Guid.NewGuid(),
-            "Martial Peak",
-            givenTheScrapeTarget.MartialPeakEarlyManga
+            "Martial Peak"
         ).Value;
+        WithSubscriberWithReleases.AddScrapeTarget(givenTheScrapeTarget.MartialPeakEarlyManga);
         CurrentRelease = GivenTheRelease.Create(
             ReleaseNumber.Create(3, 0).Value, "https://www.thisIsATest.com/chapter/3"
         ).Value;
         WithSubscriberWithReleases.PublishNewRelease(CurrentRelease);
-        
-        WithoutSubscriberWithoutReleases =  Create(
+
+        WithoutSubscriberWithoutReleases = Create(
             Guid.NewGuid(),
-            "Solo Leveling",
-            givenTheScrapeTarget.SoloLevelingEarlyManga
+            "Solo Leveling"
         ).Value;
-        
+        WithoutSubscriberWithoutReleases.AddScrapeTarget(givenTheScrapeTarget.SoloLevelingEarlyManga);
+
         WithoutSubscribersWithoutReleasesWithoutScrapeTarget = Create(
             Guid.NewGuid(),
             "Naruto"
@@ -58,20 +58,20 @@ public class GivenTheMedia
             WithoutSubscriberWithoutReleases
         };
 
-        var notPersistedScrapeTarget = GivenTheScrapeTarget.Create(Guid.NewGuid(), givenTheWebsite.EarlyManga, "/manga/tower-of-god").Value;
-        NotPersistedMedia = Create(Guid.NewGuid(), "Tower of God", notPersistedScrapeTarget).Value;
+        var notPersistedScrapeTarget = GivenTheScrapeTarget
+            .Create(Guid.NewGuid(), givenTheWebsite.EarlyManga, "/manga/tower-of-god").Value;
+        NotPersistedMedia = Create(Guid.NewGuid(), "Tower of God").Value;
+        NotPersistedMedia.AddScrapeTarget(notPersistedScrapeTarget);
     }
 
     public static Result<Media> Create(
         Guid? id = null,
-        string? mediaName = null,
-        ScrapeTarget? scrapeTarget = null
+        string? mediaName = null
     )
     {
         return Media.Create(
             id ?? Guid.NewGuid(),
-            mediaName ?? "Hunter x Hunter",
-            scrapeTarget
+            mediaName ?? "Hunter x Hunter"
         );
     }
 }

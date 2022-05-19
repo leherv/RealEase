@@ -88,11 +88,15 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
         if (scrapeTarget.IsFailure)
             return scrapeTarget.Error;
         
-        var media = Domain.Model.Media.Create(
+        var mediaResult = Domain.Model.Media.Create(
             Guid.NewGuid(),
-            mediaName,
-            scrapeTarget.Value
+            mediaName
         );
-        return media;
+        if (mediaResult.IsFailure)
+            return mediaResult;
+        
+        mediaResult.Value.AddScrapeTarget(scrapeTarget.Value);
+        
+        return mediaResult;
     }
 }

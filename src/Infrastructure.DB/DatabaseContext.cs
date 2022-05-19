@@ -11,6 +11,9 @@ public class DatabaseContext : DbContext
     public DbSet<Media> MediaDbSet { get; private set; } = null!;
     public IQueryable<Media> Media => MediaDbSet.AsQueryable();
     
+    public DbSet<ScrapeTarget> ScrapeTargetDbSet { get; private set; } = null!;
+    public IQueryable<ScrapeTarget> ScrapeTargets => ScrapeTargetDbSet.AsQueryable();
+    
     public DbSet<Subscriber> SubscriberDbSet { get; private set; } = null!;
     public IQueryable<Subscriber> Subscribers => SubscriberDbSet.AsQueryable();
     
@@ -52,7 +55,11 @@ public class DatabaseContext : DbContext
                 releaseNumberEntity.Property(releaseNumber => releaseNumber.Minor);
             });
         });
-        mediaEntity.HasOne(media => media.ScrapeTarget);
+        mediaEntity
+            .HasMany(media => media.ScrapeTargets)
+            .WithOne()
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
         mediaEntity
             .HasIndex(media => media.Name)
             .IsUnique();

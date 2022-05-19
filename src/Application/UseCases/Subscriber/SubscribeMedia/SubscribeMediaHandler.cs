@@ -2,7 +2,6 @@
 using Application.UseCases.Base;
 using Domain.ApplicationErrors;
 using Domain.Results;
-using Domain.Results.Extensions;
 
 namespace Application.UseCases.Subscriber.SubscribeMedia;
 

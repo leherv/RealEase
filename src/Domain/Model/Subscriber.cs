@@ -12,8 +12,6 @@ public class Subscriber : AggregateRoot
 
     private List<Subscription> _subscriptions;
     public IReadOnlyCollection<Subscription> Subscriptions => _subscriptions;
-
-    // TODO: make only id so other aggregate is not directly contained but only referenced
     public IReadOnlyCollection<Guid> SubscribedToMediaIds => _subscriptions
         .Select(subscription => subscription.MediaId)
         .ToList();

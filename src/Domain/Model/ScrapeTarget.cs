@@ -5,7 +5,6 @@ using Domain.Results;
 
 namespace Domain.Model;
 
-// then make this a record
 public class ScrapeTarget : Entity
 {
     public Guid WebsiteId { get; }
