@@ -26,20 +26,20 @@ public class DiscordNotificationService : INotificationService
     {
         var (subscriberExternalIdentifier, mediaName, linkToReleasedResource) = releasePublishedNotification;
         
-        var socketUserResult = GetUser(subscriberExternalIdentifier);
-        if (socketUserResult.IsFailure)
-            return socketUserResult;
+        var discordUserResult = await GetDiscordUser(subscriberExternalIdentifier);
+        if (discordUserResult.IsFailure)
+            return discordUserResult;
         
-        var socketUser = socketUserResult.Value;
+        var discordUser = discordUserResult.Value;
         var message = BuildReleasePublishedMessage(
             mediaName,
             linkToReleasedResource
         );
         
-        return await NotifyUser(socketUser, message);
+        return await NotifyDiscordUser(discordUser, message);
     }
 
-    private async Task<Result> NotifyUser(SocketUser socketUser, string message)
+    private async Task<Result> NotifyDiscordUser(IUser socketUser, string message)
     {
         try
         {
@@ -58,15 +58,15 @@ public class DiscordNotificationService : INotificationService
         return $"New release for {mediaName}! Check it out at: {linkToReleasedResource}";
     }
     
-    private Result<SocketUser> GetUser(string subscriberExternalIdentifier)
+    private async Task<Result<IUser>> GetDiscordUser(string subscriberExternalIdentifier)
     {
         if (!ulong.TryParse(subscriberExternalIdentifier, out var userId))
             return Errors.Notification.MalformedExternalIdentifierError(subscriberExternalIdentifier);
-        var socketUser = _client.GetUser(userId);
+        var user = await _client.GetUserAsync(userId);
 
-        return socketUser == null
+        return user == null
             ? Errors.Notification.NoSubscriberForExternalIdentifierError(subscriberExternalIdentifier)
-            : socketUser;
+            : Result<IUser>.Success(user);
     }
 
    

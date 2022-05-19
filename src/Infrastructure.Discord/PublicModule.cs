@@ -54,7 +54,7 @@ public class PublicModule : ModuleBase<SocketCommandContext>
 
         var message = availableMedia.MediaNames.Any()
             ? "Available Media: \n" +
-              $"{string.Join("\n", availableMedia.MediaNames)}"
+              $"{string.Join("\n", availableMedia.MediaNames.OrderBy(mediaName => mediaName))}"
             : "No media available.";
 
         await Context.Message.Channel.SendMessageAsync(message);
@@ -69,7 +69,7 @@ public class PublicModule : ModuleBase<SocketCommandContext>
                 new MediaSubscriptionsQuery(Context.User.Id.ToString()));
 
         var message = mediaSubscriptions.SubscribedToMediaNames.Any()
-            ? $"Subscribed To:\n{string.Join("\n", mediaSubscriptions.SubscribedToMediaNames)}"
+            ? $"Subscribed To:\n{string.Join("\n", mediaSubscriptions.SubscribedToMediaNames.OrderBy(mediaName => mediaName))}"
             : "No subscriptions yet";
 
         await Context.Message.Channel.SendMessageAsync(message);
@@ -120,7 +120,9 @@ public class PublicModule : ModuleBase<SocketCommandContext>
 
         var message = availableWebsites.Websites.Any()
             ? "Available Websites:" +
-              availableWebsites.Websites.Aggregate("", (current, availableWebsite) => current + $"\n{availableWebsite.Name} Base URL: {availableWebsite.Url}")
+              availableWebsites.Websites
+                  .OrderBy(availableWebsite => availableWebsite.Name)
+                  .Aggregate("", (current, availableWebsite) => current + $"\n{availableWebsite.Name} Base URL: {availableWebsite.Url}")
             : "\nNo websites available.";
 
         await Context.Message.Channel.SendMessageAsync(message);
