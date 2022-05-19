@@ -39,11 +39,15 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
             
             if(media.ScrapeTarget == null)
                 continue;
-            
+
+            var website = await _unitOfWork.WebsiteRepository.GetById(media.ScrapeTarget.WebsiteId);
+            if(website == null)
+                continue;
+
             var scrapeInstruction = new ScrapeInstruction(
                 media.Name,
-                media.ScrapeTarget.Website.Name,
-                media.ScrapeTarget.Website.Url,
+                website.Name,
+                website.Url,
                 media.ScrapeTarget.RelativeUrl
             );
             var scrapeResult = await _scraper.Scrape(scrapeInstruction);

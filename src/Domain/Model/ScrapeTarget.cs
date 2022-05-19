@@ -5,9 +5,11 @@ using Domain.Results;
 
 namespace Domain.Model;
 
+// then make this a record
 public class ScrapeTarget : Entity
 {
-    public Website Website { get; }
+    // TODO: make only id so other aggregate is not directly contained but only referenced
+    public Guid WebsiteId { get; }
     public string RelativeUrl { get; }
 
     // only for ef core
@@ -15,7 +17,7 @@ public class ScrapeTarget : Entity
     
     private ScrapeTarget(Guid id, Website website, string relativeUrl) : base(id)
     {
-        Website = website;
+        WebsiteId = website.Id;
         RelativeUrl = relativeUrl;
     }
     
@@ -25,6 +27,4 @@ public class ScrapeTarget : Entity
             .NotNullOrWhiteSpace(relativeUrl, nameof(relativeUrl))
             .ValidateAndCreate(() => new ScrapeTarget(id, website, relativeUrl));
     }
-
-    public string AbsoluteUrl => Path.Combine(Website.Url, RelativeUrl);
 }

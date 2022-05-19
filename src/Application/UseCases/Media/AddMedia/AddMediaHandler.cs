@@ -11,7 +11,7 @@ public record AddMediaCommand(string WebsiteName, string RelativeUrl);
 
 public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
 {
-    private readonly IMediaNameScraper _mediaNameMediaNameScraper;
+    private readonly IMediaNameScraper _mediaNameScraper;
     private readonly IScraper _scraper;
     private readonly IUnitOfWork _unitOfWork;
 
@@ -21,7 +21,7 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
         IUnitOfWork unitOfWork
     )
     {
-        _mediaNameMediaNameScraper = mediaNameScraper;
+        _mediaNameScraper = mediaNameScraper;
         _scraper = scraper;
         _unitOfWork = unitOfWork;
     }
@@ -43,7 +43,7 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
             website.Url,
             relativeUrl
         );
-        var scrapeMediaNameResult = await _mediaNameMediaNameScraper.ScrapeMediaName(scrapeMediaNameInstruction);
+        var scrapeMediaNameResult = await _mediaNameScraper.ScrapeMediaName(scrapeMediaNameInstruction);
         if (scrapeMediaNameResult.IsFailure)
             return scrapeMediaNameResult.Error;
         media = await _unitOfWork.MediaRepository.GetByName(scrapeMediaNameResult.Value.MediaName);

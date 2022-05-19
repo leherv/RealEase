@@ -19,4 +19,11 @@ public class WebsiteRepository : IWebsiteRepository
             .Where(website => website.Name.ToLower() == websiteName.ToLower())
             .FirstOrDefaultAsync();
     }
+
+    public async Task<Website?> GetById(Guid id)
+    {
+        return await _databaseContext.Websites
+            .Where(website => website.Id == id)
+            .FirstOrDefaultAsync();
+    }
 }

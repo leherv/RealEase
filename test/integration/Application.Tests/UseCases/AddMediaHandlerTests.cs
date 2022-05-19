@@ -53,7 +53,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         );
         var mediaToAdd = Given.The.Media.NotPersistedMedia;
         var addMediaCommand = new AddMediaCommand(
-            mediaToAdd.ScrapeTarget.Website.Name,
+            Given.The.Website.EarlyManga.Name,
             mediaToAdd.ScrapeTarget.RelativeUrl
         );
         
@@ -75,15 +75,16 @@ public class AddMediaHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         var mediaToAdd = Given.The.Media.NotPersistedMedia;
+        var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
-            mediaToAdd.ScrapeTarget.Website.Name,
+            earlyManga.Name,
             mediaToAdd.ScrapeTarget.RelativeUrl
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaToAdd.Name))
         );
         var scrapedMediaRelease = new ScrapedMediaRelease(
-            $"{mediaToAdd.ScrapeTarget.Website.Url}tower-of-god/chapter-541",
+            $"{earlyManga.Url}tower-of-god/chapter-541",
             541,
             0
         );
@@ -109,15 +110,16 @@ public class AddMediaHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         var mediaToAdd = Given.The.Media.NotPersistedMedia;
+        var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
-            mediaToAdd.ScrapeTarget.Website.Name,
+            earlyManga.Name,
             mediaToAdd.ScrapeTarget.RelativeUrl
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaToAdd.Name))
         );
         var scrapedMediaRelease = new ScrapedMediaRelease(
-            $"{mediaToAdd.ScrapeTarget.Website.Url}tower-of-god/chapter-541",
+            $"{earlyManga.Url}tower-of-god/chapter-541",
             541,
             0
         );
@@ -138,7 +140,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         media.Should().NotBeNull();
         media.Name.Should().Be(mediaToAdd.Name);
         media.ScrapeTarget.Should().NotBeNull();
-        media.ScrapeTarget.Website.Name.Should().Be(mediaToAdd.ScrapeTarget.Website.Name);
+        media.ScrapeTarget.WebsiteId.Should().Be(earlyManga.Id);
         media.ScrapeTarget.RelativeUrl.Should().Be(mediaToAdd.ScrapeTarget.RelativeUrl);
     }
     
@@ -148,15 +150,16 @@ public class AddMediaHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         var alreadyPersistedMedia = Given.The.Media.WithoutSubscriberWithoutReleases;
+        var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
-            alreadyPersistedMedia.ScrapeTarget.Website.Name,
+            earlyManga.Name,
             alreadyPersistedMedia.ScrapeTarget.RelativeUrl
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(alreadyPersistedMedia.Name))
         );
         var scrapedMediaRelease = new ScrapedMediaRelease(
-            $"{alreadyPersistedMedia.ScrapeTarget.Website.Url}tower-of-god/chapter-541",
+            $"{earlyManga.Url}tower-of-god/chapter-541",
             541,
             0
         );
@@ -183,16 +186,17 @@ public class AddMediaHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         var alreadyPersistedMedia = Given.The.Media.WithoutSubscriberWithoutReleases;
+        var earlyManga = Given.The.Website.EarlyManga;
         var deviatingRelativeUrl = alreadyPersistedMedia.ScrapeTarget.RelativeUrl + "/differs";
         var addMediaCommand = new AddMediaCommand(
-            alreadyPersistedMedia.ScrapeTarget.Website.Name,
+            earlyManga.Name,
             deviatingRelativeUrl
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(alreadyPersistedMedia.Name))
         );
         var scrapedMediaRelease = new ScrapedMediaRelease(
-            $"{alreadyPersistedMedia.ScrapeTarget.Website.Url}tower-of-god/chapter-541",
+            $"{earlyManga.Url}tower-of-god/chapter-541",
             541,
             0
         );

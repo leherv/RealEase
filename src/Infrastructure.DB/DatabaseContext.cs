@@ -36,7 +36,10 @@ public class DatabaseContext : DbContext
         
         var scrapeTargetEntity = modelBuilder.Entity<ScrapeTarget>();
         scrapeTargetEntity.Property(scrapeTarget => scrapeTarget.RelativeUrl);
-        scrapeTargetEntity.HasOne(scrapeTarget => scrapeTarget.Website);
+        scrapeTargetEntity
+            .HasOne<Website>()
+            .WithMany()
+            .HasForeignKey(scrapeTarget => scrapeTarget.WebsiteId);
         
         var mediaEntity = modelBuilder.Entity<Media>();
         mediaEntity.Property(media => media.Name);

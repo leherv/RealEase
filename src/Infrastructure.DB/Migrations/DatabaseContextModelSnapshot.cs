@@ -171,13 +171,11 @@ namespace Infrastructure.DB.Migrations
 
             modelBuilder.Entity("Domain.Model.ScrapeTarget", b =>
                 {
-                    b.HasOne("Domain.Model.Website", "Website")
+                    b.HasOne("Domain.Model.Website", null)
                         .WithMany()
                         .HasForeignKey("WebsiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Website");
                 });
 
             modelBuilder.Entity("Domain.Model.Subscription", b =>

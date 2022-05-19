@@ -4,6 +4,7 @@ namespace Domain.Model;
 
 public class Subscription : Entity
 {
+    // TODO: make only id so other aggregate is not directly contained but only referenced
     public Media Media { get; }
     public Guid SubscriberId { get; }
     public Guid MediaId { get; }

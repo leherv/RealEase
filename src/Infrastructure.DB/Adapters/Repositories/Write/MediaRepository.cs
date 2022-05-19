@@ -17,7 +17,6 @@ public class MediaRepository : IMediaRepository
     {
         return await _databaseContext.Media
             .Include(media => media.ScrapeTarget!)
-                .ThenInclude(scrapeTarget => scrapeTarget.Website)
             .SingleOrDefaultAsync(media => media!.Name.ToLower() == mediaName.ToLower());
     }
 
@@ -25,8 +24,7 @@ public class MediaRepository : IMediaRepository
     {
         return await _databaseContext.Media
             .Include(media => media.ScrapeTarget!)
-            .ThenInclude(scrapeTarget => scrapeTarget.Website)
-            .SingleOrDefaultAsync(media => media.ScrapeTarget.Website.Id == website.Id &&
+            .SingleOrDefaultAsync(media => media.ScrapeTarget.WebsiteId == website.Id &&
                                            media.ScrapeTarget.RelativeUrl == relativeUrl);
     }
 
