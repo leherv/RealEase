@@ -7,6 +7,7 @@ using Application.Ports.Persistence.Write;
 using Application.Ports.Scraper;
 using Application.UseCases.Base;
 using Application.UseCases.Media.AddMedia;
+using Application.UseCases.Media.AddScrapeTarget;
 using Application.UseCases.Media.QueryAvailableMedia;
 using Application.UseCases.Media.QueryScrapeTargets;
 using Application.UseCases.Scrape;
@@ -73,7 +74,8 @@ public class Startup
             .AddScoped<ICommandHandler<SubscribeMediaCommand, Result>, SubscribeMediaHandler>()
             .AddScoped<ICommandHandler<UnsubscribeMediaCommand, Result>, UnsubscribeMediaHandler>()
             .AddScoped<ICommandHandler<ScrapeNewReleasesCommand, Result>, ScrapeNewReleasesHandler>()
-            .AddScoped<ICommandHandler<AddMediaCommand, Result>, AddMediaHandler>();
+            .AddScoped<ICommandHandler<AddMediaCommand, Result>, AddMediaHandler>()
+            .AddScoped<ICommandHandler<AddScrapeTargetCommand, Result>, AddScrapeTargetHandler>();
         
         // Repositories(Write)
         services

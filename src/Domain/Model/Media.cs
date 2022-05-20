@@ -34,7 +34,7 @@ public class Media : AggregateRoot
         if (NewestRelease == null || release.IsNewerThan(NewestRelease))
         {
             NewestRelease = release;
-            AddDomainEvent(new NewReleasePublished(Id, Name, release.Link));
+            AddDomainEvent(new NewReleasePublished(Id, Name, release.ResourceUrl.Value));
             return Result.Success();
         }
 
@@ -51,7 +51,7 @@ public class Media : AggregateRoot
         return Result.Success();
     }
 
-    private bool ScrapeTargetAlreadyConfigured(ScrapeTarget scrapeTarget)
+    public bool ScrapeTargetAlreadyConfigured(ScrapeTarget scrapeTarget)
     {
         return _scrapeTargets.Any(existingScrapeTarget =>
             existingScrapeTarget.RelativeUrl == scrapeTarget.RelativeUrl &&

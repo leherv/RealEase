@@ -35,10 +35,16 @@ public class DatabaseContext : DbContext
     {
         var websiteEntity = modelBuilder.Entity<Website>();
         websiteEntity.Property(website => website.Name);
-        websiteEntity.Property(website => website.Url);
+        websiteEntity.OwnsOne(website => website.Url, websiteUrlEntity =>
+        {
+            websiteUrlEntity.Property(websiteUrl => websiteUrl.Value);
+        });
         
         var scrapeTargetEntity = modelBuilder.Entity<ScrapeTarget>();
-        scrapeTargetEntity.Property(scrapeTarget => scrapeTarget.RelativeUrl);
+        scrapeTargetEntity.OwnsOne(scrapeTarget => scrapeTarget.RelativeUrl, relativeUrlEntity =>
+        {
+            relativeUrlEntity.Property(relativeUrl => relativeUrl.Value);
+        });
         scrapeTargetEntity
             .HasOne<Website>()
             .WithMany()
@@ -48,12 +54,16 @@ public class DatabaseContext : DbContext
         mediaEntity.Property(media => media.Name);
         mediaEntity.OwnsOne(media => media.NewestRelease, releaseEntity =>
         {
-            releaseEntity.Property(release => release.Link);
             releaseEntity.OwnsOne(release => release.ReleaseNumber, releaseNumberEntity =>
             {
                 releaseNumberEntity.Property(releaseNumber => releaseNumber.Major);
                 releaseNumberEntity.Property(releaseNumber => releaseNumber.Minor);
             });
+            releaseEntity.OwnsOne(release => release.ResourceUrl, resourceUrlEntity =>
+            {
+                resourceUrlEntity.Property(resourceUrl => resourceUrl.Value);
+            });
+            releaseEntity.Property(release => release.Created);
         });
         mediaEntity
             .HasMany(media => media.ScrapeTargets)

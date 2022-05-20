@@ -15,16 +15,19 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
     private readonly IUnitOfWork _unitOfWork;
     private readonly IScraper _scraper;
     private readonly IApplicationLogger _applicationLogger;
+    private readonly ITimeProvider _timeProvider;
 
     public ScrapeNewReleasesHandler(
         IScraper scraper,
         IUnitOfWork unitOfWork,
-        IApplicationLogger applicationLogger
+        IApplicationLogger applicationLogger,
+        ITimeProvider timeProvider
     )
     {
         _scraper = scraper;
         _unitOfWork = unitOfWork;
         _applicationLogger = applicationLogger;
+        _timeProvider = timeProvider;
     }
 
     public async Task<Result> Handle(ScrapeNewReleasesCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
@@ -48,8 +51,8 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
             var scrapeInstruction = new ScrapeInstruction(
                 media.Name,
                 website.Name,
-                website.Url,
-                scrapeTarget.RelativeUrl
+                website.Url.Value,
+                scrapeTarget.RelativeUrl.Value
             );
             var scrapeResult = await _scraper.Scrape(scrapeInstruction);
 
@@ -60,7 +63,7 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
             else
             {
                 var scrapedMediaRelease = scrapeResult.Value;
-                var releaseResult = scrapedMediaRelease.ToDomain();
+                var releaseResult = scrapedMediaRelease.ToDomain(_timeProvider.UtcNow);
                 if (releaseResult.IsSuccess)
                     media.PublishNewRelease(releaseResult.Value);
             }

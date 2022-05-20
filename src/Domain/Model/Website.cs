@@ -8,18 +8,23 @@ namespace Domain.Model;
 public class Website : AggregateRoot
 {
     public string Name { get; }
-    public string Url { get; }
+    public WebsiteUrl Url { get; }
     
-    private Website(Guid id, string url, string name) : base(id)
+    // for ef core only
+    private Website(Guid id) : base(id)
+    {
+    }
+    
+    private Website(Guid id, WebsiteUrl url, string name) : base(id)
     {
         Url = url;
         Name = name;
     }
     
-    public static Result<Website> Create(Guid id, string url, string name)
+    public static Result<Website> Create(Guid id, WebsiteUrl url, string name)
     {
         return Invariant.Create
-            .NotNullOrWhiteSpace(url, nameof(url))
+            .NotNullOrWhiteSpace(name, nameof(name))
             .ValidateAndCreate(() => new Website(id, url, name));
     }
 }

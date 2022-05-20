@@ -49,7 +49,7 @@ public class QueryScrapeTargetsHandlerTests : IntegrationTestBase
         var scrapeTargetInformation = scrapeTargets.ScrapeTargetInformation.First();
         scrapeTargetInformation.RelativeUrl
             .Should()
-            .Be(scrapeTarget.RelativeUrl);
+            .Be(scrapeTarget.RelativeUrl.Value);
         scrapeTargetInformation.WebsiteName
             .Should()
             .NotBeNullOrWhiteSpace();

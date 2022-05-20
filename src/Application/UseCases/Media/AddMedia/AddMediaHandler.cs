@@ -34,13 +34,13 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
         if (website == null)
             return Errors.General.NotFound(nameof(Domain.Model.Website));
 
-        var media = await _unitOfWork.MediaRepository.GetByUri(website, relativeUrl);
+        var media = await _unitOfWork.MediaRepository.GetByUri(website.Id, relativeUrl);
         if (media != null)
             return Errors.Media.MediaWithScrapeTargetExistsError(media.Name);
 
         var scrapeMediaNameInstruction = new ScrapeMediaNameInstruction(
             website.Name,
-            website.Url,
+            website.Url.Value,
             relativeUrl
         );
         var scrapeMediaNameResult = await _mediaNameScraper.ScrapeMediaName(scrapeMediaNameInstruction);
@@ -53,7 +53,7 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
         var scrapeInstruction = new ScrapeInstruction(
             scrapeMediaNameResult.Value.MediaName,
             website.Name,
-            website.Url,
+            website.Url.Value,
             relativeUrl
         );
         var scrapeResult = await _scraper.Scrape(scrapeInstruction);
@@ -76,14 +76,18 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
 
     private static Result<Domain.Model.Media> CreateScrapableMedia(
         string mediaName,
-        string relativePath,
+        string relativeUrl,
         Domain.Model.Website website
     )
     {
+        var relativeUrlResult = RelativeUrl.Create(relativeUrl);
+        if (relativeUrlResult.IsFailure)
+            return relativeUrlResult.Error;
+        
         var scrapeTarget = ScrapeTarget.Create(
             Guid.NewGuid(),
             website,
-            relativePath
+            relativeUrlResult.Value
         );
         if (scrapeTarget.IsFailure)
             return scrapeTarget.Error;

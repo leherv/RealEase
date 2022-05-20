@@ -55,7 +55,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         var mediaToAdd = Given.The.Media.NotPersistedMedia;
         var addMediaCommand = new AddMediaCommand(
             Given.The.Website.EarlyManga.Name,
-            mediaToAdd.ScrapeTargets.First().RelativeUrl
+            mediaToAdd.ScrapeTargets.First().RelativeUrl.Value
         );
         
         var addMediaResult = await When.TheApplication.ReceivesCommand<AddMediaCommand, Result>(addMediaCommand);
@@ -79,7 +79,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
             earlyManga.Name,
-            mediaToAdd.ScrapeTargets.First().RelativeUrl
+            mediaToAdd.ScrapeTargets.First().RelativeUrl.Value
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaToAdd.Name))
@@ -114,7 +114,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
             earlyManga.Name,
-            mediaToAdd.ScrapeTargets.First().RelativeUrl
+            mediaToAdd.ScrapeTargets.First().RelativeUrl.Value
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaToAdd.Name))
@@ -156,7 +156,7 @@ public class AddMediaHandlerTests : IntegrationTestBase
         var earlyManga = Given.The.Website.EarlyManga;
         var addMediaCommand = new AddMediaCommand(
             earlyManga.Name,
-            alreadyPersistedMedia.ScrapeTargets.First().RelativeUrl
+            alreadyPersistedMedia.ScrapeTargets.First().RelativeUrl.Value
         );
         Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
             Result<ScrapedMediaName>.Success(new ScrapedMediaName(alreadyPersistedMedia.Name))

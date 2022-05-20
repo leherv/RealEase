@@ -28,7 +28,8 @@ public class GivenTheMedia
         ).Value;
         WithSubscriberWithReleases.AddScrapeTarget(givenTheScrapeTarget.MartialPeakEarlyManga);
         CurrentRelease = GivenTheRelease.Create(
-            ReleaseNumber.Create(3, 0).Value, "https://www.thisIsATest.com/chapter/3"
+            ReleaseNumber.Create(3, 0).Value,
+            ResourceUrl.Create("https://www.thisIsATest.com/chapter/3").Value
         ).Value;
         WithSubscriberWithReleases.PublishNewRelease(CurrentRelease);
 
@@ -40,7 +41,7 @@ public class GivenTheMedia
 
         WithoutSubscribersWithoutReleasesWithoutScrapeTarget = Create(
             Guid.NewGuid(),
-            "Naruto"
+            "Boruto"
         ).Value;
 
         MediaList = new List<Media>
@@ -58,8 +59,11 @@ public class GivenTheMedia
             WithoutSubscriberWithoutReleases
         };
 
-        var notPersistedScrapeTarget = GivenTheScrapeTarget
-            .Create(Guid.NewGuid(), givenTheWebsite.EarlyManga, "/manga/tower-of-god").Value;
+        var notPersistedScrapeTarget = GivenTheScrapeTarget.Create(
+            Guid.NewGuid(),
+            givenTheWebsite.EarlyManga,
+            RelativeUrl.Create("/manga/tower-of-god").Value
+        ).Value;
         NotPersistedMedia = Create(Guid.NewGuid(), "Tower of God").Value;
         NotPersistedMedia.AddScrapeTarget(notPersistedScrapeTarget);
     }
