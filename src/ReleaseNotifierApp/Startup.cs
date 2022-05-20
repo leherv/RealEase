@@ -8,11 +8,12 @@ using Application.Ports.Scraper;
 using Application.UseCases.Base;
 using Application.UseCases.Media.AddMedia;
 using Application.UseCases.Media.QueryAvailableMedia;
+using Application.UseCases.Media.QueryScrapeTargets;
 using Application.UseCases.Scrape;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
-using Application.UseCases.Website;
+using Application.UseCases.Website.QueryAvailableWebsites;
 using Discord.Commands;
 using Discord.WebSocket;
 using Domain.Results;
@@ -64,7 +65,8 @@ public class Startup
         services
             .AddScoped<IQueryHandler<AvailableMediaQuery, AvailableMedia>, QueryAvailableMediaHandler>()
             .AddScoped<IQueryHandler<AvailableWebsitesQuery, AvailableWebsites>, QueryAvailableWebsitesHandler>()
-            .AddScoped<IQueryHandler<MediaSubscriptionsQuery, MediaSubscriptions>, QueryMediaSubscriptionsHandler>();
+            .AddScoped<IQueryHandler<MediaSubscriptionsQuery, MediaSubscriptions>, QueryMediaSubscriptionsHandler>()
+            .AddScoped<IQueryHandler<ScrapeTargetsQuery, Result<ScrapeTargets>>, QueryScrapeTargetsHandler>();
 
         // Commands
         services
@@ -84,7 +86,8 @@ public class Startup
         services
             .AddScoped<IMediaReadRepository, MediaReadRepository>()
             .AddScoped<IMediaSubscriptionsReadRepository, MediaSubscriptionsReadRepository>()
-            .AddScoped<IWebsiteReadRepository, WebsiteReadRepository>();
+            .AddScoped<IWebsiteReadRepository, WebsiteReadRepository>()
+            .AddScoped<IScrapeTargetReadRepository, ScrapeTargetReadRepository>();
         
         // Scraper
         services

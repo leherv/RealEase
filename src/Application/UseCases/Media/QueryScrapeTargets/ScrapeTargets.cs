@@ -1,0 +1,3 @@
+namespace Application.UseCases.Media.QueryScrapeTargets;
+
+public record ScrapeTargets(IReadOnlyCollection<ScrapeTargetInformation> ScrapeTargetInformation);

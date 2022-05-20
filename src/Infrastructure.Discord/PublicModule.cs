@@ -1,10 +1,11 @@
 ﻿using Application.UseCases.Base;
 using Application.UseCases.Media.AddMedia;
 using Application.UseCases.Media.QueryAvailableMedia;
+using Application.UseCases.Media.QueryScrapeTargets;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
-using Application.UseCases.Website;
+using Application.UseCases.Website.QueryAvailableWebsites;
 using Discord.Commands;
 using Domain.ApplicationErrors;
 using Domain.Results;
@@ -23,8 +24,9 @@ public class PublicModule : ModuleBase<SocketCommandContext>
         "!listAvailable\n" +
         "!listSubscribed\n" +
         "!listWebsites\n" +
-        "!addMedia [websiteName] [relativeUrl]\n"
-        +"\te.g.: !addMedia earlymanga /manga/tower-of-god";
+        "!addMedia [websiteName] [relativeUrl]\n" +
+        "\te.g.: !addMedia earlymanga /manga/tower-of-god\n" +
+        "listScrapeTargets [mediaName]";
 
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
@@ -60,6 +62,40 @@ public class PublicModule : ModuleBase<SocketCommandContext>
         await Context.Message.Channel.SendMessageAsync(message);
     }
 
+    [Command("listScrapeTargets")]
+    [Alias("lST")]
+    public async Task ListScrapeTargets(string mediaName)
+    {
+        var scrapeTargetsResult =
+            await _queryDispatcher.Dispatch<ScrapeTargetsQuery, Result<ScrapeTargets>>(
+                new ScrapeTargetsQuery(mediaName));
+
+        string message;
+        if (scrapeTargetsResult.IsFailure)
+        {
+            message = "Listing ScrapeTargets failed";
+            _logger.LogWarning(scrapeTargetsResult.Error.ToString());
+            if (scrapeTargetsResult.Error.Code == Errors.General.NotFoundErrorCode)
+                message += " as media with this name could not be found";
+            message += ".";
+        }
+        else
+        {
+            var scrapeTargetInformation = scrapeTargetsResult.Value.ScrapeTargetInformation;
+            message = scrapeTargetInformation.Any()
+                ? "ScrapeTargets:" +
+                  scrapeTargetInformation
+                      .OrderBy(scrapeTargetInfo => scrapeTargetInfo.WebsiteName)
+                      .Aggregate("", (current, scrapeTargetInfo) => current +
+                                                                    $"\n Website: {scrapeTargetInfo.WebsiteName}" +
+                                                                    $"\n Website URL: {scrapeTargetInfo.WebsiteUrl}" +
+                                                                    $"\n Relative URL: {scrapeTargetInfo.RelativeUrl}")
+                : "\nNo websites available.";
+        }
+
+        await Context.Message.Channel.SendMessageAsync(message);
+    }
+
     [Command("listSubscribed")]
     [Alias("ls")]
     public async Task ListSubscribed()
@@ -89,7 +125,7 @@ public class PublicModule : ModuleBase<SocketCommandContext>
             _logger.LogInformation(subscribeResult.Error.ToString());
             message = "Subscribe failed.";
         }
-        
+
         await Context.Message.Channel.SendMessageAsync(message);
     }
 
@@ -107,10 +143,10 @@ public class PublicModule : ModuleBase<SocketCommandContext>
             _logger.LogInformation(unsubscribeResult.Error.ToString());
             message = "Unsubscribe failed.";
         }
-        
+
         await Context.Message.Channel.SendMessageAsync(message);
     }
-    
+
     [Command("listWebsites")]
     [Alias("lW")]
     public async Task ListWebsites()
@@ -122,18 +158,20 @@ public class PublicModule : ModuleBase<SocketCommandContext>
             ? "Available Websites:" +
               availableWebsites.Websites
                   .OrderBy(availableWebsite => availableWebsite.Name)
-                  .Aggregate("", (current, availableWebsite) => current + $"\n{availableWebsite.Name} Base URL: {availableWebsite.Url}")
+                  .Aggregate("",
+                      (current, availableWebsite) =>
+                          current + $"\n{availableWebsite.Name} Base URL: {availableWebsite.Url}")
             : "\nNo websites available.";
 
         await Context.Message.Channel.SendMessageAsync(message);
     }
-    
+
     [Command("addMedia")]
     [Alias("aM")]
     public async Task AddMedia(string websiteName, string relativePath)
     {
         var addMediaCommand = new AddMediaCommand(websiteName, relativePath);
-        
+
         var addMediaResult =
             await _commandDispatcher.Dispatch<AddMediaCommand, Result>(addMediaCommand);
 
@@ -149,7 +187,7 @@ public class PublicModule : ModuleBase<SocketCommandContext>
             if (addMediaResult.Error.Code == Errors.General.NotFoundErrorCode)
                 message += $" as website with {websiteName} could not be found";
         }
-        
+
         await Context.Message.Channel.SendMessageAsync(message);
     }
 }

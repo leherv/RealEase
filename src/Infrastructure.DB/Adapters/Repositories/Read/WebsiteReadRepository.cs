@@ -1,5 +1,5 @@
 ﻿using Application.Ports.Persistence.Read;
-using Application.UseCases.Website;
+using Application.UseCases.Website.QueryAvailableWebsites;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DB.Adapters.Repositories.Read;

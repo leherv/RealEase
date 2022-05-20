@@ -1,4 +1,4 @@
-﻿using Application.UseCases.Website;
+﻿using Application.UseCases.Website.QueryAvailableWebsites;
 
 namespace Application.Ports.Persistence.Read;
 
