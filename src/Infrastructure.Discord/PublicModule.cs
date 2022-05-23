@@ -15,17 +15,6 @@ namespace Infrastructure.Discord;
 
 public class PublicModule : ModuleBase<SocketCommandContext>
 {
-    private const string HelpText =
-        "Welcome to Vik Release Notifier (VRN)!\n" +
-        "The following commands are available:\n" +
-        "rn!subscribe \"[mediaName]\"\n" +
-        "rn!unsubscribe \"[mediaName]\"\n" +
-        "rn!listAvailable\n" +
-        "rn!listSubscribed\n" +
-        "rn!listWebsites\n" +
-        "rn!addMedia [websiteName] [relativeUrl]\n"
-        +"\te.g.: rn!addMedia earlymanga /manga/tower-of-god";
-
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly ILogger<PublicModule> _logger;
@@ -40,11 +29,7 @@ public class PublicModule : ModuleBase<SocketCommandContext>
         _commandDispatcher = commandDispatcher;
         _logger = logger;
     }
-
-    [Command("help")]
-    [Alias("h")]
-    public Task Help() => ReplyAsync(HelpText);
-
+    
     [Command("listAvailable")]
     [Alias("l")]
     public async Task ListAvailable()
@@ -74,25 +59,7 @@ public class PublicModule : ModuleBase<SocketCommandContext>
 
         await Context.Message.Channel.SendMessageAsync(message);
     }
-
-    [Command("subscribe")]
-    [Alias("s")]
-    public async Task Subscribe(string mediaName)
-    {
-        var subscribeResult =
-            await _commandDispatcher.Dispatch<SubscribeMediaCommand, Result>(
-                new SubscribeMediaCommand(Context.GetUserId().ToString(), mediaName));
-
-        var message = "Done.";
-        if (subscribeResult.IsFailure)
-        {
-            _logger.LogInformation(subscribeResult.Error.ToString());
-            message = "Subscribe failed.";
-        }
-        
-        await Context.Message.Channel.SendMessageAsync(message);
-    }
-
+    
     [Command("unsubscribe")]
     [Alias("us")]
     public async Task Unsubscribe(string mediaName)
