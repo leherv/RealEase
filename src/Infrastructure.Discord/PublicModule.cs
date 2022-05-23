@@ -18,13 +18,13 @@ public class PublicModule : ModuleBase<SocketCommandContext>
     private const string HelpText =
         "Welcome to Vik Release Notifier (VRN)!\n" +
         "The following commands are available:\n" +
-        "!subscribe \"[mediaName]\"\n" +
-        "!unsubscribe \"[mediaName]\"\n" +
-        "!listAvailable\n" +
-        "!listSubscribed\n" +
-        "!listWebsites\n" +
-        "!addMedia [websiteName] [relativeUrl]\n"
-        +"\te.g.: !addMedia earlymanga /manga/tower-of-god";
+        "rn!subscribe \"[mediaName]\"\n" +
+        "rn!unsubscribe \"[mediaName]\"\n" +
+        "rn!listAvailable\n" +
+        "rn!listSubscribed\n" +
+        "rn!listWebsites\n" +
+        "rn!addMedia [websiteName] [relativeUrl]\n"
+        +"\te.g.: rn!addMedia earlymanga /manga/tower-of-god";
 
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
