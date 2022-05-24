@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <IsPublishable>false</IsPublishable>
         <IsPackable>false</IsPackable>
+        <RootNamespace>Intrastructure.Scraper.Tests</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

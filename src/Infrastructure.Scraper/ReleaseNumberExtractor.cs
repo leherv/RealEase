@@ -4,9 +4,9 @@ using Domain.Results;
 
 namespace Infrastructure.Scraper;
 
-public static class ReleaseNumberExtractor
+internal static class ReleaseNumberExtractor
 {
-    public static Result<(int Major, int Minor)> ExtractReleaseNumbers(string chapterUrl)
+    internal static Result<(int Major, int Minor)> ExtractReleaseNumbers(string chapterUrl)
     {
         var majorResult = ExtractMajor(chapterUrl);
         if (majorResult.IsFailure)
