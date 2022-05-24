@@ -42,11 +42,7 @@ public class PublicModule : ModuleBase<SocketCommandContext>
         _commandDispatcher = commandDispatcher;
         _logger = logger;
     }
-
-    [Command("help")]
-    [Alias("h")]
-    public Task Help() => ReplyAsync(HelpText);
-
+    
     [Command("listAvailable")]
     [Alias("l")]
     public async Task ListAvailable()
@@ -128,7 +124,7 @@ public class PublicModule : ModuleBase<SocketCommandContext>
 
         await Context.Message.Channel.SendMessageAsync(message);
     }
-
+    
     [Command("unsubscribe")]
     [Alias("us")]
     public async Task Unsubscribe(string mediaName)
