@@ -15,7 +15,15 @@ public class GivenTheScraper
 
     public void ScrapeForMediaWithNameReturns(string mediaName, Result<ScrapedMediaRelease> scrapeResult)
     {
-        A.CallTo(() => _scraper.Scrape(A<ScrapeInstruction>.That.Matches(scrapeInstruction => scrapeInstruction.MediaName.ToLower().Equals(mediaName.ToLower()))))
+        A.CallTo(() => _scraper.Scrape(A<ScrapeInstruction>.That.Matches(scrapeInstruction =>
+                scrapeInstruction.MediaName.ToLower().Equals(mediaName.ToLower()))))
+            .Returns(scrapeResult);
+    }
+
+    public void ScrapeForWebsiteReturns(string websiteName, Result<ScrapedMediaRelease> scrapeResult)
+    {
+        A.CallTo(() => _scraper.Scrape(A<ScrapeInstruction>.That.Matches(scrapeInstruction =>
+                scrapeInstruction.WebsiteName.ToLower().Equals(websiteName.ToLower()))))
             .Returns(scrapeResult);
     }
 

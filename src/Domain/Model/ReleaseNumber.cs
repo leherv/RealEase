@@ -4,7 +4,7 @@ using Domain.Results;
 
 namespace Domain.Model;
 
-public record ReleaseNumber
+public record ReleaseNumber : IComparable<ReleaseNumber>
 {
     public int Major { get; }
     public int Minor { get; }
@@ -29,5 +29,21 @@ public record ReleaseNumber
             return true;
 
         return Major == other.Major && Minor > other.Minor;
+    }
+
+    public int CompareTo(ReleaseNumber? other)
+    {
+        if (other == null)
+            return 1;
+        
+        if (Equals(this))
+            return 0;
+        
+        if (Major > other.Major)
+            return 1;
+
+        return Major == other.Major && Minor > other.Minor
+            ? 1
+            : -1;
     }
 }

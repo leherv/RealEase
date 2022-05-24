@@ -32,7 +32,7 @@ public class QueryScrapeTargetsHandlerTests : IntegrationTestBase
     public async Task Returns_non_empty_list_if_media_exists_and_has_ScrapeTargets()
     {
         await Given.TheDatabase.IsSeeded();
-        var media = Given.A.Media.MediaWithScrapeTargets.First();
+        var media = Given.A.Media.WithoutSubscriberWithoutReleases;
         var scrapeTargetsQuery = new ScrapeTargetsQuery(media.Name);
         
         var scrapeTargetsResult = await When.TheApplication.ReceivesQuery<ScrapeTargetsQuery, Result<ScrapeTargets>>(scrapeTargetsQuery);

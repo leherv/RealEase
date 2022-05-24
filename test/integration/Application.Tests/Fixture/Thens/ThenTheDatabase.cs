@@ -25,6 +25,11 @@ public class ThenTheDatabase : TheDatabase
     {
         return await Query(unitOfWork => unitOfWork.SubscriberRepository.GetByExternalId(externalIdentifier));
     }
+    
+    public async Task<Media?> GetMediaByName(string name)
+    {
+        return await Query(unitOfWork => unitOfWork.MediaRepository.GetByName(name));
+    }
 
    
 }

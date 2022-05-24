@@ -13,6 +13,7 @@ public class GivenTheMedia
     public Release CurrentRelease { get; }
     public Media WithSubscriberWithoutRelease { get; }
     public Media NotPersistedMedia { get; }
+    public Media WithSubscriberWithTwoScrapeTargets { get; }
 
     public GivenTheMedia(GivenTheScrapeTarget givenTheScrapeTarget, GivenTheWebsite givenTheWebsite)
     {
@@ -44,16 +45,25 @@ public class GivenTheMedia
             "Boruto"
         ).Value;
 
+        WithSubscriberWithTwoScrapeTargets = Create(
+            Guid.NewGuid(),
+            "Magic Emperor"
+        ).Value;
+        WithSubscriberWithTwoScrapeTargets.AddScrapeTarget(givenTheScrapeTarget.MagicEmperorEarlyManga);
+        WithSubscriberWithTwoScrapeTargets.AddScrapeTarget(givenTheScrapeTarget.MagicEmperorManganato);
+
         MediaList = new List<Media>
         {
             WithSubscriberWithoutRelease,
             WithSubscriberWithReleases,
+            WithSubscriberWithTwoScrapeTargets,
             WithoutSubscriberWithoutReleases,
             WithoutSubscribersWithoutReleasesWithoutScrapeTarget
         };
 
         MediaWithScrapeTargets = new List<Media>
         {
+            WithSubscriberWithTwoScrapeTargets,
             WithSubscriberWithoutRelease,
             WithSubscriberWithReleases,
             WithoutSubscriberWithoutReleases

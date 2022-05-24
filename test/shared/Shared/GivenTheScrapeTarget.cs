@@ -12,6 +12,8 @@ public class GivenTheScrapeTarget
     public ScrapeTarget BorutoEarlyManga { get; }
     public ScrapeTarget HunterXHunterEarlyManga { get; }
     public ScrapeTarget SoloLevelingEarlyManga { get; }
+    public ScrapeTarget MagicEmperorEarlyManga { get; }
+    public ScrapeTarget MagicEmperorManganato { get; }
 
     public GivenTheScrapeTarget(GivenTheWebsite givenTheWebsite)
     {
@@ -54,6 +56,18 @@ public class GivenTheScrapeTarget
             Guid.NewGuid(),
             givenTheWebsite.EarlyManga,
             RelativeUrl.Create("/manga/boruto-naruto-next-generations").Value
+        ).Value;
+        
+        MagicEmperorEarlyManga = Create(
+            Guid.NewGuid(),
+            givenTheWebsite.EarlyManga,
+            RelativeUrl.Create("/manga/demonic-emperor").Value
+        ).Value;
+        
+        MagicEmperorManganato = Create(
+            Guid.NewGuid(),
+            givenTheWebsite.Manganato,
+            RelativeUrl.Create("/manga-gr983826").Value
         ).Value;
 
         ScrapeTargets = new List<ScrapeTarget>
