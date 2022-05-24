@@ -11,6 +11,9 @@ public class DatabaseContext : DbContext
     public DbSet<Media> MediaDbSet { get; private set; } = null!;
     public IQueryable<Media> Media => MediaDbSet.AsQueryable();
     
+    public DbSet<ScrapeTarget> ScrapeTargetDbSet { get; private set; } = null!;
+    public IQueryable<ScrapeTarget> ScrapeTargets => ScrapeTargetDbSet.AsQueryable();
+    
     public DbSet<Subscriber> SubscriberDbSet { get; private set; } = null!;
     public IQueryable<Subscriber> Subscribers => SubscriberDbSet.AsQueryable();
     
@@ -32,31 +35,48 @@ public class DatabaseContext : DbContext
     {
         var websiteEntity = modelBuilder.Entity<Website>();
         websiteEntity.Property(website => website.Name);
-        websiteEntity.Property(website => website.Url);
+        websiteEntity.OwnsOne(website => website.Url, websiteUrlEntity =>
+        {
+            websiteUrlEntity.Property(websiteUrl => websiteUrl.Value);
+        });
         
         var scrapeTargetEntity = modelBuilder.Entity<ScrapeTarget>();
-        scrapeTargetEntity.Property(scrapeTarget => scrapeTarget.RelativeUrl);
-        scrapeTargetEntity.HasOne(scrapeTarget => scrapeTarget.Website);
+        scrapeTargetEntity.OwnsOne(scrapeTarget => scrapeTarget.RelativeUrl, relativeUrlEntity =>
+        {
+            relativeUrlEntity.Property(relativeUrl => relativeUrl.Value);
+        });
+        scrapeTargetEntity
+            .HasOne<Website>()
+            .WithMany()
+            .HasForeignKey(scrapeTarget => scrapeTarget.WebsiteId);
         
         var mediaEntity = modelBuilder.Entity<Media>();
         mediaEntity.Property(media => media.Name);
         mediaEntity.OwnsOne(media => media.NewestRelease, releaseEntity =>
         {
-            releaseEntity.Property(release => release.Link);
             releaseEntity.OwnsOne(release => release.ReleaseNumber, releaseNumberEntity =>
             {
                 releaseNumberEntity.Property(releaseNumber => releaseNumber.Major);
                 releaseNumberEntity.Property(releaseNumber => releaseNumber.Minor);
             });
+            releaseEntity.OwnsOne(release => release.ResourceUrl, resourceUrlEntity =>
+            {
+                resourceUrlEntity.Property(resourceUrl => resourceUrl.Value);
+            });
+            releaseEntity.Property(release => release.Created);
         });
-        mediaEntity.HasOne(media => media.ScrapeTarget);
+        mediaEntity
+            .HasMany(media => media.ScrapeTargets)
+            .WithOne()
+            .IsRequired(false)
+            .OnDelete(DeleteBehavior.Cascade);
         mediaEntity
             .HasIndex(media => media.Name)
             .IsUnique();
 
         var subscriberEntity = modelBuilder.Entity<Subscriber>();
         subscriberEntity.Property(subscriber => subscriber.ExternalIdentifier);
-        subscriberEntity.Ignore(subscriber => subscriber.SubscribedToMedia);
+        subscriberEntity.Ignore(subscriber => subscriber.SubscribedToMediaIds);
         subscriberEntity
             .HasIndex(subscriber => subscriber.ExternalIdentifier)
             .IsUnique();
@@ -73,8 +93,9 @@ public class DatabaseContext : DbContext
         subscriptionEntity.HasIndex(subscription => new { subscription.SubscriberId, subscription.MediaId })
             .IsUnique();
         subscriptionEntity
-            .HasOne(subscription => subscription.Media)
+            .HasOne<Media>()
             .WithMany()
+            .HasForeignKey(media => media.MediaId)
             .IsRequired()
             .OnDelete(DeleteBehavior.Cascade);
 

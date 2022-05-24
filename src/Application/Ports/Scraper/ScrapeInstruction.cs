@@ -1,3 +1,3 @@
 namespace Application.Ports.Scraper;
 
-public record ScrapeInstruction(string MediaName, string WebsiteName, string Url, string RelativeUrl);
+public record ScrapeInstruction(string MediaName, string WebsiteName, string WebsiteUrl, string ResourceUrl);

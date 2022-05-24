@@ -6,7 +6,7 @@ using Domain.ApplicationErrors;
 using Domain.Results;
 using Microsoft.Extensions.Logging;
 
-namespace Infrastructure.Discord;
+namespace Infrastructure.Discord.Adapters;
 
 public class DiscordNotificationService : INotificationService
 {

@@ -12,22 +12,23 @@ public class MediaRepository : IMediaRepository
     {
         _databaseContext = databaseContext;
     }
-    
+
     public async Task<Media?> GetByName(string mediaName)
     {
         return await _databaseContext.Media
-            .Include(media => media.ScrapeTarget!)
-                .ThenInclude(scrapeTarget => scrapeTarget.Website)
-            .SingleOrDefaultAsync(media => media!.Name.ToLower() == mediaName.ToLower());
+            .Include(media => media.ScrapeTargets)
+            .SingleOrDefaultAsync(media => media.Name.ToLower() == mediaName.ToLower());
     }
 
-    public async Task<Media?> GetByUri(Website website, string relativeUrl)
+    public async Task<Media?> GetByUri(Guid websiteId, string relativeUrl)
     {
         return await _databaseContext.Media
-            .Include(media => media.ScrapeTarget!)
-            .ThenInclude(scrapeTarget => scrapeTarget.Website)
-            .SingleOrDefaultAsync(media => media.ScrapeTarget.Website.Id == website.Id &&
-                                           media.ScrapeTarget.RelativeUrl == relativeUrl);
+            .Include(media => media.ScrapeTargets)
+            .SingleOrDefaultAsync(media => media.ScrapeTargets.Any(scrapeTarget =>
+                    scrapeTarget.WebsiteId == websiteId &&
+                    scrapeTarget.RelativeUrl.Value == relativeUrl
+                )
+            );
     }
 
     public async Task<IReadOnlyCollection<Media>> GetAll()

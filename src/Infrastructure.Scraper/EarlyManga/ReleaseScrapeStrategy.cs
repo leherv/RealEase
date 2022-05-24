@@ -1,21 +1,16 @@
-using Application.Ports.Scraper;
+﻿using Application.Ports.Scraper;
 using Domain.ApplicationErrors;
 using Domain.Results;
+using Infrastructure.Scraper.Base;
+using Infrastructure.Scraper.Shared;
 using Microsoft.Playwright;
 
-namespace Infrastructure.Scraper;
+namespace Infrastructure.Scraper.EarlyManga;
 
-public class PlaywrightScraper : IScraper
+internal class ReleaseScrapeStrategy : IReleaseScrapeStrategy
 {
-    public async Task<Result<ScrapedMediaRelease>> Scrape(ScrapeInstruction scrapeInstruction)
+    public async Task<Result<ScrapedMediaRelease>> Execute(IPage page, ScrapeInstruction scrapeInstruction)
     {
-        // Program.Main(new[] {"install"});
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync();
-        var page = await browser.NewPageAsync();
-        var targetUrl = UriCombinator.Combine(scrapeInstruction.Url, scrapeInstruction.RelativeUrl);
-        await page.GotoAsync(targetUrl);
-
         var container = await page.WaitForSelectorAsync("div.chapter-container", new PageWaitForSelectorOptions
         {
             State = WaitForSelectorState.Visible
@@ -31,12 +26,12 @@ public class PlaywrightScraper : IScraper
         if (relativeChapterUrl == null)
             return Errors.Scraper.ScrapeFailedError("Newest link element does not contain a chapter url");
 
-        var releaseNumbersResult = ReleaseNumberExtractor.ExtractReleaseNumbers(relativeChapterUrl);
+        var releaseNumbersResult = UriReleaseNumberExtractor.ExtractReleaseNumbers(relativeChapterUrl);
         if (releaseNumbersResult.IsFailure)
             return releaseNumbersResult.Error;
 
         return new ScrapedMediaRelease(
-            UriCombinator.Combine(scrapeInstruction.Url, relativeChapterUrl),
+            UriCombinator.Combine(scrapeInstruction.WebsiteUrl, relativeChapterUrl),
             releaseNumbersResult.Value.Major,
             releaseNumbersResult.Value.Minor
         );

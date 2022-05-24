@@ -1,5 +1,5 @@
 ﻿using Application.Ports.Persistence.Read;
-using Application.UseCases.Website;
+using Application.UseCases.Website.QueryAvailableWebsites;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.DB.Adapters.Repositories.Read;
@@ -16,7 +16,7 @@ public class WebsiteReadRepository : IWebsiteReadRepository
     public async Task<AvailableWebsites> QueryAvailableWebsites()
     {
         var websites = await _databaseContext.Websites
-            .Select(website => new AvailableWebsite(website.Name, website.Url))
+            .Select(website => new AvailableWebsite(website.Name, website.Url.Value))
             .ToListAsync();
 
         return new AvailableWebsites(websites);

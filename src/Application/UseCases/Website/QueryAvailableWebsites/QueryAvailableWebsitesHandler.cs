@@ -1,7 +1,7 @@
 ﻿using Application.Ports.Persistence.Read;
 using Application.UseCases.Base;
 
-namespace Application.UseCases.Website;
+namespace Application.UseCases.Website.QueryAvailableWebsites;
 
 public record AvailableWebsitesQuery;
 

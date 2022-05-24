@@ -1,6 +1,6 @@
 ﻿using System.Threading.Tasks;
 using Application.Test.Fixture;
-using Application.UseCases.Website;
+using Application.UseCases.Website.QueryAvailableWebsites;
 using FluentAssertions;
 using Xunit;
 

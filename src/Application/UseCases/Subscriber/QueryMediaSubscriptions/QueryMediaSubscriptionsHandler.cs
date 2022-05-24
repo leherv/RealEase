@@ -8,15 +8,15 @@ public record MediaSubscriptionsQuery(string ExternalIdentifier);
 
 public sealed class QueryMediaSubscriptionsHandler : IQueryHandler<MediaSubscriptionsQuery, MediaSubscriptions>
 {
-    private readonly ISubscriberReadRepository _subscriberReadRepository;
+    private readonly IMediaSubscriptionsReadRepository _mediaSubscriptionsReadRepository;
     private readonly IUnitOfWork _unitOfWork;
 
     public QueryMediaSubscriptionsHandler(
-        ISubscriberReadRepository subscriberReadRepository,
+        IMediaSubscriptionsReadRepository mediaSubscriptionsReadRepository,
         IUnitOfWork unitOfWork
     )
     {
-        _subscriberReadRepository = subscriberReadRepository;
+        _mediaSubscriptionsReadRepository = mediaSubscriptionsReadRepository;
         _unitOfWork = unitOfWork;
     }
 
@@ -26,6 +26,6 @@ public sealed class QueryMediaSubscriptionsHandler : IQueryHandler<MediaSubscrip
         if (subscriber == null)
             return new MediaSubscriptions();
 
-        return await _subscriberReadRepository.QueryMediaSubscriptionsFor(mediaSubscriptionsQuery.ExternalIdentifier);
+        return await _mediaSubscriptionsReadRepository.QueryMediaSubscriptionsFor(mediaSubscriptionsQuery.ExternalIdentifier);
     }
 }

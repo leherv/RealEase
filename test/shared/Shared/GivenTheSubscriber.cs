@@ -22,12 +22,12 @@ public class GivenTheSubscriber
     
     public GivenTheSubscriber(GivenTheMedia givenTheMedia)
     {
-        SubscribedToMedia = givenTheMedia.MediaList.Take(2).ToList();
-        NotSubscribedToMedia = givenTheMedia.MediaList.Skip(2).ToList();
+        SubscribedToMedia = givenTheMedia.MediaList.Take(3).ToList();
+        NotSubscribedToMedia = givenTheMedia.MediaList.Skip(3).ToList();
         WithSubscriptions = Create(SubscriberId1, SubscriberExternalId1).Value;
         foreach (var media in SubscribedToMedia)
         {
-            WithSubscriptions.Subscribe(media);
+            WithSubscriptions.Subscribe(media.Id);
         }
 
         WithoutSubscriptions = Create(SubscriberId2, SubscriberExternalId2).Value;

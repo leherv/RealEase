@@ -8,12 +8,16 @@ public record ScrapedMediaRelease(
     int MajorReleaseNumber,
     int? MinorReleaseNumber = 0)
 {
-    public Result<Release> ToDomain()
+    public Result<Release> ToDomain(DateTime utcNow)
     {
-        var releaseNumber = ReleaseNumber.Create(MajorReleaseNumber, MinorReleaseNumber ?? 0);
+        var releaseNumberResult = ReleaseNumber.Create(MajorReleaseNumber, MinorReleaseNumber ?? 0);
+        if (releaseNumberResult.IsFailure)
+            return releaseNumberResult.Error;
 
-        return releaseNumber.IsFailure 
-            ? releaseNumber.Error 
-            : Release.Create(releaseNumber.Value, UrlToResource);
+        var resourceUrlResult = ResourceUrl.Create(UrlToResource);
+        if (resourceUrlResult.IsFailure)
+            return resourceUrlResult.Error;
+        
+        return Release.Create(releaseNumberResult.Value, resourceUrlResult.Value, utcNow);
     }
 }

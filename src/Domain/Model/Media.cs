@@ -9,38 +9,57 @@ namespace Domain.Model;
 
 public class Media : AggregateRoot
 {
-    // TODO: make value object that always needs to be lowercase
     public string Name { get; }
     public Release? NewestRelease { get; private set; }
-    public ScrapeTarget? ScrapeTarget { get; }
 
-    // only for ef core
-    private Media(Guid id) : base(id)
-    {
-    }
+    private List<ScrapeTarget> _scrapeTargets = new();
+    public IReadOnlyCollection<ScrapeTarget> ScrapeTargets => _scrapeTargets;
 
-    private Media(Guid id, string name, ScrapeTarget? scrapeTarget) : base(id)
+    private Media(Guid id, string name) : base(id)
     {
         Name = name;
-        ScrapeTarget = scrapeTarget;
     }
 
-    public static Result<Media> Create(Guid id, string name, ScrapeTarget? scrapeTarget)
+    public static Result<Media> Create(Guid id, string name)
     {
         return Invariant.Create
             .NotNullOrWhiteSpace(name, nameof(name))
-            .ValidateAndCreate(() => new Media(id, name, scrapeTarget));
+            .ValidateAndCreate(() =>
+                new Media(id, name)
+            );
     }
 
     public Result PublishNewRelease(Release release)
     {
-        if (NewestRelease == null || release.IsNewerThan(NewestRelease))
+        if (ReleaseCanBePublished(release))
         {
             NewestRelease = release;
-            AddDomainEvent(new NewReleasePublished(Id, Name, release.Link));
+            AddDomainEvent(new NewReleasePublished(Id, Name, release.ResourceUrl.Value));
             return Result.Success();
         }
 
         return Errors.Media.PublishNewReleaseFailedError(release);
+    }
+
+    public bool ReleaseCanBePublished(Release release)
+    {
+        return NewestRelease == null || release.IsNewerThan(NewestRelease);
+    }
+
+    public Result AddScrapeTarget(ScrapeTarget scrapeTarget)
+    {
+        if (ScrapeTargetAlreadyConfigured(scrapeTarget))
+            return Errors.Media.ScrapeTargetExistsError(Name);
+
+        _scrapeTargets.Add(scrapeTarget);
+
+        return Result.Success();
+    }
+
+    public bool ScrapeTargetAlreadyConfigured(ScrapeTarget scrapeTarget)
+    {
+        return _scrapeTargets.Any(existingScrapeTarget =>
+            existingScrapeTarget.RelativeUrl == scrapeTarget.RelativeUrl &&
+            existingScrapeTarget.WebsiteId == scrapeTarget.WebsiteId);
     }
 }

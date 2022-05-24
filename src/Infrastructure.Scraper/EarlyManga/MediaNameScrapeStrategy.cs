@@ -1,20 +1,15 @@
 ﻿using Application.Ports.Scraper;
 using Domain.ApplicationErrors;
 using Domain.Results;
+using Infrastructure.Scraper.Base;
 using Microsoft.Playwright;
 
-namespace Infrastructure.Scraper;
+namespace Infrastructure.Scraper.EarlyManga;
 
-public class PlaywrightMediaNameScraper : IMediaNameScraper
+internal class MediaNameScrapeStrategy : IMediaNameScrapeStrategy
 {
-    public async Task<Result<ScrapedMediaName>> ScrapeMediaName(ScrapeMediaNameInstruction scrapeMediaNameInstruction)
+    public async Task<Result<ScrapedMediaName>> Execute(IPage page, ScrapeMediaNameInstruction scrapeMediaNameInstruction)
     {
-        using var playwright = await Playwright.CreateAsync();
-        await using var browser = await playwright.Chromium.LaunchAsync();
-        var page = await browser.NewPageAsync();
-        var targetUrl = UriCombinator.Combine(scrapeMediaNameInstruction.Url, scrapeMediaNameInstruction.RelativeUrl);
-        await page.GotoAsync(targetUrl);
-        
         var container = await page.WaitForSelectorAsync("div.manga-container", new PageWaitForSelectorOptions
         {
             State = WaitForSelectorState.Visible
@@ -24,7 +19,7 @@ public class PlaywrightMediaNameScraper : IMediaNameScraper
         
         var nameSpan = await container.QuerySelectorAsync("h6.card-header > span:nth-child(2)");
         if (nameSpan == null)
-            return Errors.Scraper.ScrapeMediaNameFailedError("Newest chapter link element could not be selected.");
+            return Errors.Scraper.ScrapeMediaNameFailedError("Element containing media name could not be selected.");
 
         var mangaName = await nameSpan.InnerTextAsync();
         

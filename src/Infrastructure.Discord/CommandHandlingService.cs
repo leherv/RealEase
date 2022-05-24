@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Infrastructure.Discord.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -28,10 +29,10 @@ namespace Infrastructure.Discord;
             _commandService.CommandExecuted += CommandExecutedAsync;
         }
         
-        public async Task InitializeAsync()
+        internal async Task InitializeAsync()
         {
-            // Register modules that are public and inherit ModuleBase<T>.
-            await _commandService.AddModulesAsync(typeof(PublicModule).Assembly, _serviceProvider);
+            // Register modules that are internal and inherit ModuleBase<T>.
+            await _commandService.AddModulesAsync(typeof(Help).Assembly, _serviceProvider);
         }
         
         private async Task MessageReceivedAsync(SocketMessage rawMessage)
@@ -41,15 +42,15 @@ namespace Infrastructure.Discord;
 
             var argPos = 0;
             // Perform prefix check. 
-            if (!message.HasCharPrefix('!', ref argPos)) return;
+            if (!message.HasStringPrefix("rn!", ref argPos)) return;
 
             var context = new SocketCommandContext(_client, message);
             
             // we will handle the result in CommandExecutedAsync,
             var result = await _commandService.ExecuteAsync(context, argPos, _serviceProvider);
         }
-        
-        public async Task CommandExecutedAsync(
+
+        private async Task CommandExecutedAsync(
             Optional<CommandInfo> command,
             ICommandContext context,
             IResult result

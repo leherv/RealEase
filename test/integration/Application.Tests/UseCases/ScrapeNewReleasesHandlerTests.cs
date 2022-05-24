@@ -35,6 +35,21 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
 
     [Fact]
     [Trait("Category", "Integration")]
+    public async Task Calls_Scraper_for_each_ScrapeTarget()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var mediaToScrape = Given.A.Media.WithSubscriberWithTwoScrapeTargets;
+        var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new[] { mediaToScrape.Name });
+        Given.TheScraper.ScrapeForAnyMediaReturns(
+            Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError("")));
+
+        await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
+
+        Then.TheScraper.HasBeenCalledXTimes(mediaToScrape.ScrapeTargets.Count);
+    }
+
+    [Fact]
+    [Trait("Category", "Integration")]
     public async Task Calls_Scraper_for_all_media_if_sent_empty()
     {
         await Given.TheDatabase.IsSeeded();
@@ -45,7 +60,10 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
 
         await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
 
-        Then.TheScraper.HasBeenCalledXTimes(Given.The.Media.MediaWithScrapeTargets.Count);
+        Then.TheScraper.HasBeenCalledXTimes(Given.The.Media.MediaWithScrapeTargets
+            .SelectMany(media => media.ScrapeTargets)
+            .Count()
+        );
     }
 
     [Fact]
@@ -211,5 +229,117 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
             new ReleasePublishedNotification(subscriber.ExternalIdentifier, mediaName, linkToReleasedResource);
         Then.TheNotificationService.HasBeenCalledWithReleasePublishedNotificationOnce(
             expectedReleasePublishedNotification);
+    }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Chooses_newest_release_if_multiple_are_found()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var media = Given.A.Media.WithSubscriberWithTwoScrapeTargets;
+        var subscriber = Given.A.Subscriber.WithSubscriptions;
+        
+        var website = Given.The.Website.Websites.Single(website => website.Id == media.ScrapeTargets.First().WebsiteId);
+        var linkToReleasedResource = "https://www.test.com/chapter/1";
+        var scrapeResult = new ScrapedMediaRelease(
+            linkToReleasedResource,
+            1
+        );
+        Given.TheScraper.ScrapeForWebsiteReturns(website.Name, Result<ScrapedMediaRelease>.Success(scrapeResult));
+        
+        var website2 = Given.The.Website.Websites.Single(website => website.Id == media.ScrapeTargets.Skip(1).First().WebsiteId);
+        var linkToReleasedResource2 = "https://www.test2.com/chapter/2";
+        var scrapeResult2 = new ScrapedMediaRelease(
+            linkToReleasedResource2,
+            2
+        );
+        Given.TheScraper.ScrapeForWebsiteReturns(website2.Name, Result<ScrapedMediaRelease>.Success(scrapeResult2));
+        
+        Given.TheNotificationService.NotifyReturns(Result.Success());
+        var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new List<string> { media.Name });
+
+        var scrapeNewReleasesResult =
+            await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
+
+        Then.TheResult(scrapeNewReleasesResult).IsSuccessful();
+        var expectedReleasePublishedNotification =
+            new ReleasePublishedNotification(subscriber.ExternalIdentifier, media.Name, linkToReleasedResource2);
+        Then.TheNotificationService.HasBeenCalledWithReleasePublishedNotificationOnce(
+            expectedReleasePublishedNotification);
+
+        var persistedMedia = await Then.TheDatabase.GetMediaByName(media.Name);
+        persistedMedia
+            .Should()
+            .NotBeNull();
+        persistedMedia.NewestRelease.ResourceUrl
+            .Should()
+            .Be(ResourceUrl.Create(linkToReleasedResource2).Value);
+    }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Publish_and_notfiy_are_not_called_if_all_scrapes_unsuccessful()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var media = Given.A.Media.WithSubscriberWithTwoScrapeTargets;
+        Given.TheScraper.ScrapeForAnyMediaReturns(Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError("")));
+        Given.TheNotificationService.NotifyReturns(Result.Success());
+        var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new List<string> { media.Name });
+
+        var scrapeNewReleasesResult =
+            await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
+
+        Then.TheResult(scrapeNewReleasesResult).IsSuccessful();
+        Then.TheNotificationService.HasNotBeenCalledForMediaWithName(media.Name);
+        var persistedMedia = await Then.TheDatabase.GetMediaByName(media.Name);
+        persistedMedia
+            .Should()
+            .NotBeNull();
+        persistedMedia.NewestRelease
+            .Should()
+            .BeNull();
+    }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Publishes_the_succesful_scrape_if_at_least_one_is_succesful_and_no_release_yet()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var media = Given.A.Media.WithSubscriberWithTwoScrapeTargets;
+        var subscriber = Given.A.Subscriber.WithSubscriptions;
+        
+        var website = Given.The.Website.Websites.Single(website => website.Id == media.ScrapeTargets.First().WebsiteId);
+        Given.TheScraper.ScrapeForWebsiteReturns(website.Name, Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError("")));
+        
+        var website2 = Given.The.Website.Websites.Single(website => website.Id == media.ScrapeTargets.Skip(1).First().WebsiteId);
+        var linkToReleasedResource2 = "https://www.test2.com/chapter/1";
+        var scrapeResult2 = new ScrapedMediaRelease(
+            linkToReleasedResource2,
+            1
+        );
+        Given.TheScraper.ScrapeForWebsiteReturns(website2.Name, Result<ScrapedMediaRelease>.Success(scrapeResult2));
+        
+        Given.TheNotificationService.NotifyReturns(Result.Success());
+        var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new List<string> { media.Name });
+
+        var scrapeNewReleasesResult =
+            await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
+
+        Then.TheResult(scrapeNewReleasesResult).IsSuccessful();
+        var expectedReleasePublishedNotification =
+            new ReleasePublishedNotification(subscriber.ExternalIdentifier, media.Name, linkToReleasedResource2);
+        Then.TheNotificationService.HasBeenCalledWithReleasePublishedNotificationOnce(
+            expectedReleasePublishedNotification);
+
+        var persistedMedia = await Then.TheDatabase.GetMediaByName(media.Name);
+        persistedMedia
+            .Should()
+            .NotBeNull();
+        persistedMedia.NewestRelease.ResourceUrl
+            .Should()
+            .Be(ResourceUrl.Create(linkToReleasedResource2).Value);
+        persistedMedia.NewestRelease.ReleaseNumber.Major
+            .Should()
+            .Be(scrapeResult2.MajorReleaseNumber);
     }
 }

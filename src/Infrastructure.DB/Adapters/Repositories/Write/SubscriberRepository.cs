@@ -17,7 +17,6 @@ public class SubscriberRepository : ISubscriberRepository
     {
         return await _databaseContext.Subscribers
             .Include(subscriber => subscriber.Subscriptions)
-                .ThenInclude(subscription => subscription.Media)
             .SingleOrDefaultAsync(subscriber => subscriber.ExternalIdentifier.Equals(externalId));
     }
 
@@ -30,7 +29,6 @@ public class SubscriberRepository : ISubscriberRepository
     {
         return await  _databaseContext.Subscribers
             .Include(subscriber => subscriber.Subscriptions)
-                .ThenInclude(subscription => subscription.Media)
             .Where(subscriber => subscriber.Subscriptions.Any(subscription => subscription.MediaId == mediaId))
             .ToListAsync();
     }

@@ -12,9 +12,8 @@ public class Subscriber : AggregateRoot
 
     private List<Subscription> _subscriptions;
     public IReadOnlyCollection<Subscription> Subscriptions => _subscriptions;
-
-    public IReadOnlyCollection<Media> SubscribedToMedia => _subscriptions
-        .Select(subscription => subscription.Media)
+    public IReadOnlyCollection<Guid> SubscribedToMediaIds => _subscriptions
+        .Select(subscription => subscription.MediaId)
         .ToList();
 
     private Subscriber(Guid id, string externalIdentifier) : base(id)
@@ -30,19 +29,19 @@ public class Subscriber : AggregateRoot
             .ValidateAndCreate(() => new Subscriber(id, externalIdentifier));
     }
 
-    public void Subscribe(Media media)
+    public void Subscribe(Guid mediaId)
     {
-        var subscription = Subscription.Create(Guid.NewGuid(), media, Id);
-        if (!SubscribedToMedia.Contains(media))
+        var subscription = Subscription.Create(Guid.NewGuid(), mediaId, Id);
+        if (!SubscribedToMediaIds.Contains(mediaId))
             _subscriptions.Add(subscription);
     }
 
-    public Result Unsubscribe(Media media)
+    public Result Unsubscribe(Guid mediaId)
     {
-        var subscription = _subscriptions.SingleOrDefault(subscription => media.Equals(subscription.Media));
+        var subscription = _subscriptions.SingleOrDefault(subscription => subscription.MediaId.Equals(mediaId));
         return Result.SuccessIf(
             subscription == null || _subscriptions.Remove(subscription),
-            Errors.Subscriber.UnsubscribeFailedError(media.Name)
+            Errors.Subscriber.UnsubscribeFailedError(mediaId)
         );
     }
 }

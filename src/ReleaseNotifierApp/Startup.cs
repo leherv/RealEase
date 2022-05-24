@@ -7,12 +7,14 @@ using Application.Ports.Persistence.Write;
 using Application.Ports.Scraper;
 using Application.UseCases.Base;
 using Application.UseCases.Media.AddMedia;
+using Application.UseCases.Media.AddScrapeTarget;
 using Application.UseCases.Media.QueryAvailableMedia;
+using Application.UseCases.Media.QueryScrapeTargets;
 using Application.UseCases.Scrape;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
-using Application.UseCases.Website;
+using Application.UseCases.Website.QueryAvailableWebsites;
 using Discord.Commands;
 using Discord.WebSocket;
 using Domain.Results;
@@ -22,9 +24,10 @@ using Infrastructure.DB.Adapters.Repositories.Read;
 using Infrastructure.DB.Adapters.Repositories.Write;
 using Infrastructure.DB.DomainEvent;
 using Infrastructure.Discord;
+using Infrastructure.Discord.Adapters;
 using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
-using Infrastructure.Scraper;
+using Infrastructure.Scraper.Adapters;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotifierApp.Extensions;
 
@@ -64,14 +67,16 @@ public class Startup
         services
             .AddScoped<IQueryHandler<AvailableMediaQuery, AvailableMedia>, QueryAvailableMediaHandler>()
             .AddScoped<IQueryHandler<AvailableWebsitesQuery, AvailableWebsites>, QueryAvailableWebsitesHandler>()
-            .AddScoped<IQueryHandler<MediaSubscriptionsQuery, MediaSubscriptions>, QueryMediaSubscriptionsHandler>();
+            .AddScoped<IQueryHandler<MediaSubscriptionsQuery, MediaSubscriptions>, QueryMediaSubscriptionsHandler>()
+            .AddScoped<IQueryHandler<ScrapeTargetsQuery, Result<ScrapeTargets>>, QueryScrapeTargetsHandler>();
 
         // Commands
         services
             .AddScoped<ICommandHandler<SubscribeMediaCommand, Result>, SubscribeMediaHandler>()
             .AddScoped<ICommandHandler<UnsubscribeMediaCommand, Result>, UnsubscribeMediaHandler>()
             .AddScoped<ICommandHandler<ScrapeNewReleasesCommand, Result>, ScrapeNewReleasesHandler>()
-            .AddScoped<ICommandHandler<AddMediaCommand, Result>, AddMediaHandler>();
+            .AddScoped<ICommandHandler<AddMediaCommand, Result>, AddMediaHandler>()
+            .AddScoped<ICommandHandler<AddScrapeTargetCommand, Result>, AddScrapeTargetHandler>();
         
         // Repositories(Write)
         services
@@ -83,8 +88,9 @@ public class Startup
         // Repositories(Read)
         services
             .AddScoped<IMediaReadRepository, MediaReadRepository>()
-            .AddScoped<ISubscriberReadRepository, SubscriberReadRepository>()
-            .AddScoped<IWebsiteReadRepository, WebsiteReadRepository>();
+            .AddScoped<IMediaSubscriptionsReadRepository, MediaSubscriptionsReadRepository>()
+            .AddScoped<IWebsiteReadRepository, WebsiteReadRepository>()
+            .AddScoped<IScrapeTargetReadRepository, ScrapeTargetReadRepository>();
         
         // Scraper
         services

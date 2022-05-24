@@ -18,7 +18,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         var subscriber = Given.A.Subscriber.WithSubscriptions;
-        var mediaToUnsubscribeFrom = subscriber.SubscribedToMedia.First();
+        var mediaToUnsubscribeFrom = Given.A.Subscriber.SubscribedToMedia.First();
         var unsubscribeMediaCommand = new UnsubscribeMediaCommand(subscriber.ExternalIdentifier, mediaToUnsubscribeFrom.Name);
 
         var unSubscribeMediaResult = await When.TheApplication.ReceivesCommand<UnsubscribeMediaCommand, Result>(unsubscribeMediaCommand);

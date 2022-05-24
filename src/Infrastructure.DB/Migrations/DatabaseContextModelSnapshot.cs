@@ -31,15 +31,10 @@ namespace Infrastructure.DB.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<Guid?>("ScrapeTargetId")
-                        .HasColumnType("uuid");
-
                     b.HasKey("Id");
 
                     b.HasIndex("Name")
                         .IsUnique();
-
-                    b.HasIndex("ScrapeTargetId");
 
                     b.ToTable("Media");
                 });
@@ -49,14 +44,15 @@ namespace Infrastructure.DB.Migrations
                     b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("RelativeUrl")
-                        .IsRequired()
-                        .HasColumnType("text");
+                    b.Property<Guid?>("MediaId")
+                        .HasColumnType("uuid");
 
                     b.Property<Guid>("WebsiteId")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("MediaId");
 
                     b.HasIndex("WebsiteId");
 
@@ -110,10 +106,6 @@ namespace Infrastructure.DB.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
                     b.HasKey("Id");
 
                     b.ToTable("Website");
@@ -121,18 +113,13 @@ namespace Infrastructure.DB.Migrations
 
             modelBuilder.Entity("Domain.Model.Media", b =>
                 {
-                    b.HasOne("Domain.Model.ScrapeTarget", "ScrapeTarget")
-                        .WithMany()
-                        .HasForeignKey("ScrapeTargetId");
-
                     b.OwnsOne("Domain.Model.Release", "NewestRelease", b1 =>
                         {
                             b1.Property<Guid>("MediaId")
                                 .HasColumnType("uuid");
 
-                            b1.Property<string>("Link")
-                                .IsRequired()
-                                .HasColumnType("text");
+                            b1.Property<DateTime>("Created")
+                                .HasColumnType("timestamp with time zone");
 
                             b1.HasKey("MediaId");
 
@@ -160,29 +147,70 @@ namespace Infrastructure.DB.Migrations
                                         .HasForeignKey("ReleaseMediaId");
                                 });
 
+                            b1.OwnsOne("Domain.Model.ResourceUrl", "ResourceUrl", b2 =>
+                                {
+                                    b2.Property<Guid>("ReleaseMediaId")
+                                        .HasColumnType("uuid");
+
+                                    b2.Property<string>("Value")
+                                        .IsRequired()
+                                        .HasColumnType("text");
+
+                                    b2.HasKey("ReleaseMediaId");
+
+                                    b2.ToTable("Media");
+
+                                    b2.WithOwner()
+                                        .HasForeignKey("ReleaseMediaId");
+                                });
+
                             b1.Navigation("ReleaseNumber")
+                                .IsRequired();
+
+                            b1.Navigation("ResourceUrl")
                                 .IsRequired();
                         });
 
                     b.Navigation("NewestRelease");
-
-                    b.Navigation("ScrapeTarget");
                 });
 
             modelBuilder.Entity("Domain.Model.ScrapeTarget", b =>
                 {
-                    b.HasOne("Domain.Model.Website", "Website")
+                    b.HasOne("Domain.Model.Media", null)
+                        .WithMany("ScrapeTargets")
+                        .HasForeignKey("MediaId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("Domain.Model.Website", null)
                         .WithMany()
                         .HasForeignKey("WebsiteId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Website");
+                    b.OwnsOne("Domain.Model.RelativeUrl", "RelativeUrl", b1 =>
+                        {
+                            b1.Property<Guid>("ScrapeTargetId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("ScrapeTargetId");
+
+                            b1.ToTable("ScrapeTarget");
+
+                            b1.WithOwner()
+                                .HasForeignKey("ScrapeTargetId");
+                        });
+
+                    b.Navigation("RelativeUrl")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Domain.Model.Subscription", b =>
                 {
-                    b.HasOne("Domain.Model.Media", "Media")
+                    b.HasOne("Domain.Model.Media", null)
                         .WithMany()
                         .HasForeignKey("MediaId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -192,8 +220,34 @@ namespace Infrastructure.DB.Migrations
                         .WithMany("Subscriptions")
                         .HasForeignKey("SubscriberId")
                         .OnDelete(DeleteBehavior.Cascade);
+                });
 
-                    b.Navigation("Media");
+            modelBuilder.Entity("Domain.Model.Website", b =>
+                {
+                    b.OwnsOne("Domain.Model.WebsiteUrl", "Url", b1 =>
+                        {
+                            b1.Property<Guid>("WebsiteId")
+                                .HasColumnType("uuid");
+
+                            b1.Property<string>("Value")
+                                .IsRequired()
+                                .HasColumnType("text");
+
+                            b1.HasKey("WebsiteId");
+
+                            b1.ToTable("Website");
+
+                            b1.WithOwner()
+                                .HasForeignKey("WebsiteId");
+                        });
+
+                    b.Navigation("Url")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Domain.Model.Media", b =>
+                {
+                    b.Navigation("ScrapeTargets");
                 });
 
             modelBuilder.Entity("Domain.Model.Subscriber", b =>

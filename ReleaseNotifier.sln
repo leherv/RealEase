@@ -56,7 +56,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{B5B45A45-FA71-
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper", "src\Infrastructure.Scraper\Infrastructure.Scraper.csproj", "{FE931D1E-E986-4A1A-A1A7-0E9C2D9D1EDE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Intrastructure.Scraper.Tests", "test\unit\Intrastructure.Scraper.Tests\Intrastructure.Scraper.Tests.csproj", "{F1217747-8148-44F9-A420-DEBAEF8CF18C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper.Tests", "test\unit\Infrastructure.Scraper.Tests\Infrastructure.Scraper.Tests.csproj", "{F1217747-8148-44F9-A420-DEBAEF8CF18C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
