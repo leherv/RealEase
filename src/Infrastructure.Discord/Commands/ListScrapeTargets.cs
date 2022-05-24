@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Discord.Commands;
 
-internal class ListScrapeTargets : ModuleBase<SocketCommandContext>
+public class ListScrapeTargets : ModuleBase<SocketCommandContext>
 {
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ILogger<ListScrapeTargets> _logger;
@@ -46,7 +46,7 @@ internal class ListScrapeTargets : ModuleBase<SocketCommandContext>
                                                                     $"\n Website: {scrapeTargetInfo.WebsiteName}" +
                                                                     $"\n Website URL: {scrapeTargetInfo.WebsiteUrl}" +
                                                                     $"\n Relative URL: {scrapeTargetInfo.RelativeUrl}")
-                : "\nNo websites available.";
+                : "\nNo ScrapeTargets yet.";
         }
 
         await Context.Message.Channel.SendMessageAsync(message);
