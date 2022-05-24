@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.Scraper;
+﻿namespace Infrastructure.Scraper.Shared;
 
 internal static class UriCombinator
 {

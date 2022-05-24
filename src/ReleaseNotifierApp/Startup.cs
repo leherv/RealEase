@@ -27,7 +27,6 @@ using Infrastructure.Discord;
 using Infrastructure.Discord.Adapters;
 using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
-using Infrastructure.Scraper;
 using Infrastructure.Scraper.Adapters;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotifierApp.Extensions;

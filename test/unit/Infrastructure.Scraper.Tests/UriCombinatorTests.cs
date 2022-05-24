@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using Infrastructure.Scraper;
+using Infrastructure.Scraper.Shared;
 using Xunit;
 
 namespace Intrastructure.Scraper.Tests;
