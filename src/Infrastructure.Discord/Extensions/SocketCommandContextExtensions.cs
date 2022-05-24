@@ -2,9 +2,9 @@
 
 namespace Infrastructure.Discord.Extensions;
 
-public static class SocketCommandContextExtensions
+internal static class SocketCommandContextExtensions
 {
-    public static ulong GetUserId(this SocketCommandContext context)
+    internal static ulong GetUserId(this SocketCommandContext context)
     {
         return context.User.Id;
     }

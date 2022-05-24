@@ -6,12 +6,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Discord.Commands;
 
-public class AddScrapeTarget : ModuleBase<SocketCommandContext>
+internal class AddScrapeTarget : ModuleBase<SocketCommandContext>
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly ILogger<Subscribe> _logger;
 
-    public AddScrapeTarget(ICommandDispatcher commandDispatcher, ILogger<Subscribe> logger)
+    internal AddScrapeTarget(ICommandDispatcher commandDispatcher, ILogger<Subscribe> logger)
     {
         _commandDispatcher = commandDispatcher;
         _logger = logger;
@@ -19,7 +19,7 @@ public class AddScrapeTarget : ModuleBase<SocketCommandContext>
 
     [Command("addScrapeTarget")]
     [Alias("aST")]
-    public async Task SubscribeHandler(string mediaName, string websiteName, string relativeUrl)
+    internal async Task SubscribeHandler(string mediaName, string websiteName, string relativeUrl)
     {
         var addScrapeTargetResult =
             await _commandDispatcher.Dispatch<AddScrapeTargetCommand, Result>(

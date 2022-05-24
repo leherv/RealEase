@@ -4,11 +4,11 @@ using Discord.Commands;
 
 namespace Infrastructure.Discord.Commands;
 
-public class ListAvailable : ModuleBase<SocketCommandContext>
+internal class ListAvailable : ModuleBase<SocketCommandContext>
 {
     private readonly IQueryDispatcher _queryDispatcher;
 
-    public ListAvailable(IQueryDispatcher queryDispatcher)
+    internal ListAvailable(IQueryDispatcher queryDispatcher)
     {
         _queryDispatcher = queryDispatcher;
     }

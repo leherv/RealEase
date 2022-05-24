@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Discord.Commands;
 
-public class Help : ModuleBase<SocketCommandContext>
+internal class Help : ModuleBase<SocketCommandContext>
 {
     private const string HelpText =
         "Welcome to Vik Release Notifier (VRN)!\n" +
@@ -19,5 +19,5 @@ public class Help : ModuleBase<SocketCommandContext>
     
     [Command("help")]
     [Alias("h")]
-    public Task HelpHandler() => ReplyAsync(HelpText);
+    internal Task HelpHandler() => ReplyAsync(HelpText);
 }

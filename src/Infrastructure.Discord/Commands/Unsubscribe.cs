@@ -7,12 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Discord.Commands;
 
-public class Unsubscribe : ModuleBase<SocketCommandContext>
+internal class Unsubscribe : ModuleBase<SocketCommandContext>
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly ILogger<Unsubscribe> _logger;
 
-    public Unsubscribe(ICommandDispatcher commandDispatcher, ILogger<Unsubscribe> logger)
+    internal Unsubscribe(ICommandDispatcher commandDispatcher, ILogger<Unsubscribe> logger)
     {
         _commandDispatcher = commandDispatcher;
         _logger = logger;
@@ -20,7 +20,7 @@ public class Unsubscribe : ModuleBase<SocketCommandContext>
     
     [Command("unsubscribe")]
     [Alias("us")]
-    public async Task UnsubscribeHandler(string mediaName)
+    internal async Task UnsubscribeHandler(string mediaName)
     {
         var unsubscribeResult =
             await _commandDispatcher.Dispatch<UnsubscribeMediaCommand, Result>(

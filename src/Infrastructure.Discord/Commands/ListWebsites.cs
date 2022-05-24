@@ -5,18 +5,18 @@ using Discord.Commands;
 
 namespace Infrastructure.Discord.Commands;
 
-public class ListWebsites : ModuleBase<SocketCommandContext>
+internal class ListWebsites : ModuleBase<SocketCommandContext>
 {
     private readonly IQueryDispatcher _queryDispatcher;
 
-    public ListWebsites(IQueryDispatcher queryDispatcher)
+    internal ListWebsites(IQueryDispatcher queryDispatcher)
     {
         _queryDispatcher = queryDispatcher;
     }
 
     [Command("listWebsites")]
     [Alias("lW")]
-    public async Task ListWebsitesHandler()
+    internal async Task ListWebsitesHandler()
     {
         var availableWebsites =
             await _queryDispatcher.Dispatch<AvailableWebsitesQuery, AvailableWebsites>(new AvailableWebsitesQuery());

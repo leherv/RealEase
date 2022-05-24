@@ -7,12 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Discord.Commands;
 
-public class AddMedia : ModuleBase<SocketCommandContext>
+internal class AddMedia : ModuleBase<SocketCommandContext>
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly ILogger<AddMedia> _logger;
 
-    public AddMedia(ICommandDispatcher commandDispatcher, ILogger<AddMedia> logger)
+    internal AddMedia(ICommandDispatcher commandDispatcher, ILogger<AddMedia> logger)
     {
         _commandDispatcher = commandDispatcher;
         _logger = logger;
@@ -20,7 +20,7 @@ public class AddMedia : ModuleBase<SocketCommandContext>
 
     [Command("addMedia")]
     [Alias("aM")]
-    public async Task AddMediaHandler(string websiteName, string relativePath)
+    internal async Task AddMediaHandler(string websiteName, string relativePath)
     {
         var addMediaCommand = new AddMediaCommand(websiteName, relativePath);
         

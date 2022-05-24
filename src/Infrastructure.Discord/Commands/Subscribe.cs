@@ -12,7 +12,7 @@ public class Subscribe : ModuleBase<SocketCommandContext>
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly ILogger<Subscribe> _logger;
 
-    public Subscribe(ICommandDispatcher commandDispatcher, ILogger<Subscribe> logger)
+    internal Subscribe(ICommandDispatcher commandDispatcher, ILogger<Subscribe> logger)
     {
         _commandDispatcher = commandDispatcher;
         _logger = logger;
@@ -20,7 +20,7 @@ public class Subscribe : ModuleBase<SocketCommandContext>
 
     [Command("subscribe")]
     [Alias("s")]
-    public async Task SubscribeHandler(string mediaName)
+    internal async Task SubscribeHandler(string mediaName)
     {
         var subscribeResult =
             await _commandDispatcher.Dispatch<SubscribeMediaCommand, Result>(

@@ -7,12 +7,12 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Discord.Commands;
 
-public class ListScrapeTargets : ModuleBase<SocketCommandContext>
+internal class ListScrapeTargets : ModuleBase<SocketCommandContext>
 {
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ILogger<ListScrapeTargets> _logger;
 
-    public ListScrapeTargets(ILogger<ListScrapeTargets> logger, IQueryDispatcher queryDispatcher)
+    internal ListScrapeTargets(ILogger<ListScrapeTargets> logger, IQueryDispatcher queryDispatcher)
     {
         _logger = logger;
         _queryDispatcher = queryDispatcher;
@@ -20,7 +20,7 @@ public class ListScrapeTargets : ModuleBase<SocketCommandContext>
 
     [Command("listScrapeTargets")]
     [Alias("lST")]
-    public async Task ListScrapeTargetsHandler(string mediaName)
+    internal async Task ListScrapeTargetsHandler(string mediaName)
     {
         var scrapeTargetsResult =
             await _queryDispatcher.Dispatch<ScrapeTargetsQuery, Result<ScrapeTargets>>(

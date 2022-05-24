@@ -29,9 +29,9 @@ namespace Infrastructure.Discord;
             _commandService.CommandExecuted += CommandExecutedAsync;
         }
         
-        public async Task InitializeAsync()
+        internal async Task InitializeAsync()
         {
-            // Register modules that are public and inherit ModuleBase<T>.
+            // Register modules that are internal and inherit ModuleBase<T>.
             await _commandService.AddModulesAsync(typeof(Help).Assembly, _serviceProvider);
         }
         
@@ -49,8 +49,8 @@ namespace Infrastructure.Discord;
             // we will handle the result in CommandExecutedAsync,
             var result = await _commandService.ExecuteAsync(context, argPos, _serviceProvider);
         }
-        
-        public async Task CommandExecutedAsync(
+
+        private async Task CommandExecutedAsync(
             Optional<CommandInfo> command,
             ICommandContext context,
             IResult result

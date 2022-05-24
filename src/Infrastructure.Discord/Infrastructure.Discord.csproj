@@ -24,5 +24,4 @@
         <HintPath>..\..\..\..\..\Program Files\dotnet\shared\Microsoft.AspNetCore.App\6.0.2\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
       </Reference>
     </ItemGroup>
-
 </Project>
