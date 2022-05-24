@@ -24,9 +24,11 @@ using Infrastructure.DB.Adapters.Repositories.Read;
 using Infrastructure.DB.Adapters.Repositories.Write;
 using Infrastructure.DB.DomainEvent;
 using Infrastructure.Discord;
+using Infrastructure.Discord.Adapters;
 using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
 using Infrastructure.Scraper;
+using Infrastructure.Scraper.Adapters;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotifierApp.Extensions;
 

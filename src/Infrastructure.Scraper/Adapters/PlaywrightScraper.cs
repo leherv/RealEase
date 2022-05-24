@@ -3,7 +3,7 @@ using Domain.ApplicationErrors;
 using Domain.Results;
 using Microsoft.Playwright;
 
-namespace Infrastructure.Scraper;
+namespace Infrastructure.Scraper.Adapters;
 
 public class PlaywrightScraper : IScraper
 {
