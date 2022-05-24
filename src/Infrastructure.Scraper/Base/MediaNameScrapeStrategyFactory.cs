@@ -9,6 +9,7 @@ internal static class MediaNameScrapeStrategyFactory
         {
             "earlymanga" => new EarlyManga.MediaNameScrapeStrategy(),
             "manganato" => new Manganato.MediaNameScrapeStrategy(),
+            "tapas" => new Tapas.MediaNameScrapeStrategy(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

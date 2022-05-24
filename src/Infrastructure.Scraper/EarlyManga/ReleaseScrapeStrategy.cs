@@ -26,7 +26,7 @@ internal class ReleaseScrapeStrategy : IReleaseScrapeStrategy
         if (relativeChapterUrl == null)
             return Errors.Scraper.ScrapeFailedError("Newest link element does not contain a chapter url");
 
-        var releaseNumbersResult = ReleaseNumberExtractor.ExtractReleaseNumbers(relativeChapterUrl);
+        var releaseNumbersResult = UriReleaseNumberExtractor.ExtractReleaseNumbers(relativeChapterUrl);
         if (releaseNumbersResult.IsFailure)
             return releaseNumbersResult.Error;
 

@@ -8,6 +8,7 @@ internal static class ReleaseScrapeStrategyFactory
         {
             "earlymanga" => new EarlyManga.ReleaseScrapeStrategy(),
             "manganato" => new Manganato.ReleaseScrapeStrategy(),
+            "tapas" => new Tapas.ReleaseScrapeStrategy(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

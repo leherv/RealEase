@@ -1,9 +1,8 @@
 ﻿using FluentAssertions;
-using Infrastructure.Scraper;
 using Infrastructure.Scraper.Shared;
 using Xunit;
 
-namespace Intrastructure.Scraper.Tests;
+namespace Infrastructure.Scraper.Tests;
 
 public class UriCombinatorTests
 {
