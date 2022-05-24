@@ -12,8 +12,7 @@ public class PlaywrightMediaNameScraper : IMediaNameScraper
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync();
         var page = await browser.NewPageAsync();
-        var targetUrl = UriCombinator.Combine(scrapeMediaNameInstruction.Url, scrapeMediaNameInstruction.RelativeUrl);
-        await page.GotoAsync(targetUrl);
+        await page.GotoAsync(scrapeMediaNameInstruction.ResourceUrl);
         
         var container = await page.WaitForSelectorAsync("div.manga-container", new PageWaitForSelectorOptions
         {

@@ -147,11 +147,12 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
         Domain.Model.Website website
     )
     {
+        var resourceUrl = ResourceUrl.Create(website.Url, scrapeTarget.RelativeUrl);
         return new ScrapeInstruction(
             media.Name,
             website.Name,
             website.Url.Value,
-            scrapeTarget.RelativeUrl.Value
+            resourceUrl.Value
         );
     }
 

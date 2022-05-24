@@ -38,10 +38,14 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
         if (media != null)
             return Errors.Media.MediaWithScrapeTargetExistsError(media.Name);
 
+        var resourceUrlResult = ResourceUrl.Create(website.Url, relativeUrl);
+        if (resourceUrlResult.IsFailure)
+            return resourceUrlResult;
+        var resourceUrl = resourceUrlResult.Value;
+        
         var scrapeMediaNameInstruction = new ScrapeMediaNameInstruction(
             website.Name,
-            website.Url.Value,
-            relativeUrl
+            resourceUrl.Value
         );
         var scrapeMediaNameResult = await _mediaNameScraper.ScrapeMediaName(scrapeMediaNameInstruction);
         if (scrapeMediaNameResult.IsFailure)
@@ -54,7 +58,7 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
             scrapeMediaNameResult.Value.MediaName,
             website.Name,
             website.Url.Value,
-            relativeUrl
+            resourceUrl.Value
         );
         var scrapeResult = await _scraper.Scrape(scrapeInstruction);
         if (scrapeResult.IsFailure)

@@ -17,4 +17,12 @@ public record ResourceUrl(string Value)
             .NotNullOrWhiteSpace(urlToResource, nameof(urlToResource))
             .ValidateAndCreate(() => new ResourceUrl(urlToResource));
     }
+    
+    public static Result<ResourceUrl> Create(WebsiteUrl websiteUrl, string relativeUrl)
+    {
+        var relativeUrlResult = RelativeUrl.Create(relativeUrl);
+        if (relativeUrlResult.IsFailure)
+            return relativeUrlResult.Error;
+        return Create(websiteUrl, relativeUrlResult.Value);
+    }
 }

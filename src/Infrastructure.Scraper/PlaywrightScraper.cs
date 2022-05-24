@@ -13,8 +13,7 @@ public class PlaywrightScraper : IScraper
         using var playwright = await Playwright.CreateAsync();
         await using var browser = await playwright.Chromium.LaunchAsync();
         var page = await browser.NewPageAsync();
-        var targetUrl = UriCombinator.Combine(scrapeInstruction.Url, scrapeInstruction.RelativeUrl);
-        await page.GotoAsync(targetUrl);
+        await page.GotoAsync(scrapeInstruction.ResourceUrl);
 
         var container = await page.WaitForSelectorAsync("div.chapter-container", new PageWaitForSelectorOptions
         {
@@ -36,7 +35,7 @@ public class PlaywrightScraper : IScraper
             return releaseNumbersResult.Error;
 
         return new ScrapedMediaRelease(
-            UriCombinator.Combine(scrapeInstruction.Url, relativeChapterUrl),
+            UriCombinator.Combine(scrapeInstruction.WebsiteUrl, relativeChapterUrl),
             releaseNumbersResult.Value.Major,
             releaseNumbersResult.Value.Minor
         );

@@ -36,7 +36,7 @@ public record ReleaseNumber : IComparable<ReleaseNumber>
         if (other == null)
             return 1;
         
-        if (Equals(this))
+        if (Equals(other))
             return 0;
         
         if (Major > other.Major)

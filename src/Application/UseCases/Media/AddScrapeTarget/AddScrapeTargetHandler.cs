@@ -33,7 +33,7 @@ public class AddScrapeTargetHandler : ICommandHandler<AddScrapeTargetCommand, Re
         var relativeUrlResult = RelativeUrl.Create(scrapeNewReleasesCommand.RelativeUrl);
         if (relativeUrlResult.IsFailure)
             return relativeUrlResult.Error;
-
+        
         var scrapeTargetToAddResult = ScrapeTarget.Create(Guid.NewGuid(), website, relativeUrlResult.Value);
         if (scrapeTargetToAddResult.IsFailure)
             return scrapeTargetToAddResult;
@@ -41,12 +41,13 @@ public class AddScrapeTargetHandler : ICommandHandler<AddScrapeTargetCommand, Re
         
         if(media.ScrapeTargetAlreadyConfigured(scrapeTargetToAdd))
             return Errors.Media.ScrapeTargetExistsError(media.Name);
-        
+
+        var resourceUrl = ResourceUrl.Create(website.Url, relativeUrlResult.Value);
         var scrapeInstruction = new ScrapeInstruction(
             media.Name,
             website.Name,
             website.Url.Value,
-            scrapeNewReleasesCommand.RelativeUrl
+            resourceUrl.Value
         );
         var scrapeResult = await _scraper.Scrape(scrapeInstruction);
         if (scrapeResult.IsFailure)
