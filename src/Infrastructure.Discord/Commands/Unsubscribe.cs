@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Discord.Commands;
 
-internal class Unsubscribe : ModuleBase<SocketCommandContext>
+public class Unsubscribe : ModuleBase<SocketCommandContext>
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly ILogger<Unsubscribe> _logger;

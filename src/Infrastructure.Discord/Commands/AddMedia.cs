@@ -7,7 +7,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Discord.Commands;
 
-internal class AddMedia : ModuleBase<SocketCommandContext>
+public class AddMedia : ModuleBase<SocketCommandContext>
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly ILogger<AddMedia> _logger;

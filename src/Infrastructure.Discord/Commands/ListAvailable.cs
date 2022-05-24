@@ -4,7 +4,7 @@ using Discord.Commands;
 
 namespace Infrastructure.Discord.Commands;
 
-internal class ListAvailable : ModuleBase<SocketCommandContext>
+public class ListAvailable : ModuleBase<SocketCommandContext>
 {
     private readonly IQueryDispatcher _queryDispatcher;
 
@@ -15,7 +15,7 @@ internal class ListAvailable : ModuleBase<SocketCommandContext>
 
     [Command("listAvailable")]
     [Alias("l")]
-    public async Task ListAvailableHandler()
+    internal async Task ListAvailableHandler()
     {
         var availableMedia =
             await _queryDispatcher.Dispatch<AvailableMediaQuery, AvailableMedia>(new AvailableMediaQuery());

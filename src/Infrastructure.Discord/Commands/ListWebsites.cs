@@ -4,7 +4,7 @@ using Discord.Commands;
 
 namespace Infrastructure.Discord.Commands;
 
-internal class ListWebsites : ModuleBase<SocketCommandContext>
+public class ListWebsites : ModuleBase<SocketCommandContext>
 {
     private readonly IQueryDispatcher _queryDispatcher;
 

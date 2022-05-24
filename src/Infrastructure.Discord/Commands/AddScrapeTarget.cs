@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Discord.Commands;
 
-internal class AddScrapeTarget : ModuleBase<SocketCommandContext>
+public class AddScrapeTarget : ModuleBase<SocketCommandContext>
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly ILogger<Subscribe> _logger;

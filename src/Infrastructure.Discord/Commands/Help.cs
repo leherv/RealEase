@@ -2,7 +2,7 @@
 
 namespace Infrastructure.Discord.Commands;
 
-internal class Help : ModuleBase<SocketCommandContext>
+public class Help : ModuleBase<SocketCommandContext>
 {
     private const string HelpText =
         "Welcome to Vik Release Notifier (VRN)!\n" +

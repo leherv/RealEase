@@ -4,7 +4,7 @@ using Discord.Commands;
 
 namespace Infrastructure.Discord.Commands;
 
-internal class ListSubscribed : ModuleBase<SocketCommandContext>
+public class ListSubscribed : ModuleBase<SocketCommandContext>
 {
     private readonly IQueryDispatcher _queryDispatcher;
 
