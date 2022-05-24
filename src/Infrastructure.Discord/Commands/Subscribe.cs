@@ -10,9 +10,9 @@ namespace Infrastructure.Discord.Commands;
 public class Subscribe : ModuleBase<SocketCommandContext>
 {
     private readonly ICommandDispatcher _commandDispatcher;
-    private readonly ILogger<PublicModule> _logger;
+    private readonly ILogger<Subscribe> _logger;
 
-    public Subscribe(ICommandDispatcher commandDispatcher, ILogger<PublicModule> logger)
+    public Subscribe(ICommandDispatcher commandDispatcher, ILogger<Subscribe> logger)
     {
         _commandDispatcher = commandDispatcher;
         _logger = logger;

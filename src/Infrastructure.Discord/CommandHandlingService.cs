@@ -1,6 +1,7 @@
 ﻿using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using Infrastructure.Discord.Commands;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
@@ -31,7 +32,7 @@ namespace Infrastructure.Discord;
         public async Task InitializeAsync()
         {
             // Register modules that are public and inherit ModuleBase<T>.
-            await _commandService.AddModulesAsync(typeof(PublicModule).Assembly, _serviceProvider);
+            await _commandService.AddModulesAsync(typeof(Help).Assembly, _serviceProvider);
         }
         
         private async Task MessageReceivedAsync(SocketMessage rawMessage)

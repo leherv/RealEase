@@ -13,7 +13,9 @@ public class Help : ModuleBase<SocketCommandContext>
         "rn!listSubscribed\n" +
         "rn!listWebsites\n" +
         "rn!addMedia [websiteName] [relativeUrl]\n"
-        +"\te.g.: rn!addMedia earlymanga /manga/tower-of-god";
+        +"\te.g.: rn!addMedia earlymanga /manga/tower-of-god\n" +
+        "rn!addScrapeTarget \"[mediaName]\" [websiteName] [relativeUrl]\n" +
+        "rn!listScrapeTargets \"[mediaName]\"";
     
     [Command("help")]
     [Alias("h")]
