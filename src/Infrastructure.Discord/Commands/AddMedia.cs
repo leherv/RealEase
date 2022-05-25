@@ -37,7 +37,7 @@ public class AddMedia : ModuleBase<SocketCommandContext>
             if (addMediaResult.Error.Code == Errors.Media.MediaWithScrapeTargetExistsErrorCode)
                 message += " as another media already is configured for this URL";
             if (addMediaResult.Error.Code == Errors.General.NotFoundErrorCode)
-                message += $" as website with {websiteName} could not be found";
+                message += $" as website with name {websiteName} could not be found";
         }
         
         await Context.Message.Channel.SendMessageAsync(message);

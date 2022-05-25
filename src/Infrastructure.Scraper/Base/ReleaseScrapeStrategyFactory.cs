@@ -1,4 +1,6 @@
-﻿namespace Infrastructure.Scraper.Base;
+﻿using System;
+
+namespace Infrastructure.Scraper.Base;
 
 internal static class ReleaseScrapeStrategyFactory
 {

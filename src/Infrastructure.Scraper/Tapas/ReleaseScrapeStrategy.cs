@@ -12,26 +12,24 @@ internal class ReleaseScrapeStrategy : IReleaseScrapeStrategy
 {
     public async Task<Result<ScrapedMediaRelease>> Execute(IPage page, ScrapeInstruction scrapeInstruction)
     {
-        var container = await page.WaitForSelectorAsync("div.episode-list", new PageWaitForSelectorOptions
-        {
-            State = WaitForSelectorState.Visible
-        });
-        if (container == null)
-            return Errors.Scraper.ScrapeFailedError("Element containing chapters did not appear.");
+        await WaitForChapterListToLoad(page);
+        await MoveNewestChapterToTheTop(page);
+        await WaitForChapterListToLoad(page);
         
-        var newestListEntry = await container.QuerySelectorAsync("ul li:last-of-type");
+        var newestListEntry = await page.QuerySelectorAsync("ul.list-body >> li");
         if (newestListEntry == null)
-            return Errors.Scraper.ScrapeFailedError("Newest chapter link element could not be selected.");
+            return Errors.Scraper.ScrapeFailedError("Newest list element could not be selected.");
         
         var relativeUrl = await newestListEntry.GetAttributeAsync("data-href");
         if (relativeUrl == null)
             return Errors.Scraper.ScrapeFailedError("Newest list element does not contain a chapter url");
 
-        var episodeInfo = await newestListEntry.QuerySelectorAsync("a.info__title");
+        var episodeInfo = await newestListEntry.QuerySelectorAsync("a.info__label");
         if (episodeInfo == null)
             return Errors.Scraper.ScrapeFailedError("Newest list element does not contain a episode number");
+        var episodeInfoText = await episodeInfo.InnerTextAsync();
         
-        var releaseNumbersResult = UriReleaseNumberExtractor.ExtractReleaseNumbers(relativeUrl);
+        var releaseNumbersResult = ReleaseNumberExtractor.ExtractReleaseNumbers(episodeInfoText);
         if (releaseNumbersResult.IsFailure)
             return releaseNumbersResult.Error;
         
@@ -41,4 +39,15 @@ internal class ReleaseScrapeStrategy : IReleaseScrapeStrategy
             releaseNumbersResult.Value.Minor
         );
     }
+
+    private static async Task WaitForChapterListToLoad(IPage page)
+    {
+        await page.Locator("ul.list-body >> li >> nth=0").WaitForAsync();
+    }
+
+    private static async Task MoveNewestChapterToTheTop(IPage page)
+    {
+        await page.Locator("a.sort-btn").ClickAsync();
+    }
+    
 }

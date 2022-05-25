@@ -8,6 +8,7 @@ public class GivenTheWebsite
     public List<Website> Websites { get; }
     public Website EarlyManga { get; }
     public Website Manganato { get; }
+    public Website Tapas { get; }
 
     public GivenTheWebsite()
     {
@@ -16,16 +17,24 @@ public class GivenTheWebsite
             WebsiteUrl.Create("https://earlymng.org/").Value,
             "earlymanga"
         ).Value;
+        
         Manganato = Create(
             Guid.NewGuid(),
             WebsiteUrl.Create("https://readmanganato.com/").Value,
             "manganato"
         ).Value;
+        
+        Tapas = Create(
+            Guid.NewGuid(),
+            WebsiteUrl.Create("https://tapas.io/").Value,
+            "tapas"
+        ).Value;
 
         Websites = new List<Website>
         {
             EarlyManga,
-            Manganato
+            Manganato,
+            Tapas
         };
     }
 
