@@ -8,9 +8,8 @@ public record WebsiteUrl(string Value)
 {
     public static Result<WebsiteUrl> Create(string url)
     {
-        var preparedUrl = url.TrimEnd('/');
         return Invariant.Create
-            .NotNullOrWhiteSpace(preparedUrl, nameof(preparedUrl))
-            .ValidateAndCreate(() => new WebsiteUrl(preparedUrl));
+            .NotNullOrWhiteSpace(url, nameof(url))
+            .ValidateAndCreate(() => new WebsiteUrl(url));
     }
 }

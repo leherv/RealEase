@@ -8,7 +8,9 @@ public record ResourceUrl(string Value)
 {
     public static ResourceUrl Create(WebsiteUrl websiteUrl, RelativeUrl relativeUrl)
     {
-        return new ResourceUrl(websiteUrl.Value + relativeUrl.Value);
+        var preparedWebsiteUrl = websiteUrl.Value.TrimEnd('/');
+        var preparedRelativeUrl = websiteUrl.Value.TrimStart('/');
+        return new ResourceUrl($"{preparedWebsiteUrl}/{preparedRelativeUrl}");
     }
 
     public static Result<ResourceUrl> Create(string urlToResource)

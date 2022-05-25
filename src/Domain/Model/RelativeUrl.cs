@@ -8,9 +8,8 @@ public record RelativeUrl(string Value)
 {
     public static Result<RelativeUrl> Create(string url)
     {
-        var preparedUrl = url.TrimStart('/');
         return Invariant.Create
-            .NotNullOrWhiteSpace(preparedUrl, nameof(preparedUrl))
-            .ValidateAndCreate(() => new RelativeUrl(preparedUrl));
+            .NotNullOrWhiteSpace(url, nameof(url))
+            .ValidateAndCreate(() => new RelativeUrl(url));
     }
 }
