@@ -1,6 +1,7 @@
 ﻿using Application.UseCases.Base;
 using Application.UseCases.Media.AddScrapeTarget;
 using Discord.Commands;
+using Domain.ApplicationErrors;
 using Domain.Results;
 using Microsoft.Extensions.Logging;
 
@@ -19,7 +20,7 @@ public class AddScrapeTarget : ModuleBase<SocketCommandContext>
 
     [Command("addScrapeTarget")]
     [Alias("aST")]
-    internal async Task SubscribeHandler(string mediaName, string websiteName, string relativeUrl)
+    internal async Task AddScrapeTargetHandler(string mediaName, string websiteName, string relativeUrl)
     {
         var addScrapeTargetResult =
             await _commandDispatcher.Dispatch<AddScrapeTargetCommand, Result>(
@@ -28,8 +29,11 @@ public class AddScrapeTarget : ModuleBase<SocketCommandContext>
         var message = "Done.";
         if (addScrapeTargetResult.IsFailure)
         {
-            _logger.LogInformation(addScrapeTargetResult.Error.ToString());
-            message = "Adding ScrapeTarget failed.";
+            message = "Adding ScrapeTarget failed";
+            _logger.LogWarning(addScrapeTargetResult.Error.ToString());
+            if (addScrapeTargetResult.Error.Code == Errors.Media.ScrapeTargetExistsErrorCode)
+                message += " as this ScrapeTarget is already configured";
+            message += ".";
         }
 
         await Context.Message.Channel.SendMessageAsync(message);

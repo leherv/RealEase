@@ -18,7 +18,7 @@ public class GivenTheWebsite
         ).Value;
         Manganato = Create(
             Guid.NewGuid(),
-            WebsiteUrl.Create("https://manganato.com/").Value,
+            WebsiteUrl.Create("https://readmanganato.com/").Value,
             "manganato"
         ).Value;
 

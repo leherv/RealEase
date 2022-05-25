@@ -1,4 +1,5 @@
-﻿using Application.Ports.Scraper;
+﻿using System.Threading.Tasks;
+using Application.Ports.Scraper;
 using Domain.ApplicationErrors;
 using Domain.Results;
 using Infrastructure.Scraper.Base;
