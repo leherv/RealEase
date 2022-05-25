@@ -31,7 +31,7 @@ internal class ReleaseScrapeStrategy : IReleaseScrapeStrategy
         if (episodeInfo == null)
             return Errors.Scraper.ScrapeFailedError("Newest list element does not contain a episode number");
         
-        var releaseNumbersResult = UriReleaseNumberExtractor.ExtractReleaseNumbers(relativeUrl);
+        var releaseNumbersResult = ReleaseNumberExtractor.ExtractReleaseNumbers(relativeUrl);
         if (releaseNumbersResult.IsFailure)
             return releaseNumbersResult.Error;
         
