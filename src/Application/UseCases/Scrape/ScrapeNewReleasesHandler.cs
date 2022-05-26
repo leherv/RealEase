@@ -73,8 +73,17 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
     private async Task<IReadOnlyCollection<Result<ScrapedMediaRelease>>> ScrapeForReleases(
         IEnumerable<ScrapeInstruction> scrapeInstructions)
     {
-        var scrapeTasks = scrapeInstructions.Select(scrapeInstruction => _scraper.Scrape(scrapeInstruction));
-        return await Task.WhenAll(scrapeTasks);
+        // TODO: after deploying to different target change back to this again - on HEROKU free tier this is not possible due to memory problems   
+        // var scrapeTasks = scrapeInstructions.Select(scrapeInstruction => _scraper.Scrape(scrapeInstruction));
+        // return await Task.WhenAll(scrapeTasks);
+        var results = new List<Result<ScrapedMediaRelease>>();
+        foreach (var scrapeInstruction in scrapeInstructions)
+        {
+            var result = await _scraper.Scrape(scrapeInstruction);
+            results.Add(result);
+        }
+
+        return results;
     }
 
     private void LogFailingScrapes(IEnumerable<Result<ScrapedMediaRelease>> scrapedMediaReleasesResults)
