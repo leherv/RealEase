@@ -19,6 +19,7 @@ public class PlaywrightScraper : IScraper
 
     public async Task<Result<ScrapedMediaRelease>> Scrape(ScrapeInstruction scrapeInstruction)
     {
+        var scrapeStrategy = ReleaseScrapeStrategyFactory.Create(scrapeInstruction.WebsiteName);
         try
         {
             // Program.Main(new[] {"install"});
@@ -26,16 +27,15 @@ public class PlaywrightScraper : IScraper
             await using var browser = await playwright.Chromium.LaunchAsync();
             var page = await browser.NewPageAsync();
             await page.GotoAsync(scrapeInstruction.ResourceUrl);
-
-            var scrapeStrategy = ReleaseScrapeStrategyFactory.Create(scrapeInstruction.WebsiteName);
+            await page.Locator("ldsflsd").WaitForAsync();
 
             return await scrapeStrategy.Execute(page, scrapeInstruction);
         }
-        catch (PlaywrightException playwrightException)
+        catch (System.TimeoutException timeoutException)
         {
-            _applicationLogger.LogWarning(playwrightException,
+            _applicationLogger.LogWarning(timeoutException,
                 $"Scraping for Media with name {scrapeInstruction.MediaName} and ScrapeTarget with websiteName {scrapeInstruction.WebsiteName} and ResourceUrl {scrapeInstruction.ResourceUrl} failed.");
-            return Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError(playwrightException.Message));
+            return Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError(timeoutException.Message));
         }
     }
 }
