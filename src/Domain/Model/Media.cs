@@ -62,4 +62,6 @@ public class Media : AggregateRoot
             existingScrapeTarget.RelativeUrl == scrapeTarget.RelativeUrl &&
             existingScrapeTarget.WebsiteId == scrapeTarget.WebsiteId);
     }
+
+    public bool HasScrapeTargets => ScrapeTargets.Any();
 }

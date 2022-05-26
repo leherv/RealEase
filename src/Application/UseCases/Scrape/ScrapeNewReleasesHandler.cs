@@ -39,7 +39,7 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
         if (mediaToScrapeResult.IsFailure)
             return mediaToScrapeResult.Error;
 
-        foreach (var media in mediaToScrapeResult.Value)
+        foreach (var media in mediaToScrapeResult.Value.Where(media => media.HasScrapeTargets))
         {
             var scrapeInstructions = await PrepareScrapeInstructionsForMedia(media);
             var scrapedMediaReleasesResults = await ScrapeForReleases(scrapeInstructions);
