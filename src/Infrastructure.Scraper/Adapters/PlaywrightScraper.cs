@@ -1,20 +1,20 @@
 using System.Threading.Tasks;
+using Application.Ports.General;
 using Application.Ports.Scraper;
 using Domain.ApplicationErrors;
 using Domain.Results;
 using Infrastructure.Scraper.Base;
-using Microsoft.Extensions.Logging;
 using Microsoft.Playwright;
 
 namespace Infrastructure.Scraper.Adapters;
 
 public class PlaywrightScraper : IScraper
 {
-    private readonly ILogger<PlaywrightScraper> _logger;
-
-    public PlaywrightScraper(ILogger<PlaywrightScraper> logger)
+    private readonly IApplicationLogger _applicationLogger;
+    
+    public PlaywrightScraper(IApplicationLogger applicationLogger)
     {
-        _logger = logger;
+        _applicationLogger = applicationLogger;
     }
 
     public async Task<Result<ScrapedMediaRelease>> Scrape(ScrapeInstruction scrapeInstruction)
@@ -33,7 +33,7 @@ public class PlaywrightScraper : IScraper
         }
         catch (PlaywrightException playwrightException)
         {
-            _logger.LogWarning(playwrightException,
+            _applicationLogger.LogWarning(playwrightException,
                 $"Scraping for Media with name {scrapeInstruction.MediaName} and ScrapeTarget with websiteName {scrapeInstruction.WebsiteName} and ResourceUrl {scrapeInstruction.ResourceUrl} failed.");
             return Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError(playwrightException.Message));
         }
