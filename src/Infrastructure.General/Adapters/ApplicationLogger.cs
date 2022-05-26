@@ -16,4 +16,9 @@ public class ApplicationLogger : IApplicationLogger
     {
         _logger.LogWarning(message);
     }
+
+    public void LogWarning(Exception e, string message)
+    {
+        _logger.LogWarning(e, message);
+    }
 }

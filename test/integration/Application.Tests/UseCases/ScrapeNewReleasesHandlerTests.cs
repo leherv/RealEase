@@ -302,7 +302,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     
     [Fact]
     [Trait("Category", "Integration")]
-    public async Task Publishes_the_succesful_scrape_if_at_least_one_is_succesful_and_no_release_yet()
+    public async Task Publishes_the_successful_scrape_if_at_least_one_is_successful_and_no_release_yet()
     {
         await Given.TheDatabase.IsSeeded();
         var media = Given.A.Media.WithSubscriberWithTwoScrapeTargets;

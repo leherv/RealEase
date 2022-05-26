@@ -1,4 +1,6 @@
 ﻿
+using System;
+
 namespace Infrastructure.Scraper.Base;
 
 internal static class MediaNameScrapeStrategyFactory

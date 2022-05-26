@@ -10,7 +10,6 @@ public class ReleaseNumberTests
     private static IEnumerable<object[]> ReleaseNumbers() => new List<object[]>
     {
         new object[] { 1, 1, 1, 0, true},
-        new object[] { 2, 1, 1, 2, true},
         new object[] { 2, 1, 1, 2, true },
         new object[] { 1, 0, 1, 1, false },
         new object[] { 230, 9, 231, 0, false },
