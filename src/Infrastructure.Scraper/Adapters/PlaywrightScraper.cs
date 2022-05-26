@@ -27,7 +27,6 @@ public class PlaywrightScraper : IScraper
             await using var browser = await playwright.Chromium.LaunchAsync();
             var page = await browser.NewPageAsync();
             await page.GotoAsync(scrapeInstruction.ResourceUrl);
-            await page.Locator("ldsflsd").WaitForAsync();
 
             return await scrapeStrategy.Execute(page, scrapeInstruction);
         }
