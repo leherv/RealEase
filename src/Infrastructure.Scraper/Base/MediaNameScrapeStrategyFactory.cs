@@ -1,6 +1,4 @@
 ﻿
-using System;
-
 namespace Infrastructure.Scraper.Base;
 
 internal static class MediaNameScrapeStrategyFactory
@@ -12,6 +10,7 @@ internal static class MediaNameScrapeStrategyFactory
             "earlymanga" => new EarlyManga.MediaNameScrapeStrategy(),
             "manganato" => new Manganato.MediaNameScrapeStrategy(),
             "tapas" => new Tapas.MediaNameScrapeStrategy(),
+            "mangapill" => new MangaPill.MediaNameScrapeStrategy(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

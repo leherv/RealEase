@@ -1,5 +1,4 @@
-﻿using System.Threading.Tasks;
-using Application.Ports.Scraper;
+﻿using Application.Ports.Scraper;
 using Domain.Results;
 using Infrastructure.Scraper.Base;
 using Microsoft.Playwright;
