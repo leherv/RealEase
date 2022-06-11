@@ -7,7 +7,7 @@ using Microsoft.Playwright;
 
 namespace Infrastructure.Scraper.MangaPill;
 
-public class ReleaseScrapeStrategy : IReleaseScrapeStrategy
+internal class ReleaseScrapeStrategy : IReleaseScrapeStrategy
 {
     public async Task<Result<ScrapedMediaRelease>> Execute(IPage page, ScrapeInstruction scrapeInstruction)
     {

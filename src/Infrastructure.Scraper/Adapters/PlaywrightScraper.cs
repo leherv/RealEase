@@ -1,4 +1,3 @@
-using System.Threading.Tasks;
 using Application.Ports.General;
 using Application.Ports.Scraper;
 using Domain.ApplicationErrors;

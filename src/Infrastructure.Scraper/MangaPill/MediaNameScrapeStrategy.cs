@@ -6,7 +6,7 @@ using Microsoft.Playwright;
 
 namespace Infrastructure.Scraper.MangaPill;
 
-public class MediaNameScrapeStrategy : IMediaNameScrapeStrategy
+internal class MediaNameScrapeStrategy : IMediaNameScrapeStrategy
 {
     public async Task<Result<ScrapedMediaName>> Execute(IPage page, ScrapeMediaNameInstruction scrapeMediaNameInstruction)
     {
