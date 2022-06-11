@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Infrastructure.Scraper.Base;
+﻿namespace Infrastructure.Scraper.Base;
 
 internal static class ReleaseScrapeStrategyFactory
 {
@@ -11,6 +9,7 @@ internal static class ReleaseScrapeStrategyFactory
             "earlymanga" => new EarlyManga.ReleaseScrapeStrategy(),
             "manganato" => new Manganato.ReleaseScrapeStrategy(),
             "tapas" => new Tapas.ReleaseScrapeStrategy(),
+            "mangapill" => new MangaPill.ReleaseScrapeStrategy(),
             _ => throw new ArgumentOutOfRangeException()
         };
     }
