@@ -23,7 +23,7 @@ public class PlaywrightScraper : IScraper
         {
             // Program.Main(new[] {"install"});
             using var playwright = await Playwright.CreateAsync();
-            await using var browser = await playwright.Chromium.LaunchAsync();
+            await using var browser = await playwright.Firefox.LaunchAsync();
             var page = await browser.NewPageAsync();
             await page.GotoAsync(scrapeInstruction.ResourceUrl);
 
