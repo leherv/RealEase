@@ -29,7 +29,7 @@ public class PlaywrightScraper : IScraper
 
             return await scrapeStrategy.Execute(page, scrapeInstruction);
         }
-        catch (System.TimeoutException timeoutException)
+        catch (TimeoutException timeoutException)
         {
             _applicationLogger.LogWarning(timeoutException,
                 $"Scraping for Media with name {scrapeInstruction.MediaName} and ScrapeTarget with websiteName {scrapeInstruction.WebsiteName} and ResourceUrl {scrapeInstruction.ResourceUrl} failed.");

@@ -11,7 +11,7 @@ internal class ReleaseScrapeStrategy : IReleaseScrapeStrategy
 {
     public async Task<Result<ScrapedMediaRelease>> Execute(IPage page, ScrapeInstruction scrapeInstruction)
     {
-        var newestLink = await page.WaitForSelectorAsync("div#chapters a", new PageWaitForSelectorOptions
+        var newestLink = await page.WaitForSelectorAsync("div[data-filter-list] a", new PageWaitForSelectorOptions
         {
             State = WaitForSelectorState.Visible
         });
