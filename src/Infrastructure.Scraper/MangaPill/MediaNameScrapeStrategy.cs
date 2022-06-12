@@ -10,6 +10,13 @@ internal class MediaNameScrapeStrategy : IMediaNameScrapeStrategy
 {
     public async Task<Result<ScrapedMediaName>> Execute(IPage page, ScrapeMediaNameInstruction scrapeMediaNameInstruction)
     {
+        var container = await page.WaitForSelectorAsync("div[data-filter-list] a", new PageWaitForSelectorOptions
+        {
+            State = WaitForSelectorState.Visible
+        });
+        if (container == null)
+            return Errors.Scraper.ScrapeFailedError("Element containing chapters did not appear.");
+        
         var nameH1 = await page.WaitForSelectorAsync("h1", new PageWaitForSelectorOptions
         {
             State = WaitForSelectorState.Visible
