@@ -15,6 +15,6 @@ jobs:
         username: ${{ secrets.PROD_SFTP_USER }}
         server: ${{ secrets.PROD_IP }}
         port: ${{ secrets.PROD_SFTP_PORT }}
-        ssh_private_key: ${{ secrets.ID_RSA }}
+        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
         #local_path: # default is ./*
         remote_path: ${{ secrets.PROD_SFTP_PATH }}
