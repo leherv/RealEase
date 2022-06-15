@@ -18,5 +18,3 @@ jobs:
         ssh_private_key: ${{ secrets.ID_RSA }}
         #local_path: # default is ./*
         remote_path: ${{ secrets.PROD_SFTP_PATH }}
-        # connection via sftp protocol only
-        sftp_only: true
