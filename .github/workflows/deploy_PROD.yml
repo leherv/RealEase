@@ -1,0 +1,22 @@
+name: Deploy to PROD
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: SFTP Deploy
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.2
+      with:
+        username: ${{ secrets.PROD_SFTP_USER }}
+        server: ${{ secrets.PROD_IP }}
+        port: ${{ secrets.PROD_SFTP_PORT }}
+        ssh_private_key: ${{ secrets.ID_RSA }}
+        #local_path: # default is ./*
+        remote_path: ${{ secrets.PROD_SFTP_PATH }}
+        # connection via sftp protocol only
+        sftp_only: true
