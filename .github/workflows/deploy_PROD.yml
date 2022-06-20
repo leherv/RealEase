@@ -10,11 +10,12 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: SFTP Deploy
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.2
+      uses: Creepios/sftp-action@80940bd13b40dbc4868ae7d6e879caf3dac3bd88
       with:
         username: ${{ secrets.PROD_SFTP_USER }}
-        server: ${{ secrets.PROD_IP }}
+        host: ${{ secrets.PROD_IP }}
         port: ${{ secrets.PROD_SFTP_PORT }}
-        ssh_private_key: ${{ secrets.ID_RSA }}
-        #local_path: # default is ./*
-        remote_path: ${{ secrets.PROD_SFTP_PATH }}
+        privateKey: ${{ secrets.ID_RSA }}
+        privateKeyIsFile: false
+        localPath: ./*
+        remotePath: ${{ secrets.PROD_SFTP_PATH }}
