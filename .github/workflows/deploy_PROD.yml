@@ -17,4 +17,3 @@ jobs:
         port: ${{ secrets.PROD_SFTP_PORT }}
         ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
         remote_path: ${{ secrets.PROD_SFTP_PATH }}
-        args: '-o ConnectTimeout=5'
