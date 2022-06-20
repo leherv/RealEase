@@ -10,7 +10,7 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: SFTP Deploy
-      uses: wlixcc/SFTP-Deploy-Action@v1.2.2
+      uses: datanomi/SFTP-Push@v.1.2.2.1h
       with:
         username: ${{ secrets.PROD_SFTP_USER }}
         server: ${{ secrets.PROD_IP }}
