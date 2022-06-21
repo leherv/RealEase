@@ -24,7 +24,7 @@ jobs:
       uses: fifsky/ssh-action@v0.0.6
       with:
         # Command to execute on the remote server.
-        command: cp ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/ 
+        command: cp -r ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/ 
         # Hostname or IP address of the server.
         host: ${{ secrets.PROD_IP }}
         # Username for authentication.
