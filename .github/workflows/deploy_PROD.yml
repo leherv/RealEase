@@ -24,7 +24,7 @@ jobs:
       uses: fifsky/ssh-action@v0.0.6
       with:
         # Command to execute on the remote server.
-        command: cp -r ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/ && cd ${{ secrets.PROD_APPLICATION_PATH }} && docker-compose -f ./build/docker-compose.yml up --build --abort-on-container-exit --force-recreate
+        command: cp -r ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/
         # Hostname or IP address of the server.
         host: ${{ secrets.PROD_IP }}
         # Username for authentication.
@@ -33,3 +33,23 @@ jobs:
         port: ${{ secrets.PROD_SFTP_PORT }}
         # String that contains a private key for either key-based or hostbased user authentication (OpenSSH format)
         key: ${{ secrets.PROD_APPLICATION_USER_SSH_PRIVATE_KEY }}
+        
+    - name: Build and start via docker
+    # You may pin to the exact commit or the version.
+    # uses: fifsky/ssh-action@58b3c484be9c20cf118fd3b939a6d2cb3c769512
+      uses: fifsky/ssh-action@v0.0.6
+      with:
+        # Command to execute on the remote server.
+        command: cd ${{ secrets.PROD_APPLICATION_PATH }} && docker-compose -f ./build/docker-compose.yml up --build --abort-on-container-exit --force-recreate
+        # Hostname or IP address of the server.
+        host: ${{ secrets.PROD_IP }}
+        # Username for authentication.
+        user: ${{ secrets.PROD_APPLICATION_USERNAME }}
+        # Port number of the server.
+        port: ${{ secrets.PROD_SFTP_PORT }}
+        # String that contains a private key for either key-based or hostbased user authentication (OpenSSH format)
+        key: ${{ secrets.PROD_APPLICATION_USER_SSH_PRIVATE_KEY }}
+        
+        
+        
+        
