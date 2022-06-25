@@ -10,12 +10,28 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: SFTP Deploy
-      uses: Creepios/sftp-action@80940bd13b40dbc4868ae7d6e879caf3dac3bd88
+      uses: wlixcc/SFTP-Deploy-Action@v1.2.2
       with:
         username: ${{ secrets.PROD_SFTP_USER }}
-        host: ${{ secrets.PROD_IP }}
+        server: ${{ secrets.PROD_IP }}
         port: ${{ secrets.PROD_SFTP_PORT }}
-        privateKey: ${{ secrets.ID_RSA }}
-        privateKeyIsFile: false
-        localPath: ./*
-        remotePath: ${{ secrets.PROD_SFTP_PATH }}
+        ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
+        remote_path: ${{ secrets.PROD_SFTP_PATH }}
+        
+    - name: Move Files
+      uses: fifsky/ssh-action@v0.0.6
+      with:
+        command: cp -r ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/
+        host: ${{ secrets.PROD_IP }}
+        user: ${{ secrets.PROD_APPLICATION_USERNAME }}
+        port: ${{ secrets.PROD_SFTP_PORT }}
+        key: ${{ secrets.PROD_APPLICATION_USER_SSH_PRIVATE_KEY }}
+        
+    - name: Build and start via docker
+      uses: fifsky/ssh-action@v0.0.6
+      with:
+        command: cd ${{ secrets.PROD_APPLICATION_PATH }} && docker-compose -f ./build/docker-compose.yml up --build --force-recreate -d
+        host: ${{ secrets.PROD_IP }}
+        user: ${{ secrets.PROD_APPLICATION_USERNAME }}
+        port: ${{ secrets.PROD_SFTP_PORT }}
+        key: ${{ secrets.PROD_APPLICATION_USER_SSH_PRIVATE_KEY }}
