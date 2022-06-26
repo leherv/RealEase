@@ -1,5 +1,5 @@
 ![CI](https://github.com/leherv/ReleaseNotifier/actions/workflows/build.yml/badge.svg)
-![Test_Results](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/testresults.json)
+![Test_Results](https://img.shields.io/endpointurl=https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/testresults.json)
 
 ![Deploy_PROD](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_PROD.yml/badge.svg)
 ![Deploy_DEV](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_heroku_DEV.yml/badge.svg)
