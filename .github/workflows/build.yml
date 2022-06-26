@@ -29,6 +29,13 @@ jobs:
         reporter: dotnet-trx  
         fail-on-error: 'true'
         
+    - name: Parse Trx files
+      uses: NasAmin/trx-parser@v0.1
+      id: trx-parser
+      with:
+        TRX_PATH: ${{ github.workspace }}/test-results
+        REPO_TOKEN: ${{ secrets.GIST_SECRET }}
+        
     - name: Create test result badge
       uses: schneegans/dynamic-badges-action@v1.4.0
       with:
@@ -38,3 +45,4 @@ jobs:
         label: Hello
         message: World
         color: green
+        
