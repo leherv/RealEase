@@ -1,4 +1,6 @@
 [![GitHub issues](https://img.shields.io/github/issues/leherv/ReleaseNotifier)](https://github.com/leherv/ReleaseNotifier/issues)
+![CI](https://github.com/leherv/ReleaseNotifier/actions/workflows/build.yml/badge.svg)
+
 
 # Release Notifier (RN)
 
@@ -57,18 +59,6 @@ ___
     * see discussion (https://cezarypiatek.github.io/post/why-i-dont-use-mediatr-for-cqrs/)
   * rethink application wide errors https://enterprisecraftsmanship.com/posts/advanced-error-handling-techniques/
 * Use a more functional approach in the Application services (Handlers), like csharpfunctionalextensions
-
-### Notes 
-Media
-NewestRelease (keine Liste von Releases weil irrelevant und spart Table rows)
-
-PublishNewRelease(Release release) {
-NewReleasePublished (Event)
-}
-
-Add todo try masstransit
-
-Lokal für docker setup ein sql script einbinden, dass Media und ScrapeTargets einfügt damit nicht jedes mal manuell nötig
 
 ### Due to Heroku
 Transform ASP.NET Core ReleaseNotifierApp to a console app as hosting an admin interface from the same app (by using process type web) is not possible as the 
