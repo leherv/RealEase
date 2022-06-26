@@ -34,7 +34,7 @@ jobs:
       id: trx-parser
       with:
         TRX_PATH: ${{ github.workspace }}/test-results
-        REPO_TOKEN: ${{ secrets.GIST_SECRET }}
+        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Create test result badge
       uses: schneegans/dynamic-badges-action@v1.4.0
