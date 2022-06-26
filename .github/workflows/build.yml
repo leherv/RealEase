@@ -30,7 +30,7 @@ jobs:
         fail-on-error: 'true'
         
     - name: Parse Trx files
-      uses: NasAmin/trx-parser@v0.1
+      uses: NasAmin/trx-parser@v0.2.0
       id: trx-parser
       with:
         TRX_PATH: ${{ github.workspace }}/test-results
