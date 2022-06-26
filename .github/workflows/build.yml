@@ -43,6 +43,6 @@ jobs:
         gistID: ${{ secrets.TEST_RESULTS_GIST_ID }}
         filename: testresults.json
         label: Hello
-        message: World
+        message: ${{ steps.vars.outputs.passed }}
         color: green
         
