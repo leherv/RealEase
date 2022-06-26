@@ -21,6 +21,7 @@ jobs:
       run: docker-compose -f ./build/docker-compose.yml -f ./build/docker-compose.CI.yml up --build --abort-on-container-exit --force-recreate
     
     - name: Publish test results
+      id: publishTestResults
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
@@ -43,6 +44,6 @@ jobs:
         gistID: ${{ secrets.TEST_RESULTS_GIST_ID }}
         filename: testresults.json
         label: Hello
-        message: ${{ steps.vars.outputs.passed }}
+        message: ${{ steps.publishTestResults.outputs.passed }}
         color: green
         
