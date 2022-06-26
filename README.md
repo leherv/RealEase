@@ -1,5 +1,7 @@
 [![GitHub issues](https://img.shields.io/github/issues/leherv/ReleaseNotifier)](https://github.com/leherv/ReleaseNotifier/issues)
 ![CI](https://github.com/leherv/ReleaseNotifier/actions/workflows/build.yml/badge.svg)
+![Deploy_PROD](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_PROD.yml/badge.svg)
+![Deploy_DEV](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_heroku_DEV.yml/badge.svg)
 
 
 # Release Notifier (RN)
