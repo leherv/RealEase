@@ -1,4 +1,4 @@
-![CI](https://github.com/leherv/ReleaseNotifier/workflows/build/badge.svg)
+[![GitHub issues](https://img.shields.io/github/issues/leherv/ReleaseNotifier)](https://github.com/leherv/ReleaseNotifier/issues)
 
 # Release Notifier (RN)
 
