@@ -31,7 +31,7 @@ jobs:
         fail-on-error: 'true'
     
     - name: Test coverage
-    - uses: 5monkeys/cobertura-action@master
+      uses: 5monkeys/cobertura-action@master
       with:
         path: 'test-results/**/*.cobertura.xml'
         repo_token: ${{ secrets.GITHUB_TOKEN }}
