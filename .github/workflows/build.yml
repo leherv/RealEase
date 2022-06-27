@@ -48,7 +48,7 @@ jobs:
         
     - name: Create test result badge successful tests
       if: success() || failure()
-      uses: schneegans/dynamic-badges-action@v1.4.
+      uses: schneegans/dynamic-badges-action@v1.4.0
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: ${{ secrets.TEST_RESULTS_GIST_ID }}
