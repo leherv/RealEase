@@ -33,8 +33,9 @@ jobs:
     - name: Test Coverage
       uses: danielpalme/ReportGenerator-GitHub-Action@5.1.9
       with:
-        reports: 'test-results/**/*.cobertura.xml'
+        reports: 'test-results/**/coverage.cobertura.xml'
         reporttypes: HtmlInline;Cobertura,Badges
+        targetdir: 'coveragereport'
         
     - name: Create test result badge successful tests
       if: success() || failure()
