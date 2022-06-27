@@ -13,11 +13,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
+    
     - name: Set up docker-compose
       uses: parisk/setup-compose-cli@v1
+    
     - name: Run docker-compose
       run: docker-compose -f ./build/docker-compose.yml -f ./build/docker-compose.CI.yml up --build --abort-on-container-exit --force-recreate
+    
     - name: Publish test results
+      id: publishTestResults
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
@@ -25,3 +29,24 @@ jobs:
         path: 'test-results/**/*.trx'    
         reporter: dotnet-trx  
         fail-on-error: 'true'
+        
+    - name: Create test result badge successful tests
+      uses: schneegans/dynamic-badges-action@v1.4.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        filename: testresult_success.json
+        label: Tests passed
+        message: ${{ steps.publishTestResults.outputs.passed }}
+        color: green
+        
+    - name: Create test result badge failed tests
+      uses: schneegans/dynamic-badges-action@v1.4.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        filename: testresult_failed.json
+        label: Tests failed
+        message: ${{ steps.publishTestResults.outputs.failed }}
+        color: red
+        
