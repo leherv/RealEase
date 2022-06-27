@@ -30,13 +30,22 @@ jobs:
         reporter: dotnet-trx  
         fail-on-error: 'true'
     
-    - name: Test coverage
-      if: success() || failure()
-      uses: 5monkeys/cobertura-action@master
+    - name: Test Coverage
+      uses: danielpalme/ReportGenerator-GitHub-Action@5.1.9
       with:
-        path: 'test-results/**/*.cobertura.xml'
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        minimum_coverage: 0
+        reports: 'test-results/**/*.cobertura.xml'
+        # The directory where the generated report should be saved.
+        targetdir: 'test-results/coveragereport'
+        # The output formats and scope (separated by semicolon) Values: Badges, Clover, Cobertura, CsvSummary, Html, HtmlChart, HtmlInline, HtmlInline_AzurePipelines, HtmlInline_AzurePipelines_Dark, HtmlSummary, JsonSummary, Latex, LatexSummary, lcov, MHtml, PngChart, SonarQube, TeamCitySummary, TextSummary, Xml, XmlSummary
+        reporttypes: HtmlInline;Cobertura,Badges
+    
+#     - name: Test coverage
+#       if: success() || failure()
+#       uses: 5monkeys/cobertura-action@master
+#       with:
+#         path: 'test-results/**/*.cobertura.xml'
+#         repo_token: ${{ secrets.GITHUB_TOKEN }}
+#         minimum_coverage: 0
         
     - name: Create test result badge successful tests
       if: success() || failure()
