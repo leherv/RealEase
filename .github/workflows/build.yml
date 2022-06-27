@@ -30,12 +30,12 @@ jobs:
         reporter: dotnet-trx  
         fail-on-error: 'true'
         
-    - name: Parse Trx files
-      uses: NasAmin/trx-parser@v0.2.0
-      id: trx-parser
-      with:
-        TRX_PATH: ${{ github.workspace }}/test-results
-        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Calculate total test count
+      env: 
+        failed: ${{ steps.publishTestResults.outputs.passed }}
+        passed: ${{ steps.publishTestResults.outputs.failed }}
+      run: |
+          echo ::set-env name=TOTAL_TEST_COUNT::$(($failed+passed))
         
     - name: Create test result badge
       uses: schneegans/dynamic-badges-action@v1.4.0
@@ -43,7 +43,7 @@ jobs:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: ${{ secrets.TEST_RESULTS_GIST_ID }}
         filename: testresults.json
-        label: Tests
-        message: ${{ steps.publishTestResults.outputs.passed + steps.publishTestResults.outputs.passed }}
+        label: Tests passed
+        message: ${{ steps.publishTestResults.outputs.passed }}/${{ env.TOTAL_TEST_COUNT }}
         color: green
         
