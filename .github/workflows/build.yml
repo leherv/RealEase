@@ -29,13 +29,22 @@ jobs:
         path: 'test-results/**/*.trx'    
         reporter: dotnet-trx  
         fail-on-error: 'true'
-    
-    - name: cobertura-report
-      uses: 5monkeys/cobertura-action@v12
+
+    - name: Copy Coverage
+      run: cp test-results/**/coverage.cobertura.xml coverage.cobertura.xml
+
+    - name: Code Coverage Summary Report
+      uses: irongut/CodeCoverageSummary@v1.2.0
       with:
-        repo_token: ${{ secrets.GITHUB_TOKEN }}
-        path: 'test-results/**/*.xml'
-        minimum_coverage: 0
+        filename: coverage.cobertura.xml
+        badge: true
+        fail_below_min: false
+        format: markdown
+        hide_branch_rate: false
+        hide_complexity: false
+        indicators: true
+        output: both
+        thresholds: '50 70'
         
     - name: Create test result badge successful tests
       if: success() || failure()

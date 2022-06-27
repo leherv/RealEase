@@ -6,7 +6,7 @@ RUN dotnet restore
 FROM base as test
 RUN apt-get update && \
     apt-get install -y netcat 
-CMD sh -c 'chmod +x ./build/*.sh; ./build/wait-for.sh release_notifier_db:5432 -t 30 -- dotnet test --collect:"XPlat Code Coverage" --results-directory "test-results" --logger trx --no-restore'
+CMD sh -c 'chmod +x ./build/*.sh; ./build/wait-for.sh release_notifier_db:5432 -t 30 -- dotnet test --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./test-results --logger trx --no-restore'
 
 FROM base as publish
 COPY --from=base app/build/ out/
