@@ -30,16 +30,16 @@ jobs:
         reporter: dotnet-trx  
         fail-on-error: 'true'
     
-    - name: Test Coverage
-      uses: danielpalme/ReportGenerator-GitHub-Action@5.1.9
+    - name: cobertura-report
+      uses: 5monkeys/cobertura-action@v12
       with:
-        reports: 'test-results/**/*.xml'
-        reporttypes: HtmlInline;Cobertura,Badges
-        targetdir: 'coveragereport'
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        path: 'test-results/**/*.xml'
+        minimum_coverage: 0
         
     - name: Create test result badge successful tests
       if: success() || failure()
-      uses: schneegans/dynamic-badges-action@v1.4.0
+      uses: schneegans/dynamic-badges-action@v1.4.
       with:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: ${{ secrets.TEST_RESULTS_GIST_ID }}
