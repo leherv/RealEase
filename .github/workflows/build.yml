@@ -37,6 +37,6 @@ jobs:
         gistID: ${{ secrets.TEST_RESULTS_GIST_ID }}
         filename: testresults.json
         label: Tests passed
-        message: ${{ steps.publishTestResults.outputs.passed }}/{{ ${{ steps.publishTestResults.outputs.passed } + ${{ steps.publishTestResults.outputs.failed }} }}
+        message: ${{ steps.publishTestResults.outputs.passed }}/{{ ${{ steps.publishTestResults.outputs.passed }} + ${{ steps.publishTestResults.outputs.failed }} }}
         color: green
         
