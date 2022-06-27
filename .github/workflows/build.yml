@@ -31,12 +31,12 @@ jobs:
         fail-on-error: 'true'
       
     - name: Combine code coverage files  
-      run: dotnet tool restore && dotnet reportgenerator "-reports:test-results/**/*.xml" "-targetdir:./test-results" -reporttypes:Cobertura
+      run: dotnet tool restore && dotnet reportgenerator "-reports:test-results/**/*.xml" "-targetdir:." -reporttypes:Cobertura
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
       with:
-        filename: test-results/coverage.cobertura.xml
+        filename: coverage.cobertura.xml
         badge: true
         fail_below_min: false
         format: markdown
