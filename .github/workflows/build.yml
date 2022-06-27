@@ -36,6 +36,7 @@ jobs:
       with:
         path: 'test-results/**/*.cobertura.xml'
         repo_token: ${{ secrets.GITHUB_TOKEN }}
+        minimum_coverage: 0
         
     - name: Create test result badge successful tests
       if: success() || failure()
