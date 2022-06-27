@@ -29,6 +29,12 @@ jobs:
         path: 'test-results/**/*.trx'    
         reporter: dotnet-trx  
         fail-on-error: 'true'
+    
+    - name: Test coverage
+    - uses: 5monkeys/cobertura-action@master
+      with:
+        path: 'test-results/**/*.cobertura.xml'
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Create test result badge successful tests
       uses: schneegans/dynamic-badges-action@v1.4.0
