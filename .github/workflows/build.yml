@@ -29,6 +29,9 @@ jobs:
         path: 'test-results/**/*.trx'    
         reporter: dotnet-trx  
         fail-on-error: 'true'
+      
+    - name: Combine code coverage files  
+      run: dotnet reportgenerator "-reports:test-results/**/*.xml" "-targetdir:./test-results" -reporttypes:Cobertura
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
