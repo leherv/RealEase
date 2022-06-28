@@ -9,7 +9,7 @@ RUN apt-get update && \
     dotnet tool restore
 CMD sh -c 'chmod +x ./build/*.sh; \
            ./build/wait-for.sh release_notifier_db:5432 -t 30 -- dotnet test --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./test-results --logger trx --no-restore; \
-           dotnet reportgenerator "-reports:test-results/**/*.xml" "-targetdir:." -reporttypes:Cobertura;Badges'
+           dotnet reportgenerator "-reports:test-results/**/*.xml" "-targetdir:." "-reporttypes:Cobertura;Badges"'
 
 
 FROM base as publish
