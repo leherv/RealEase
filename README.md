@@ -2,10 +2,10 @@
 ![Test_Results_success](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/testresult_success.json&color=brightgreen)
 ![Test_Results_failed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/testresult_failed.json)
 
-![Branch_Coverage](badge_combined.svg)
-![Line_Coverage]()
-![Method_Coverage]()
-![Combined_Coverage]()
+![Branch_Coverage](https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/8b55a6bd21ca1244e61786fb9610161843249c93/badge_branchcoverage.svg)
+![Line_Coverage](https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/8b55a6bd21ca1244e61786fb9610161843249c93/badge_linecoverage.svg)
+![Method_Coverage](https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/8b55a6bd21ca1244e61786fb9610161843249c93/badge_methodcoverage.svg)
+![Combined_Coverage](https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/8b55a6bd21ca1244e61786fb9610161843249c93/badge_combined.svg)
 
 ![Deploy_PROD](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_PROD.yml/badge.svg)
 ![Deploy_DEV](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_heroku_DEV.yml/badge.svg)
