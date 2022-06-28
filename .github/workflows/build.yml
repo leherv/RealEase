@@ -29,14 +29,12 @@ jobs:
         path: 'test-results/**/*.trx'    
         reporter: dotnet-trx  
         fail-on-error: 'true'
-      
-    - name: Combine code coverage files  
-      run: dotnet tool restore && dotnet reportgenerator "-reports:test-results/**/*.xml" "-targetdir:." -reporttypes:Cobertura
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
+      if: success() || failure()
       with:
-        filename: Cobertura.xml
+        filename: 'test-results/Cobertura.xml'
         badge: true
         fail_below_min: false
         format: markdown
@@ -45,7 +43,50 @@ jobs:
         indicators: true
         output: both
         thresholds: '50 70'
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: code-coverage-results.md
         
+    - name: Deploy branch coverage badge to Gist
+      uses: exuanbo/actions-deploy-gist@v1.1.4
+      if: success() || failure()
+      with: 
+        token: ${{ secrets.GIST_SECRET }}
+        gist_id: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        file_path: test-results/badge_branchcoverage.svg
+        file_type: svg
+        
+    - name: Deploy line coverage badge to Gist
+      uses: exuanbo/actions-deploy-gist@v1.1.4
+      if: success() || failure()
+      with: 
+        token: ${{ secrets.GIST_SECRET }}
+        gist_id: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        file_path: test-results/badge_linecoverage.svg
+        file_type: svg
+        
+    - name: Deploy method coverage badge to Gist
+      uses: exuanbo/actions-deploy-gist@v1.1.4
+      if: success() || failure()
+      with: 
+        token: ${{ secrets.GIST_SECRET }}
+        gist_id: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        file_path: test-results/badge_methodcoverage.svg
+        file_type: svg
+        
+    - name: Deploy combined coverage badge to Gist
+      uses: exuanbo/actions-deploy-gist@v1.1.4
+      if: success() || failure()
+      with: 
+        token: ${{ secrets.GIST_SECRET }}
+        gist_id: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        file_path: test-results/badge_combined.svg
+        file_type: svg
+      
     - name: Create test result badge successful tests
       if: success() || failure()
       uses: schneegans/dynamic-badges-action@v1.4.0
@@ -67,11 +108,3 @@ jobs:
         label: Tests failed
         message: ${{ steps.publishTestResults.outputs.failed }}
         color: red
-        
-    - name: Add Coverage PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      if: github.event_name == 'pull_request'
-      with:
-        recreate: true
-        path: code-coverage-results.md
-        
