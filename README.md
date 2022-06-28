@@ -1,6 +1,6 @@
 ![CI](https://github.com/leherv/ReleaseNotifier/actions/workflows/build.yml/badge.svg)
-![Deploy_PROD](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_PROD.yml/badge.svg)
 ![Deploy_DEV](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_heroku_DEV.yml/badge.svg)
+![Deploy_PROD](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_PROD.yml/badge.svg)
 
 ![Test_Results_success](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/testresult_success.json&color=brightgreen)
 ![Test_Results_failed](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/testresult_failed.json)
