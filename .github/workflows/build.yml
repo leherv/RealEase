@@ -32,6 +32,7 @@ jobs:
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
+      if: success() || failure()
       with:
         filename: 'test-results/Cobertura.xml'
         badge: true
@@ -49,6 +50,9 @@ jobs:
       with:
         recreate: true
         path: code-coverage-results.md
+        
+    - name: Copy test coverage badges
+      run: cp test-results/badge_branchcoverage.svg cp test-results/badge_linecoverage.svg test-results/badge_methodcoverage.svg test-results/badge_combined ./
       
     - name: Create test result badge successful tests
       if: success() || failure()
