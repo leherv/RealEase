@@ -52,7 +52,7 @@ jobs:
         path: code-coverage-results.md
         
     - name: Copy test coverage badges
-      run: cp test-results/badge_branchcoverage.svg cp test-results/badge_linecoverage.svg test-results/badge_methodcoverage.svg test-results/badge_combined ./
+      run: cp test-results/badge_branchcoverage.svg cp test-results/badge_linecoverage.svg test-results/badge_methodcoverage.svg test-results/badge_combined.svg ./
       
     - name: Create test result badge successful tests
       if: success() || failure()
