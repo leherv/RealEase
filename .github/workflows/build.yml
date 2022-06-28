@@ -29,9 +29,6 @@ jobs:
         path: 'test-results/**/*.trx'    
         reporter: dotnet-trx  
         fail-on-error: 'true'
-      
-    - name: Combine code coverage files  
-      run: dotnet tool restore && dotnet reportgenerator "-reports:test-results/**/*.xml" "-targetdir:." -reporttypes:Cobertura
 
     - name: Code Coverage Summary Report
       uses: irongut/CodeCoverageSummary@v1.2.0
@@ -45,7 +42,14 @@ jobs:
         indicators: true
         output: both
         thresholds: '50 70'
-        
+
+    - name: Add Coverage PR Comment
+      uses: marocchino/sticky-pull-request-comment@v2
+      if: github.event_name == 'pull_request'
+      with:
+        recreate: true
+        path: code-coverage-results.md
+      
     - name: Create test result badge successful tests
       if: success() || failure()
       uses: schneegans/dynamic-badges-action@v1.4.0
@@ -67,11 +71,3 @@ jobs:
         label: Tests failed
         message: ${{ steps.publishTestResults.outputs.failed }}
         color: red
-        
-    - name: Add Coverage PR Comment
-      uses: marocchino/sticky-pull-request-comment@v2
-      if: github.event_name == 'pull_request'
-      with:
-        recreate: true
-        path: code-coverage-results.md
-        
