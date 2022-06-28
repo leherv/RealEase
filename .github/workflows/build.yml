@@ -51,8 +51,41 @@ jobs:
         recreate: true
         path: code-coverage-results.md
         
-    - name: Copy test coverage badges
-      run: cp test-results/badge_branchcoverage.svg test-results/badge_linecoverage.svg test-results/badge_methodcoverage.svg test-results/badge_combined.svg ./
+    - name: Deploy branch coverage badge to Gist
+      uses: exuanbo/actions-deploy-gist@v1.1.4
+      if: success() || failure()
+      with: 
+        token: ${{ secrets.GIST_SECRET }}
+        gist_id: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        file_path: test-results/badge_branchcoverage.svg
+        file_type: svg
+        
+    - name: Deploy line coverage badge to Gist
+      uses: exuanbo/actions-deploy-gist@v1.1.4
+      if: success() || failure()
+      with: 
+        token: ${{ secrets.GIST_SECRET }}
+        gist_id: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        file_path: test-results/badge_linecoverage.svg
+        file_type: svg
+        
+    - name: Deploy method coverage badge to Gist
+      uses: exuanbo/actions-deploy-gist@v1.1.4
+      if: success() || failure()
+      with: 
+        token: ${{ secrets.GIST_SECRET }}
+        gist_id: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        file_path: test-results/badge_methodcoverage.svg
+        file_type: svg
+        
+    - name: Deploy combined coverage badge to Gist
+      uses: exuanbo/actions-deploy-gist@v1.1.4
+      if: success() || failure()
+      with: 
+        token: ${{ secrets.GIST_SECRET }}
+        gist_id: ${{ secrets.TEST_RESULTS_GIST_ID }}
+        file_path: test-results/badge_combined.svg
+        file_type: svg
       
     - name: Create test result badge successful tests
       if: success() || failure()
