@@ -1,3 +1,5 @@
+# Release Notifier (RN)
+
 ![CI](https://github.com/leherv/ReleaseNotifier/actions/workflows/build.yml/badge.svg)
 ![Deploy_DEV](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_heroku_DEV.yml/badge.svg)
 ![Deploy_PROD](https://github.com/leherv/ReleaseNotifier/actions/workflows/deploy_PROD.yml/badge.svg)
@@ -11,8 +13,6 @@
 ![Method_Coverage](https://gist.githubusercontent.com/leherv/f3101ad56d43a3586c957e2d6a36e458/raw/8b55a6bd21ca1244e61786fb9610161843249c93/badge_methodcoverage.svg)
 
 [![GitHub issues](https://img.shields.io/github/issues/leherv/ReleaseNotifier)](https://github.com/leherv/ReleaseNotifier/issues)
-
-# Release Notifier (RN)
 
 ## Local Development
 Run the app locally
