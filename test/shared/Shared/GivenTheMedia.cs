@@ -7,6 +7,7 @@ public class GivenTheMedia
 {
     public List<Media> MediaList { get; }
     public List<Media> MediaWithScrapeTargets { get; }
+    public List<Media> MediaWithScrapeTargetsPointingToInActiveWebsites { get; }
     public Media WithoutSubscribersWithoutReleasesWithoutScrapeTarget { get; }
     public Media WithoutSubscriberWithoutReleases { get; }
     public Media WithSubscriberWithReleases { get; }
@@ -14,6 +15,7 @@ public class GivenTheMedia
     public Media WithSubscriberWithoutRelease { get; }
     public Media NotPersistedMedia { get; }
     public Media WithSubscriberWithTwoScrapeTargets { get; }
+    public Media WithInActiveWebsite { get; }
 
     public GivenTheMedia(GivenTheScrapeTarget givenTheScrapeTarget, GivenTheWebsite givenTheWebsite)
     {
@@ -52,13 +54,20 @@ public class GivenTheMedia
         WithSubscriberWithTwoScrapeTargets.AddScrapeTarget(givenTheScrapeTarget.MagicEmperorEarlyManga);
         WithSubscriberWithTwoScrapeTargets.AddScrapeTarget(givenTheScrapeTarget.MagicEmperorManganato);
 
+        WithInActiveWebsite = Create(
+            Guid.NewGuid(),
+            "Faceless"
+        ).Value;
+        WithInActiveWebsite.AddScrapeTarget(givenTheScrapeTarget.FacelessMangaWalker);
+        
         MediaList = new List<Media>
         {
             WithSubscriberWithoutRelease,
             WithSubscriberWithReleases,
             WithSubscriberWithTwoScrapeTargets,
             WithoutSubscriberWithoutReleases,
-            WithoutSubscribersWithoutReleasesWithoutScrapeTarget
+            WithoutSubscribersWithoutReleasesWithoutScrapeTarget,
+            WithInActiveWebsite
         };
 
         MediaWithScrapeTargets = new List<Media>
@@ -66,7 +75,12 @@ public class GivenTheMedia
             WithSubscriberWithTwoScrapeTargets,
             WithSubscriberWithoutRelease,
             WithSubscriberWithReleases,
-            WithoutSubscriberWithoutReleases
+            WithoutSubscriberWithoutReleases,
+        };
+
+        MediaWithScrapeTargetsPointingToInActiveWebsites = new List<Media>
+        {
+            WithInActiveWebsite
         };
 
         var notPersistedScrapeTarget = GivenTheScrapeTarget.Create(

@@ -9,6 +9,7 @@ public class Website : AggregateRoot
 {
     public string Name { get; }
     public WebsiteUrl Url { get; }
+    public bool Active { get; private set; }
     
     // for ef core only
     private Website(Guid id) : base(id)
@@ -19,6 +20,7 @@ public class Website : AggregateRoot
     {
         Url = url;
         Name = name;
+        Active = true;
     }
     
     public static Result<Website> Create(Guid id, WebsiteUrl url, string name)
@@ -26,5 +28,15 @@ public class Website : AggregateRoot
         return Invariant.Create
             .NotNullOrWhiteSpace(name, nameof(name))
             .ValidateAndCreate(() => new Website(id, url, name));
+    }
+
+    public void SetInActive()
+    {
+        Active = false;
+    }
+
+    public void SetActive()
+    {
+        Active = true;
     }
 }

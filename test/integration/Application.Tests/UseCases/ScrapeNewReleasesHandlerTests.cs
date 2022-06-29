@@ -47,6 +47,21 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
 
         Then.TheScraper.HasBeenCalledXTimes(mediaToScrape.ScrapeTargets.Count);
     }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Does_not_call_scraper_if_website_is_not_active()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var mediaToScrape = Given.A.Media.WithInActiveWebsite;
+        var scrapeNewReleasesCommand = new ScrapeNewReleasesCommand(new[] { mediaToScrape.Name });
+        Given.TheScraper.ScrapeForAnyMediaReturns(
+            Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError("")));
+
+        await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
+
+        Then.TheScraper.HasBeenCalledXTimes(0);
+    }
 
     [Fact]
     [Trait("Category", "Integration")]
@@ -239,7 +254,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         var media = Given.A.Media.WithSubscriberWithTwoScrapeTargets;
         var subscriber = Given.A.Subscriber.WithSubscriptions;
         
-        var website = Given.The.Website.Websites.Single(website => website.Id == media.ScrapeTargets.First().WebsiteId);
+        var website = Given.The.Website.ActiveWebsites.Single(website => website.Id == media.ScrapeTargets.First().WebsiteId);
         var linkToReleasedResource = "https://www.test.com/chapter/1";
         var scrapeResult = new ScrapedMediaRelease(
             linkToReleasedResource,
@@ -247,7 +262,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         );
         Given.TheScraper.ScrapeForWebsiteReturns(website.Name, Result<ScrapedMediaRelease>.Success(scrapeResult));
         
-        var website2 = Given.The.Website.Websites.Single(website => website.Id == media.ScrapeTargets.Skip(1).First().WebsiteId);
+        var website2 = Given.The.Website.ActiveWebsites.Single(website => website.Id == media.ScrapeTargets.Skip(1).First().WebsiteId);
         var linkToReleasedResource2 = "https://www.test2.com/chapter/2";
         var scrapeResult2 = new ScrapedMediaRelease(
             linkToReleasedResource2,
@@ -308,10 +323,10 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
         var media = Given.A.Media.WithSubscriberWithTwoScrapeTargets;
         var subscriber = Given.A.Subscriber.WithSubscriptions;
         
-        var website = Given.The.Website.Websites.Single(website => website.Id == media.ScrapeTargets.First().WebsiteId);
+        var website = Given.The.Website.ActiveWebsites.Single(website => website.Id == media.ScrapeTargets.First().WebsiteId);
         Given.TheScraper.ScrapeForWebsiteReturns(website.Name, Result<ScrapedMediaRelease>.Failure(Errors.Scraper.ScrapeFailedError("")));
         
-        var website2 = Given.The.Website.Websites.Single(website => website.Id == media.ScrapeTargets.Skip(1).First().WebsiteId);
+        var website2 = Given.The.Website.ActiveWebsites.Single(website => website.Id == media.ScrapeTargets.Skip(1).First().WebsiteId);
         var linkToReleasedResource2 = "https://www.test2.com/chapter/1";
         var scrapeResult2 = new ScrapedMediaRelease(
             linkToReleasedResource2,
