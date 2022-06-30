@@ -38,6 +38,8 @@ public class ScrapeTargetReadRepository : IScrapeTargetReadRepository
                 await _databaseContext.Websites.FirstOrDefaultAsync(website => scrapeTarget.WebsiteId == website.Id);
             if (website == null)
                 return Errors.General.NotFound(nameof(Website));
+            if(!website.Active)
+                continue;
 
             scrapeTargetInformation.Add(new ScrapeTargetInformation(
                 website.Name,
