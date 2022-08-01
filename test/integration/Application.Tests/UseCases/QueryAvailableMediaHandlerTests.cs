@@ -17,7 +17,7 @@ public class QueryAvailableMediaHandlerTests : IntegrationTestBase
 
         var availableMedia = await When.TheApplication.ReceivesQuery<AvailableMediaQuery, AvailableMedia>(availableMediaQuery);
 
-        availableMedia.MediaNames
+        availableMedia.Media
             .Should()
             .HaveCount(Given.The.Media.MediaList.Count);
     }
@@ -30,7 +30,7 @@ public class QueryAvailableMediaHandlerTests : IntegrationTestBase
 
         var availableMedia = await When.TheApplication.ReceivesQuery<AvailableMediaQuery, AvailableMedia>(availableMediaQuery);;
 
-        availableMedia.MediaNames
+        availableMedia.Media
             .Should()
             .HaveCount(0);
     }

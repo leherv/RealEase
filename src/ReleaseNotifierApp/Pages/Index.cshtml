@@ -7,7 +7,7 @@
         <div class="col-6">
             <h2 class="text-center">Current Subscriptions</h2>
             <form method="post">
-                @foreach (var mediaName in Model.CheckedMediaNames)
+                @foreach (var (id, mediaName) in Model.MediaSubscriptions.SubscribedToMedia)
                 {
                     <div class="form-check">
                         <input class="form-check-input"
@@ -17,7 +17,7 @@
                                name="CheckedMediaNames"
                                id="@mediaName">
                         <label class="form-check-label" for="@mediaName">
-                            @mediaName
+                            <a class="btn-link" href="/Media/@id">@mediaName</a> 
                         </label>
                     </div>
                 }

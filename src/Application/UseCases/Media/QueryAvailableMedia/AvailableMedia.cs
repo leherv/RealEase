@@ -2,4 +2,4 @@ using Application.UseCases.Base;
 
 namespace Application.UseCases.Media.QueryAvailableMedia;
 
-public record AvailableMedia(IReadOnlyCollection<string> MediaNames) : IReadModel;
+public record AvailableMedia(IReadOnlyCollection<MediaInfo> Media) : IReadModel;

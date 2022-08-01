@@ -21,8 +21,8 @@ public class ListSubscribed : ModuleBase<SocketCommandContext>
             await _queryDispatcher.Dispatch<MediaSubscriptionsQuery, MediaSubscriptions>(
                 new MediaSubscriptionsQuery(Context.User.Id.ToString()));
 
-        var message = mediaSubscriptions.SubscribedToMediaNames.Any()
-            ? $"Subscribed To:\n{string.Join("\n", mediaSubscriptions.SubscribedToMediaNames)}"
+        var message = mediaSubscriptions.SubscribedToMedia.Any()
+            ? $"Subscribed To:\n{string.Join("\n", mediaSubscriptions.SubscribedToMedia)}"
             : "No subscriptions yet";
 
         await Context.Message.Channel.SendMessageAsync(message);

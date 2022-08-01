@@ -70,7 +70,6 @@ public class Startup
                 options.ClientId = discordSettings.ClientId;
                 options.ClientSecret = discordSettings.ClientSecret;
                 options.SaveTokens = true;
-                options.AccessDeniedPath = "/access-denied";
             });
 
         // Discord

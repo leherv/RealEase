@@ -22,16 +22,16 @@ public class MediaSubscriptionsReadRepository : IMediaSubscriptionsReadRepositor
 
         var subscribedToMediaIds = subscriber.SubscribedToMediaIds;
 
-        var subscribedToMediaNames = await GetSubscribedToMediaNames(subscribedToMediaIds);
+        var mediaSubscriptionInfos = await GetSubscribedToMedia(subscribedToMediaIds);
 
-        return new MediaSubscriptions(subscribedToMediaNames);
+        return new MediaSubscriptions(mediaSubscriptionInfos);
     }
 
-    private async Task<List<string>> GetSubscribedToMediaNames(IReadOnlyCollection<Guid> subscribedToMediaIds)
+    private async Task<List<Application.UseCases.Subscriber.QueryMediaSubscriptions.MediaSubscriptionInfo>> GetSubscribedToMedia(IReadOnlyCollection<Guid> subscribedToMediaIds)
     {
         return await _databaseContext.Media
             .Where(media => subscribedToMediaIds.Contains(media.Id))
-            .Select(media => media.Name)
+            .Select(media => new MediaSubscriptionInfo(media.Id, media.Name))
             .ToListAsync();
     }
 

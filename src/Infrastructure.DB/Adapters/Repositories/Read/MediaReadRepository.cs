@@ -15,10 +15,10 @@ public class MediaReadRepository : IMediaReadRepository
 
     public async Task<AvailableMedia> QueryAvailableMedia()
     {
-        var mediaNames = await _databaseContext.Media
-            .Select(media => media.Name)
+        var media = await _databaseContext.Media
+            .Select(media => new MediaInfo(media.Id, media.Name))
             .ToListAsync();
 
-        return new AvailableMedia(mediaNames);
+        return new AvailableMedia(media);
     }
 }

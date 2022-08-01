@@ -9,9 +9,9 @@ namespace ReleaseNotifierApp.Pages;
 public class Index : PageModel
 {
     private readonly IQueryDispatcher _queryDispatcher;
-    
-    [BindProperty]
-    public List<string> CheckedMediaNames { get; set; }
+
+    [BindProperty] public List<string> CheckedMediaNames { get; set; }
+    public MediaSubscriptions MediaSubscriptions { get; set; }
 
     public Index(IQueryDispatcher queryDispatcher)
     {
@@ -20,8 +20,8 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnGet()
     {
-        CheckedMediaNames = await BuildSubscriptions();
-        
+        await FetchSubscriptions();
+
         return Page();
     }
 
@@ -30,14 +30,15 @@ public class Index : PageModel
         Console.WriteLine();
     }
 
-    private async Task<List<string>> BuildSubscriptions()
+    private async Task FetchSubscriptions()
     {
         var externalIdentifier = User.GetExternalIdentifier();
-        var mediaSubscriptions =
-            await _queryDispatcher.Dispatch<MediaSubscriptionsQuery, MediaSubscriptions>(
-                new MediaSubscriptionsQuery(externalIdentifier));
-
-        return mediaSubscriptions.SubscribedToMediaNames.ToList();
+        
+        MediaSubscriptions = await _queryDispatcher.Dispatch<MediaSubscriptionsQuery, MediaSubscriptions>(
+            new MediaSubscriptionsQuery(externalIdentifier));
+        
+        CheckedMediaNames = MediaSubscriptions.SubscribedToMedia
+            .Select(subscribedToMedia => subscribedToMedia.Name)
+            .ToList();
     }
 }
-
