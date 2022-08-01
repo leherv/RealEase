@@ -2,3 +2,9 @@
 @{
     Layout = "_Layout";
 }
+
+@{
+    if (!User.IsAuthenticated() && !Context.Request.Path.Equals("/Login", StringComparison.OrdinalIgnoreCase)) {
+        Context.Response.Redirect("/Login");
+    }
+}

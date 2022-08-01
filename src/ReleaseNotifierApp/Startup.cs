@@ -53,8 +53,7 @@ public class Startup
         
         // General
         services.AddControllers();
-        services.AddRazorPages()
-            .AddRazorPagesOptions(options => options.Conventions.AllowAnonymousToPage("/Login"));
+        services.AddRazorPages();
         services.AddHttpContextAccessor();
         
         // Authentication

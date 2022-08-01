@@ -20,11 +20,6 @@ public class Index : PageModel
 
     public async Task<IActionResult> OnGet()
     {
-        if (!User.IsAuthenticated())
-        {
-            return RedirectToPage("/Login");
-        }
-
         CheckedMediaNames = await BuildSubscriptions();
         
         return Page();
