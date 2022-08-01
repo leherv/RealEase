@@ -15,6 +15,7 @@ using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
 using Application.UseCases.Website.QueryAvailableWebsites;
+using AspNet.Security.OAuth.Discord;
 using Discord.Commands;
 using Discord.WebSocket;
 using Domain.Results;
@@ -28,6 +29,7 @@ using Infrastructure.Discord.Adapters;
 using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
 using Infrastructure.Scraper.Adapters;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotifierApp.Extensions;
 
@@ -48,6 +50,29 @@ public class Startup
     {
         // Settings
         services.Configure<DiscordSettings>(Configuration.GetSection(nameof(DiscordSettings)));
+        
+        // General
+        services.AddControllers();
+        services.AddRazorPages()
+            .AddRazorPagesOptions(options => options.Conventions.AllowAnonymousToPage("/Login"));
+        services.AddHttpContextAccessor();
+        
+        // Authentication
+        var discordSettings = Configuration.GetSection(nameof(DiscordSettings)).Get<DiscordSettings>();
+        services.AddAuthentication(options =>
+            {
+                options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                options.DefaultChallengeScheme = DiscordAuthenticationDefaults.AuthenticationScheme;
+            })
+            .AddCookie()
+            .AddDiscord(options =>
+            {
+                options.ClientId = discordSettings.ClientId;
+                options.ClientSecret = discordSettings.ClientSecret;
+                options.SaveTokens = true;
+                options.AccessDeniedPath = "/access-denied";
+            });
 
         // Discord
         services
@@ -118,6 +143,25 @@ public class Startup
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
     public virtual void Configure(IApplicationBuilder app, IWebHostEnvironment env)
     {
+        if (!env.IsDevelopment())
+        {
+            app.UseExceptionHandler("/Error");
+            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseHsts();
+        }
+
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        
+        app.UseRouting();
+        app.UseAuthentication();
+        app.UseAuthorization();
+        app.UseEndpoints(endpoint =>
+        {
+            endpoint.MapControllers();
+            endpoint.MapRazorPages();
+        });
+        
         using var scope = app.ApplicationServices.CreateScope();
         var databaseContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
         databaseContext.Database.Migrate();

@@ -1,0 +1,26 @@
+@{
+    var loggedIn = User.IsAuthenticated();
+    var username = User.GetName();
+}
+@if (!loggedIn)
+{
+    <form method="get" action="@Url.Action("Login", "Auth")">
+        <button class="btn btn-primary"
+                type="submit">
+            Login with Discord
+        </button>
+    </form>
+}
+
+@if (loggedIn)
+{
+    <div>
+        <span>Logged in as @username</span>
+        <form method="get" action="@Url.Action("Logout", "Auth")" class="d-flex justify-content-center">
+            <button class="btn btn-primary"
+                    type="submit">
+                Log out
+            </button>
+        </form>
+    </div>
+}

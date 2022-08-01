@@ -1,0 +1,23 @@
+﻿@page
+@model ReleaseNotifierApp.Pages.ErrorModel
+@{
+    ViewData["Title"] = "Error";
+}
+
+<h1 class="text-danger">Error</h1>
+<h2 class="text-danger">Es ist ein Fehler beim bearbeiten ihrer Anfrage aufgetreten. Bitte wenden Sie sich an ihren Administrator.</h2>
+
+@if (!string.IsNullOrWhiteSpace(Model.TraceIdentifier))
+{
+    <p>
+        <strong>Request ID:</strong> <code>@Model.HttpContext.TraceIdentifier</code>
+    </p>
+}
+
+@if (!string.IsNullOrWhiteSpace(Model.ActivityId))
+{
+    <p>
+        <strong>Trace ID:</strong> <code>@Model.ActivityId</code>
+    </p>
+}
+

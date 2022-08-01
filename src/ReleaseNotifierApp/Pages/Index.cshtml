@@ -1,0 +1,31 @@
+@page
+@model ReleaseNotifierApp.Pages.Index
+
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-6">
+            <h2 class="text-center">Current Subscriptions</h2>
+            <form method="post">
+                @foreach (var mediaName in Model.CheckedMediaNames)
+                {
+                    <div class="form-check">
+                        <input class="form-check-input"
+                               value="@mediaName"
+                               type="checkbox"
+                               checked
+                               name="CheckedMediaNames"
+                               id="@mediaName">
+                        <label class="form-check-label" for="@mediaName">
+                            @mediaName
+                        </label>
+                    </div>
+                }
+                <button class="btn btn-primary"
+                        type="submit">
+                    Update Subscriptions
+                </button>
+            </form>
+        </div>
+    </div>
+</div>

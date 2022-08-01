@@ -4,6 +4,7 @@ await Host.CreateDefaultBuilder(args)
     .ConfigureWebHostDefaults(webBuilder =>
         webBuilder.UseKestrel().UseUrls("http://0.0.0.0:" + Environment.GetEnvironmentVariable("PORT"))
         .UseStartup<Startup>()
+        // .UseWebRoot(Environment.CurrentDirectory)
     )
     .ConfigureAppConfiguration((context, builder) =>
     {
