@@ -13,12 +13,16 @@ public class AvailableMediaReadRepository : IAvailableMediaReadRepository
         _databaseContext = databaseContext;
     }
 
-    public async Task<AvailableMedia> QueryAvailableMedia()
+    public async Task<AvailableMedia> QueryAvailableMedia(QueryParameters queryParameters)
     {
+        var totalCount = await _databaseContext.Media.CountAsync();
+        
         var media = await _databaseContext.Media
+            .Skip(queryParameters.CalculateSkipForQuery())
+            .Take(queryParameters.PageSize)
             .Select(media => new MediaInformation(media.Id, media.Name))
             .ToListAsync();
 
-        return new AvailableMedia(media);
+        return new AvailableMedia(media, totalCount);
     }
 }

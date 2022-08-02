@@ -3,8 +3,6 @@ using Application.UseCases.Base;
 
 namespace Application.UseCases.Media.QueryAvailableMedia;
 
-public record AvailableMediaQuery;
-
 public sealed class QueryAvailableMediaHandler : IQueryHandler<AvailableMediaQuery, AvailableMedia>
 {
     private readonly IAvailableMediaReadRepository _availableMediaReadRepository;
@@ -16,6 +14,7 @@ public sealed class QueryAvailableMediaHandler : IQueryHandler<AvailableMediaQue
 
     public async Task<AvailableMedia> Handle(AvailableMediaQuery mediaQuery, CancellationToken cancellationToken)
     {
-        return await _availableMediaReadRepository.QueryAvailableMedia();
+        var (pageIndex, pageSize) = mediaQuery;
+        return await _availableMediaReadRepository.QueryAvailableMedia(new QueryParameters(pageIndex, pageSize));
     }
 }
