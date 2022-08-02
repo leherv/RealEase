@@ -7,15 +7,15 @@ public record AvailableMediaQuery;
 
 public sealed class QueryAvailableMediaHandler : IQueryHandler<AvailableMediaQuery, AvailableMedia>
 {
-    private readonly IMediaReadRepository _mediaReadRepository;
+    private readonly IAvailableMediaReadRepository _availableMediaReadRepository;
 
-    public QueryAvailableMediaHandler(IMediaReadRepository mediaReadRepository)
+    public QueryAvailableMediaHandler(IAvailableMediaReadRepository availableMediaReadRepository)
     {
-        _mediaReadRepository = mediaReadRepository;
+        _availableMediaReadRepository = availableMediaReadRepository;
     }
 
-    public async Task<AvailableMedia> Handle(AvailableMediaQuery availableMediaQuery, CancellationToken cancellationToken)
+    public async Task<AvailableMedia> Handle(AvailableMediaQuery mediaQuery, CancellationToken cancellationToken)
     {
-        return await _mediaReadRepository.QueryAvailableMedia();
+        return await _availableMediaReadRepository.QueryAvailableMedia();
     }
 }

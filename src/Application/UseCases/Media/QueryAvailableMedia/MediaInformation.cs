@@ -1,3 +1,3 @@
 namespace Application.UseCases.Media.QueryAvailableMedia;
 
-public record MediaInfo(Guid Id, string Name);
+public record MediaInformation(Guid Id, string Name);

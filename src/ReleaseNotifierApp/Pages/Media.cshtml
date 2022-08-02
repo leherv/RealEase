@@ -1,3 +1,53 @@
 @page "{id:Guid}"
 @model ReleaseNotifierApp.Pages.Media
 
+@if (string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="card">
+        <div class="card-header">
+            Media - Details
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@Model.MediaName</h5>
+            
+            @if (Model.HasRelease)
+            {
+                <p class="card-text">LatestRelease: Chapter @Model.LatestReleaseDisplayString()</p>
+                <a href="@Model.NewestChapterLink" class="btn btn-primary">Read it!</a>
+            }
+
+            @if (Model.HasScrapeTargets)
+            {
+                <div class="mt-4">
+                    <p class="card-text">Scrape Targets</p>
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Website</th>
+                            <th scope="col">Website Url</th>
+                            <th scope="col">ScrapeTarget Url</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @foreach (var scrapeTargetDetail in Model.ScrapeTargetDetails)
+                        {
+                            <tr>
+                                <th scope="row">1</th>
+                                <td>@scrapeTargetDetail.WebsiteName</td>
+                                <td>@scrapeTargetDetail.WebsiteUrl</td>
+                                <td>@scrapeTargetDetail.ScrapeTargetUrl</td>
+                            </tr>
+                        }
+                        </tbody >
+                    </table>
+                </div>
+            }
+
+        </div>
+    </div>
+}
+else
+{
+    <h2>@Model.ErrorMessage</h2>
+}

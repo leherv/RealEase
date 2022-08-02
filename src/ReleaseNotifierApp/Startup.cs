@@ -9,6 +9,7 @@ using Application.UseCases.Base;
 using Application.UseCases.Media.AddMedia;
 using Application.UseCases.Media.AddScrapeTarget;
 using Application.UseCases.Media.QueryAvailableMedia;
+using Application.UseCases.Media.QueryMedia;
 using Application.UseCases.Media.QueryScrapeTargets;
 using Application.UseCases.Scrape;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
@@ -89,6 +90,7 @@ public class Startup
         // Queries
         services
             .AddScoped<IQueryHandler<AvailableMediaQuery, AvailableMedia>, QueryAvailableMediaHandler>()
+            .AddScoped<IQueryHandler<MediaQuery, Result<MediaDetails>>, QueryMediaHandler>()
             .AddScoped<IQueryHandler<AvailableWebsitesQuery, AvailableWebsites>, QueryAvailableWebsitesHandler>()
             .AddScoped<IQueryHandler<MediaSubscriptionsQuery, MediaSubscriptions>, QueryMediaSubscriptionsHandler>()
             .AddScoped<IQueryHandler<ScrapeTargetsQuery, Result<ScrapeTargets>>, QueryScrapeTargetsHandler>();
@@ -110,8 +112,9 @@ public class Startup
         
         // Repositories(Read)
         services
-            .AddScoped<IMediaReadRepository, MediaReadRepository>()
+            .AddScoped<IAvailableMediaReadRepository, AvailableMediaReadRepository>()
             .AddScoped<IMediaSubscriptionsReadRepository, MediaSubscriptionsReadRepository>()
+            .AddScoped<IMediaReadRepository, MediaReadRepository>()
             .AddScoped<IWebsiteReadRepository, WebsiteReadRepository>()
             .AddScoped<IScrapeTargetReadRepository, ScrapeTargetReadRepository>();
         

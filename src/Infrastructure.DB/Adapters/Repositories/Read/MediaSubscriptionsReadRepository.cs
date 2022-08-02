@@ -27,7 +27,7 @@ public class MediaSubscriptionsReadRepository : IMediaSubscriptionsReadRepositor
         return new MediaSubscriptions(mediaSubscriptionInfos);
     }
 
-    private async Task<List<Application.UseCases.Subscriber.QueryMediaSubscriptions.MediaSubscriptionInfo>> GetSubscribedToMedia(IReadOnlyCollection<Guid> subscribedToMediaIds)
+    private async Task<List<MediaSubscriptionInfo>> GetSubscribedToMedia(IReadOnlyCollection<Guid> subscribedToMediaIds)
     {
         return await _databaseContext.Media
             .Where(media => subscribedToMediaIds.Contains(media.Id))
