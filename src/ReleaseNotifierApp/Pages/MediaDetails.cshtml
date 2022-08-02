@@ -1,0 +1,65 @@
+@page "/Media/{id:Guid}"
+@model ReleaseNotifierApp.Pages.MediaDetailsModel
+
+@if (string.IsNullOrWhiteSpace(Model.ErrorMessage))
+{
+    <div class="card">
+        <div class="card-header">
+            Media - Details
+        </div>
+        <div class="card-body">
+            <h5 class="card-title">@Model.MediaName</h5>
+
+            <p class="card-text">LatestRelease: @Model.LatestReleaseDisplayString()</p>
+            @if (Model.HasRelease)
+            {
+                <a href="@Model.NewestChapterLink" target="_blank" class="btn btn-primary">Read it!</a>
+            }
+            <div class="mt-4">
+                <p class="card-text">Scrape Targets:</p>
+                @if (Model.HasScrapeTargets)
+                {
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Website</th>
+                            <th scope="col">Website Url</th>
+                            <th scope="col">ScrapeTarget Url</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        @for (var i = 0; i < Model.ScrapeTargetDetails.Count; i++)
+                        {
+                            var scrapeTargetDetail = Model.ScrapeTargetDetails.ElementAt(i);
+                            <tr>
+                                <th scope="row">@(i + 1)</th>
+                                <td>@scrapeTargetDetail.WebsiteName</td>
+                                <td>
+                                    <a href="@scrapeTargetDetail.WebsiteUrl" target="_blank">
+                                        @scrapeTargetDetail.WebsiteUrl
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="@scrapeTargetDetail.ScrapeTargetUrl" target="_blank">
+                                        @scrapeTargetDetail.ScrapeTargetUrl
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                        </tbody >
+                    </table>
+                }
+                else
+                {
+                    <p>No ScrapeTargets yet</p>
+                }
+            </div>
+
+        </div>
+    </div>
+}
+else
+{
+    <h2>@Model.ErrorMessage</h2>
+}

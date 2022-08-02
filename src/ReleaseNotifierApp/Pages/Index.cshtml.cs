@@ -38,7 +38,7 @@ public class Index : PageModel
             new MediaSubscriptionsQuery(externalIdentifier));
         
         CheckedMediaNames = MediaSubscriptions.SubscribedToMedia
-            .Select(subscribedToMedia => subscribedToMedia.Name)
+            .Select(subscribedToMedia => subscribedToMedia.MediaName)
             .ToList();
     }
 }

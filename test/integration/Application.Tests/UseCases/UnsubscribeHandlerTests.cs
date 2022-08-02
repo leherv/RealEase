@@ -29,7 +29,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
         mediaSubscriptions.Should().NotBeNull();
         mediaSubscriptions.SubscribedToMedia.Should().HaveCount(subscriber.Subscriptions.Count - 1);
         mediaSubscriptions.SubscribedToMedia
-            .Select(subscribedToMedia => subscribedToMedia.Name)
+            .Select(subscribedToMedia => subscribedToMedia.MediaName)
             .Should()
             .NotContain(mediaToUnsubscribeFrom.Name);
     }

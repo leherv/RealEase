@@ -1,53 +1,49 @@
-@page "{id:Guid}"
+@page
 @model ReleaseNotifierApp.Pages.Media
 
-@if (string.IsNullOrWhiteSpace(Model.ErrorMessage))
-{
-    <div class="card">
-        <div class="card-header">
-            Media - Details
-        </div>
-        <div class="card-body">
-            <h5 class="card-title">@Model.MediaName</h5>
-            
-            @if (Model.HasRelease)
+<table class="table">
+    <thead>
+    <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    @for (var i = 0; i < Model.MediaInfos.Count; i++)
+    {
+        var mediaInfo = Model.MediaInfos.ElementAt(i);
+        <tr>
+            <th scope="row">@(i + 1)</th>
+            <td>@mediaInfo.Name</td>
+            <td>
+                <a href="/Media/@mediaInfo.Id">
+                    <i class="fa fa-external-link" aria-hidden="true"></i>
+                </a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+<nav aria-label="Media page navigation">
+    <ul class="pagination justify-content-center">
+        <li class="page-item @(Model.PaginationNavigationResult.PreviousPossible ? "" : "disabled")">
+            <a class="page-link" href="/Media?pageIndex=@(Model.PageIndex - 1)" tabindex="-1">Previous</a>
+        </li>
+        @foreach (var navigationNumber in Model.PaginationNavigationResult.NavigationNumbers)
+        {
+            @if (navigationNumber.Visible)
             {
-                <p class="card-text">LatestRelease: Chapter @Model.LatestReleaseDisplayString()</p>
-                <a href="@Model.NewestChapterLink" class="btn btn-primary">Read it!</a>
+                <li class="page-item @(navigationNumber.Active ? "active" : "")">
+                    <a class="page-link"
+                       href="/Media?pageIndex=@(navigationNumber.Value)">
+                        @navigationNumber.Value
+                    </a>
+                </li>
             }
-
-            @if (Model.HasScrapeTargets)
-            {
-                <div class="mt-4">
-                    <p class="card-text">Scrape Targets</p>
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">Website</th>
-                            <th scope="col">Website Url</th>
-                            <th scope="col">ScrapeTarget Url</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        @foreach (var scrapeTargetDetail in Model.ScrapeTargetDetails)
-                        {
-                            <tr>
-                                <th scope="row">1</th>
-                                <td>@scrapeTargetDetail.WebsiteName</td>
-                                <td>@scrapeTargetDetail.WebsiteUrl</td>
-                                <td>@scrapeTargetDetail.ScrapeTargetUrl</td>
-                            </tr>
-                        }
-                        </tbody >
-                    </table>
-                </div>
-            }
-
-        </div>
-    </div>
-}
-else
-{
-    <h2>@Model.ErrorMessage</h2>
-}
+        }
+        <li class="page-item @(Model.PaginationNavigationResult.NextPossible ? "" : "disabled")">
+            <a class="page-link" href="/Media?pageIndex=@(Model.PageIndex + 1)">Next</a>
+        </li>
+    </ul>
+</nav>

@@ -1,4 +1,5 @@
 @using ReleaseNotifierApp.Pages.Components.LoginView
+@* @using ReleaseNotifierApp.Extensions *@
 <!DOCTYPE html>
 
 <html lang="en">
@@ -8,6 +9,7 @@
     <meta name="theme-color" content="#ffffff">
 
     <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <title>ReleaseNotifier</title>
 </head>
@@ -25,6 +27,9 @@
             <ul class="navbar-nav mr-auto">
                 @if (User.IsAuthenticated())
                 {
+                    <li class="nav-item">
+                        <a class="nav-link" href="/Media">Media</a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/Subscriptions">Subscriptions</a>
                     </li>

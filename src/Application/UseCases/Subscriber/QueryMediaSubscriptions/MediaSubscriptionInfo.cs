@@ -1,3 +1,3 @@
 namespace Application.UseCases.Subscriber.QueryMediaSubscriptions;
 
-public record MediaSubscriptionInfo(Guid Id, string Name);
+public record MediaSubscriptionInfo(Guid MediaId, string MediaName);

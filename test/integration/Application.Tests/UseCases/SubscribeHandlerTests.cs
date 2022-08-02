@@ -29,7 +29,7 @@ public class SubscribeHandlerTests : IntegrationTestBase
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(subscriber.ExternalIdentifier));
         mediaSubscriptions.Should().NotBeNull();
         mediaSubscriptions.SubscribedToMedia
-            .Select(subscribedToMedia => subscribedToMedia.Name)
+            .Select(subscribedToMedia => subscribedToMedia.MediaName)
             .Should()
             .Contain(mediaToSubscribeTo.Name);
     }
@@ -49,7 +49,7 @@ public class SubscribeHandlerTests : IntegrationTestBase
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(newExternalIdentifier));
         mediaSubscriptions.SubscribedToMedia
-            .Select(subscribedToMedia => subscribedToMedia.Name)
+            .Select(subscribedToMedia => subscribedToMedia.MediaName)
             .Should()
             .Contain(mediaToSubscribeTo.Name);
     }
