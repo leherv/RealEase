@@ -1,5 +1,7 @@
 using Application.UseCases.Base;
+using Application.UseCases.Media.AddScrapeTarget;
 using Application.UseCases.Media.QueryMedia;
+using Application.UseCases.Website.QueryAvailableWebsites;
 using Domain.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -9,26 +11,61 @@ namespace ReleaseNotifierApp.Pages;
 public class MediaDetailsModel : PageModel
 {
     [BindProperty(SupportsGet = true)] public Guid Id { get; set; }
-    public string ErrorMessage { get; set; }
+
+    public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
 
     private MediaDetails MediaDetails;
 
     private readonly IQueryDispatcher _queryDispatcher;
+    private readonly ICommandDispatcher _commandDispatcher;
 
-    public MediaDetailsModel(IQueryDispatcher queryDispatcher)
+    public MediaDetailsModel(IQueryDispatcher queryDispatcher, ICommandDispatcher commandDispatcher)
     {
         _queryDispatcher = queryDispatcher;
+        _commandDispatcher = commandDispatcher;
     }
 
-    public async Task<IActionResult> OnGet()
+    public async Task OnGet()
     {
-        var mediaDetailsResult = await _queryDispatcher.Dispatch<MediaQuery, Result<MediaDetails>>(new MediaQuery(Id));
-        if (mediaDetailsResult.IsFailure)
-            ErrorMessage = mediaDetailsResult.ToString();
+        await SetupPage();
+    }
 
+    public async Task<IActionResult> OnPost(string mediaName, string websiteName, string relativePath)
+    {
+        // TODO: handle validation
+        var addScrapeTargetResult =
+            await _commandDispatcher.Dispatch<AddScrapeTargetCommand, Result>(
+                new AddScrapeTargetCommand(mediaName, websiteName, relativePath));
+        // TODO: handle failure (toast or so)
+
+        await SetupPage();
+        return Page();
+    }
+
+    private async Task SetupPage()
+    {
+        var mediaDetailsResult = await FetchMediaDetails();
+        // TODO: handle failure (toast or so)
         MediaDetails = mediaDetailsResult.Value;
 
-        return Page();
+        var availableWebsites = await FetchAvailableWebsites();
+
+        WebsiteViewModels = availableWebsites.Websites
+            .Where(website => !MediaDetails.ScrapeTargetDetails
+                .Select(scrapeTargetDetail => scrapeTargetDetail.WebsiteName)
+                .Contains(website.Name, StringComparer.InvariantCultureIgnoreCase))
+            .Select(website => new WebsiteViewModel(website.Name, website.Url))
+            .ToList();
+    }
+
+    private async Task<Result<MediaDetails>> FetchMediaDetails()
+    {
+        return await _queryDispatcher.Dispatch<MediaQuery, Result<MediaDetails>>(new MediaQuery(Id));
+    }
+
+    private async Task<AvailableWebsites> FetchAvailableWebsites()
+    {
+        return await _queryDispatcher.Dispatch<AvailableWebsitesQuery, AvailableWebsites>(new AvailableWebsitesQuery());
     }
 
     public string MediaName => MediaDetails.Name;
