@@ -27,22 +27,22 @@
 </table>
 <nav aria-label="Media page navigation">
     <ul class="pagination justify-content-center">
-        <li class="page-item @(Model.PaginationNavigationResult.PreviousPossible ? "" : "disabled")">
+        <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
             <a class="page-link" href="/Media?pageIndex=@(Model.PageIndex - 1)" tabindex="-1">Previous</a>
         </li>
-        @foreach (var navigationNumber in Model.PaginationNavigationResult.NavigationNumbers)
+        @foreach (var navigationItem in Model.PaginationNavigation.NavigationItems)
         {
-            @if (navigationNumber.Visible)
+            @if (navigationItem.Visible)
             {
-                <li class="page-item @(navigationNumber.Active ? "active" : "")">
+                <li class="page-item @(navigationItem.Active ? "active" : "")">
                     <a class="page-link"
-                       href="/Media?pageIndex=@(navigationNumber.Value)">
-                        @navigationNumber.Value
+                       href="/Media?pageIndex=@(navigationItem.Value)">
+                        @navigationItem.Value
                     </a>
                 </li>
             }
         }
-        <li class="page-item @(Model.PaginationNavigationResult.NextPossible ? "" : "disabled")">
+        <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
             <a class="page-link" href="/Media?pageIndex=@(Model.PageIndex + 1)">Next</a>
         </li>
     </ul>

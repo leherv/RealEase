@@ -10,12 +10,12 @@ public class Media : PageModel
 {
     [FromQuery]
     public int PageIndex { get; set; } = 1;
-    public int PageSize = 2;
+    public int PageSize = 1;
     
     public int TotalResultCount = 0;
     
     public IReadOnlyCollection<MediaInformation> MediaInfos;
-    public PaginationNavigationResult PaginationNavigationResult;
+    public PaginationNavigation PaginationNavigation;
     
     private readonly IQueryDispatcher _queryDispatcher;
 
@@ -32,7 +32,7 @@ public class Media : PageModel
             .ToList();
         TotalResultCount = availableMedia.TotalResultCount;
 
-        PaginationNavigationResult = PaginationNavigation.Build(PageIndex, PageSize, TotalResultCount);
+        PaginationNavigation = PaginationNavigationBuilder.Build(PageIndex, PageSize, TotalResultCount);
     }
 
     private Task<AvailableMedia> FetchMedia()
