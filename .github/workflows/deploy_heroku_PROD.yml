@@ -27,7 +27,7 @@ jobs:
     # This command implicitly build the Dockerfile as well. This is also why we needed to copy it to the project root. Sadly specifying a specific target is not supported 
     # see (https://github.com/AkhileshNS/heroku-deploy/issues/66) therefore the build takes longer to run as all stages are executed. In the future a specific Dockerfile for Heroku could be provided.
     - name: Push container
-      run: heroku container:push worker --app ${{ secrets.HEROKU_APP_NAME }}
+      run: heroku container:push web --app ${{ secrets.HEROKU_APP_NAME }}
       
     - name: Release container
-      run: heroku container:release worker --app ${{ secrets.HEROKU_APP_NAME }}
+      run: heroku container:release web --app ${{ secrets.HEROKU_APP_NAME }}
