@@ -1,6 +1,4 @@
-@using ReleaseNotifierApp.Pages.Components.LoginView
-@* @using ReleaseNotifierApp.Extensions *@
-@using ReleaseNotifierApp.Extensions
+@using Components.LoginView
 <!DOCTYPE html>
 
 <html lang="en">
@@ -26,15 +24,12 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
-                @if (User.IsAuthenticated())
-                {
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Media">Media</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/Subscriptions">Subscriptions</a>
-                    </li>
-                }
+                @* @if (User.IsAuthenticated()) *@
+                @* { *@
+                @*     <li class="nav-item"> *@
+                @*         <a class="nav-link" href="/Media">Media</a> *@
+                @*     </li> *@
+                @* } *@
             </ul>
             <div>@await Component.InvokeAsync(typeof(LoginView))</div>
         </div>

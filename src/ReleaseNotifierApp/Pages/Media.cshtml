@@ -1,30 +1,76 @@
 @page
-@model ReleaseNotifierApp.Pages.Media
+@model Media
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <table class="table">
     <thead>
     <tr>
         <th scope="col">#</th>
         <th scope="col">Name</th>
+        <th scope="col">Subscribed</th>
         <th scope="col">Actions</th>
     </tr>
     </thead>
     <tbody>
-    @for (var i = 0; i < Model.MediaInfos.Count; i++)
+    @for (var i = 0; i < Model.MediaViewModels.Count; i++)
     {
-        var mediaInfo = Model.MediaInfos.ElementAt(i);
+        var mediaViewModel = Model.MediaViewModels.ElementAt(i);
         <tr>
             <th scope="row">@(i + 1)</th>
-            <td>@mediaInfo.Name</td>
+            <td>@mediaViewModel.Name</td>
+
             <td>
-                <a href="/Media/@mediaInfo.Id">
-                    <i class="fa fa-external-link" aria-hidden="true"></i>
-                </a>
+                @if (mediaViewModel.UserSubscribed)
+                {
+                    <i style="color: green" class="fa fa-check" aria-hidden="true"></i>
+                }
+                else
+                {
+                    <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                }
+            </td>
+
+            <td>
+                <div class="float-left">
+                    <a class="btn btn-primary" href="/Media/@mediaViewModel.MediaId">
+                        Open <i class="fa fa-external-link" aria-hidden="true"></i>
+                    </a>
+                </div>
+
+                <div class="float-left ml-1">
+                    @if (mediaViewModel.UserSubscribed)
+                    {
+                        <form method="post">
+                            <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                            <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
+                            <button class="btn btn-danger"
+                                    asp-page-handler="Unsubscribe"
+                                    type="submit">
+                                Unsubscribe
+                            </button>
+                            @Html.AntiForgeryToken()
+                        </form>
+                    }
+                    else
+                    {
+                        <form method="post">
+                            <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                            <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
+                            <button class="btn btn-primary"
+                                    type="submit"
+                                    asp-page-handler="Subscribe">
+                                Subscribe
+                            </button>
+                            @Html.AntiForgeryToken()
+                        </form>
+                    }
+                </div>
             </td>
         </tr>
     }
     </tbody>
 </table>
+
 <nav aria-label="Media page navigation">
     <ul class="pagination justify-content-center">
         <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
