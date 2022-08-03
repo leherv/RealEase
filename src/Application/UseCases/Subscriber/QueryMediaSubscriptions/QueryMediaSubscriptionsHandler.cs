@@ -20,12 +20,12 @@ public sealed class QueryMediaSubscriptionsHandler : IQueryHandler<MediaSubscrip
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<MediaSubscriptions> Handle(MediaSubscriptionsQuery mediaSubscriptionsQuery, CancellationToken cancellationToken)
+    public async Task<MediaSubscriptions> Handle(MediaSubscriptionsQuery mediaQuery, CancellationToken cancellationToken)
     {
-        var subscriber = await _unitOfWork.SubscriberRepository.GetByExternalId(mediaSubscriptionsQuery.ExternalIdentifier);
+        var subscriber = await _unitOfWork.SubscriberRepository.GetByExternalId(mediaQuery.ExternalIdentifier);
         if (subscriber == null)
             return new MediaSubscriptions();
 
-        return await _mediaSubscriptionsReadRepository.QueryMediaSubscriptionsFor(mediaSubscriptionsQuery.ExternalIdentifier);
+        return await _mediaSubscriptionsReadRepository.QueryMediaSubscriptionsFor(mediaQuery.ExternalIdentifier);
     }
 }

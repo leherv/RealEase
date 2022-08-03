@@ -141,7 +141,7 @@ public sealed class ScrapeNewReleasesHandler : ICommandHandler<ScrapeNewReleases
         foreach (var mediaScrapeTarget in media.ScrapeTargets)
         {
             var website = await _unitOfWork.WebsiteRepository.GetById(mediaScrapeTarget.WebsiteId);
-            if (website == null)
+            if (website == null || !website.Active)
                 continue;
             var scrapeInstruction = PrepareScrapeInstruction(mediaScrapeTarget, media, website);
             scrapeInstructions.Add(scrapeInstruction);

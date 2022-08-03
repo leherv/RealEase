@@ -16,6 +16,7 @@ public class WebsiteReadRepository : IWebsiteReadRepository
     public async Task<AvailableWebsites> QueryAvailableWebsites()
     {
         var websites = await _databaseContext.Websites
+            .Where(website => website.Active)
             .Select(website => new AvailableWebsite(website.Name, website.Url.Value))
             .ToListAsync();
 

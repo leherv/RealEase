@@ -15,11 +15,24 @@
     </ItemGroup>
 
     <ItemGroup>
+        <PackageReference Include="AspNet.Security.OAuth.Discord" Version="6.0.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="6.0.1">
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
             <PrivateAssets>all</PrivateAssets>
         </PackageReference>
         <PackageReference Include="Quartz.Extensions.Hosting" Version="3.4.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Index.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Pages\Shared\_Layout.cshtml" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="wwwroot\lib\bootstrap" />
     </ItemGroup>
 
 </Project>

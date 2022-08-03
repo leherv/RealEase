@@ -28,7 +28,10 @@ public class SubscribeHandlerTests : IntegrationTestBase
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(subscriber.ExternalIdentifier));
         mediaSubscriptions.Should().NotBeNull();
-        mediaSubscriptions.SubscribedToMediaNames.Should().Contain(mediaToSubscribeTo.Name);
+        mediaSubscriptions.SubscribedToMedia
+            .Select(subscribedToMedia => subscribedToMedia.MediaName)
+            .Should()
+            .Contain(mediaToSubscribeTo.Name);
     }
 
     [Fact]
@@ -45,7 +48,10 @@ public class SubscribeHandlerTests : IntegrationTestBase
 
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(newExternalIdentifier));
-        mediaSubscriptions.SubscribedToMediaNames.Should().Contain(mediaToSubscribeTo.Name);
+        mediaSubscriptions.SubscribedToMedia
+            .Select(subscribedToMedia => subscribedToMedia.MediaName)
+            .Should()
+            .Contain(mediaToSubscribeTo.Name);
     }
 
     [Fact]
@@ -76,7 +82,7 @@ public class SubscribeHandlerTests : IntegrationTestBase
         Then.TheResult(subscribeMediaResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
         
         var mediaSubscriptions = await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(newExternalIdentifier));
-        mediaSubscriptions.SubscribedToMediaNames.Should().HaveCount(0);
+        mediaSubscriptions.SubscribedToMedia.Should().HaveCount(0);
         
          (await Then.TheDatabase.GetSubscriberForExternalIdentifier("non existent"))
             .Should()

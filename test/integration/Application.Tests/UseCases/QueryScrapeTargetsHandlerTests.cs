@@ -85,4 +85,31 @@ public class QueryScrapeTargetsHandlerTests : IntegrationTestBase
             .Should()
             .BeNull();
     }
+
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Returns_empty_list_if_media_has_only_ScrapeTargets_referencing_inactive_Websites()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var media = Given.A.Media.WithInActiveWebsite;
+        var scrapeTargetsQuery = new ScrapeTargetsQuery(media.Name);
+        
+        var scrapeTargetsResult = await When.TheApplication.ReceivesQuery<ScrapeTargetsQuery, Result<ScrapeTargets>>(scrapeTargetsQuery);
+        Then.TheResult(scrapeTargetsResult)
+            .IsSuccessful()
+            .Should()
+            .BeTrue();
+        var scrapeTargets = scrapeTargetsResult.Value;
+        scrapeTargets.ScrapeTargetInformation
+            .Should()
+            .HaveCount(0);
+        var scrapeTarget = media.ScrapeTargets.FirstOrDefault();
+        var scrapeTargetInformation = scrapeTargets.ScrapeTargetInformation.FirstOrDefault();
+        scrapeTarget
+            .Should()
+            .NotBeNull();
+        scrapeTargetInformation
+            .Should()
+            .BeNull();
+    }
 }

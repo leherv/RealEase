@@ -14,6 +14,7 @@ public class GivenTheScrapeTarget
     public ScrapeTarget SoloLevelingEarlyManga { get; }
     public ScrapeTarget MagicEmperorEarlyManga { get; }
     public ScrapeTarget MagicEmperorManganato { get; }
+    public ScrapeTarget FacelessMangaWalker { get; }
 
     public GivenTheScrapeTarget(GivenTheWebsite givenTheWebsite)
     {
@@ -70,12 +71,20 @@ public class GivenTheScrapeTarget
             RelativeUrl.Create("/manga-gr983826").Value
         ).Value;
 
+        FacelessMangaWalker = Create(
+            Guid.NewGuid(),
+            givenTheWebsite.MangaWalker,
+            RelativeUrl.Create("/contents/detail/KDCW_CW01202004010000_68/").Value
+        ).Value;
+        
+
         ScrapeTargets = new List<ScrapeTarget>
         {
             HunterXHunterEarlyManga,
             SoloLevelingEarlyManga,
             MartialPeakEarlyManga,
-            BorutoManganato
+            BorutoManganato,
+            FacelessMangaWalker
         };
     }
 

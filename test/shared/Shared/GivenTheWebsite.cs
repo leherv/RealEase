@@ -5,11 +5,14 @@ namespace Shared;
 
 public class GivenTheWebsite
 {
-    public List<Website> Websites { get; }
+    public List<Website> ActiveWebsites { get; }
+    public List<Website> InActiveWebsites { get; }
+    public List<Website> Websites => ActiveWebsites.Concat(InActiveWebsites).ToList();
     public Website EarlyManga { get; }
     public Website Manganato { get; }
     public Website Tapas { get; }
     public Website MangaPill { get; }
+    public Website MangaWalker { get; }
 
     public GivenTheWebsite()
     {
@@ -36,13 +39,25 @@ public class GivenTheWebsite
             WebsiteUrl.Create("https://mangapill.com/").Value,
             "mangapill"
         ).Value;
+        
+        MangaWalker = Create(
+            Guid.NewGuid(),
+            WebsiteUrl.Create("https://comic-walker.com/").Value,
+            "mangawalker"
+        ).Value;
+        MangaWalker.SetInActive();
 
-        Websites = new List<Website>
+        ActiveWebsites = new List<Website>
         {
             EarlyManga,
             Manganato,
             Tapas,
             MangaPill
+        };
+
+        InActiveWebsites = new List<Website>
+        {
+            MangaWalker
         };
     }
 

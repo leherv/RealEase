@@ -14,7 +14,7 @@ public sealed class QueryAvailableWebsitesHandler : IQueryHandler<AvailableWebsi
         _websiteReadRepository = websiteReadRepository;
     }
 
-    public async Task<AvailableWebsites> Handle(AvailableWebsitesQuery query, CancellationToken cancellationToken)
+    public async Task<AvailableWebsites> Handle(AvailableWebsitesQuery mediaQuery, CancellationToken cancellationToken)
     {
         return await _websiteReadRepository.QueryAvailableWebsites();
     }

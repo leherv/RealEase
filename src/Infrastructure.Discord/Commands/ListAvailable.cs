@@ -18,11 +18,11 @@ public class ListAvailable : ModuleBase<SocketCommandContext>
     internal async Task ListAvailableHandler()
     {
         var availableMedia =
-            await _queryDispatcher.Dispatch<AvailableMediaQuery, AvailableMedia>(new AvailableMediaQuery());
+            await _queryDispatcher.Dispatch<AvailableMediaQuery, AvailableMedia>(new AvailableMediaQuery(1, 50));
 
-        var message = availableMedia.MediaNames.Any()
+        var message = availableMedia.Media.Any()
             ? "Available Media: \n" +
-              $"{string.Join("\n", availableMedia.MediaNames)}"
+              $"{string.Join("\n", availableMedia.Media.Select(media => media.Name))}"
             : "No media available.";
 
         await Context.Message.Channel.SendMessageAsync(message);

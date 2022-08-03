@@ -20,7 +20,7 @@ public class GetSubscriptionsHandlerTests : IntegrationTestBase
             await When.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(
                 mediaSubscriptionsQuery);
 
-        mediaSubscriptions.SubscribedToMediaNames
+        mediaSubscriptions.SubscribedToMedia
             .Should()
             .HaveCount(Given.A.Subscriber.WithSubscriptions.Subscriptions.Count);
     }
@@ -37,7 +37,7 @@ public class GetSubscriptionsHandlerTests : IntegrationTestBase
             await When.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(
                 mediaSubscriptionsQuery);
 
-        mediaSubscriptions.SubscribedToMediaNames
+        mediaSubscriptions.SubscribedToMedia
             .Should()
             .HaveCount(0);
     }
@@ -53,7 +53,7 @@ public class GetSubscriptionsHandlerTests : IntegrationTestBase
             await When.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(
                 mediaSubscriptionsQuery);
 
-        mediaSubscriptions.SubscribedToMediaNames
+        mediaSubscriptions.SubscribedToMedia
             .Should()
             .HaveCount(0);
     }

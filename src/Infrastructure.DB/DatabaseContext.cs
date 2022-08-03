@@ -35,6 +35,7 @@ public class DatabaseContext : DbContext
     {
         var websiteEntity = modelBuilder.Entity<Website>();
         websiteEntity.Property(website => website.Name);
+        websiteEntity.Property(website => website.Active);
         websiteEntity.OwnsOne(website => website.Url, websiteUrlEntity =>
         {
             websiteUrlEntity.Property(websiteUrl => websiteUrl.Value);

@@ -4,10 +4,10 @@ namespace Application.UseCases.Subscriber.QueryMediaSubscriptions;
 
 public record MediaSubscriptions : IReadModel
 {
-    public IReadOnlyCollection<string> SubscribedToMediaNames { get; init; } = new List<string>();
+    public IReadOnlyCollection<MediaSubscriptionInfo> SubscribedToMedia { get; init; } = new List<MediaSubscriptionInfo>();
 
-    public MediaSubscriptions(IReadOnlyCollection<string>? subscribedToMediaNames = null)
+    public MediaSubscriptions(IReadOnlyCollection<MediaSubscriptionInfo>? subscribedToMedia = null)
     {
-        SubscribedToMediaNames = subscribedToMediaNames ?? new List<string>();
+        SubscribedToMedia = subscribedToMedia ?? new List<MediaSubscriptionInfo>();
     }
 }

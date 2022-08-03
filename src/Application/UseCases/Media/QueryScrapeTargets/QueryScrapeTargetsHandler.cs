@@ -15,8 +15,8 @@ public sealed class QueryScrapeTargetsHandler : IQueryHandler<ScrapeTargetsQuery
         _scrapeTargetReadRepository = scrapeTargetReadRepository;
     }
 
-    public async Task<Result<ScrapeTargets>> Handle(ScrapeTargetsQuery query, CancellationToken cancellationToken)
+    public async Task<Result<ScrapeTargets>> Handle(ScrapeTargetsQuery mediaQuery, CancellationToken cancellationToken)
     {
-        return await _scrapeTargetReadRepository.QueryScrapeTargetsFor(query.MediaName);
+        return await _scrapeTargetReadRepository.QueryScrapeTargetsFor(mediaQuery.MediaName);
     }
 }

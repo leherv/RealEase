@@ -61,7 +61,7 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
         await Given.TheDatabase.IsSeeded();
         var mediaWithScrapeTarget = Given.A.Media.MediaWithScrapeTargets.First();
         var scrapeTarget = mediaWithScrapeTarget.ScrapeTargets.First();
-        var website = Given.The.Website.Websites.Single(website => website.Id == scrapeTarget.WebsiteId);
+        var website = Given.The.Website.ActiveWebsites.Single(website => website.Id == scrapeTarget.WebsiteId);
         var addScrapeTargetCommand = new AddScrapeTargetCommand(
             mediaWithScrapeTarget.Name,
             website.Name,

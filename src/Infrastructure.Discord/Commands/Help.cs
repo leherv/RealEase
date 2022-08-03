@@ -9,7 +9,7 @@ public class Help : ModuleBase<SocketCommandContext>
         "The following commands are available:\n" +
         "rn!subscribe \"[mediaName]\"\n" +
         "rn!unsubscribe \"[mediaName]\"\n" +
-        "rn!listAvailable\n" +
+        "rn!listAvailable (50 max)\n" +
         "rn!listSubscribed\n" +
         "rn!listWebsites\n" +
         "rn!addMedia [websiteName] [relativeUrl]\n"

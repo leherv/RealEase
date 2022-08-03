@@ -27,8 +27,11 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(subscriber.ExternalIdentifier));
         mediaSubscriptions.Should().NotBeNull();
-        mediaSubscriptions.SubscribedToMediaNames.Should().HaveCount(subscriber.Subscriptions.Count - 1);
-        mediaSubscriptions.SubscribedToMediaNames.Should().NotContain(mediaToUnsubscribeFrom.Name);
+        mediaSubscriptions.SubscribedToMedia.Should().HaveCount(subscriber.Subscriptions.Count - 1);
+        mediaSubscriptions.SubscribedToMedia
+            .Select(subscribedToMedia => subscribedToMedia.MediaName)
+            .Should()
+            .NotContain(mediaToUnsubscribeFrom.Name);
     }
     
     [Fact]
@@ -46,7 +49,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(subscriber.ExternalIdentifier));
         mediaSubscriptions.Should().NotBeNull();
-        mediaSubscriptions.SubscribedToMediaNames.Should().BeEmpty();
+        mediaSubscriptions.SubscribedToMedia.Should().BeEmpty();
     }
     
     [Fact]
@@ -64,7 +67,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(subscriber.ExternalIdentifier));
         mediaSubscriptions.Should().NotBeNull();
-        mediaSubscriptions.SubscribedToMediaNames.Should().HaveCount(subscriber.Subscriptions.Count);
+        mediaSubscriptions.SubscribedToMedia.Should().HaveCount(subscriber.Subscriptions.Count);
     }
     
     [Fact]
@@ -82,7 +85,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(subscriber.ExternalIdentifier));
         mediaSubscriptions.Should().NotBeNull();
-        mediaSubscriptions.SubscribedToMediaNames.Should().HaveCount(subscriber.Subscriptions.Count);
+        mediaSubscriptions.SubscribedToMedia.Should().HaveCount(subscriber.Subscriptions.Count);
     }
     
     [Fact]
@@ -101,6 +104,6 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
         var mediaSubscriptions =
             await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(nonExistentSubscriberExternalId));
         mediaSubscriptions.Should().NotBeNull();
-        mediaSubscriptions.SubscribedToMediaNames.Should().HaveCount(0);
+        mediaSubscriptions.SubscribedToMedia.Should().HaveCount(0);
     }
 }

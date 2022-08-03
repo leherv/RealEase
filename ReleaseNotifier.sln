@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper.Tests", "test\unit\Infrastructure.Scraper.Tests\Infrastructure.Scraper.Tests.csproj", "{F1217747-8148-44F9-A420-DEBAEF8CF18C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotifierApp.Tests", "test\unit\ReleaseNotifierApp.Tests\ReleaseNotifierApp.Tests.csproj", "{1C2C479D-4C04-4097-9B36-F75798129DE3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -112,6 +114,10 @@ Global
 		{F1217747-8148-44F9-A420-DEBAEF8CF18C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1217747-8148-44F9-A420-DEBAEF8CF18C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1217747-8148-44F9-A420-DEBAEF8CF18C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C2C479D-4C04-4097-9B36-F75798129DE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C2C479D-4C04-4097-9B36-F75798129DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C2C479D-4C04-4097-9B36-F75798129DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C2C479D-4C04-4097-9B36-F75798129DE3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +138,7 @@ Global
 		{E4011FB0-DDF1-4CED-AD44-E5B3470AE280} = {0CEFA7DF-6DB8-4CD2-948A-9989CF0A4CBD}
 		{FE931D1E-E986-4A1A-A1A7-0E9C2D9D1EDE} = {0CEFA7DF-6DB8-4CD2-948A-9989CF0A4CBD}
 		{F1217747-8148-44F9-A420-DEBAEF8CF18C} = {377C3338-F3E4-4386-AE72-C20EB19BDC0C}
+		{1C2C479D-4C04-4097-9B36-F75798129DE3} = {377C3338-F3E4-4386-AE72-C20EB19BDC0C}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7EC3C59-1E7D-450E-976C-3598BD5E8088}
