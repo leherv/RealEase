@@ -1,4 +1,7 @@
 @using Components.LoginView
+@using Infrastructure.Discord.Settings
+@inject Microsoft.Extensions.Options.IOptions<DiscordSettings> _discordSettings
+
 <!DOCTYPE html>
 
 <html lang="en">
@@ -24,6 +27,9 @@
 
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link btn btn-light" href="@_discordSettings.Value.AddBotUri">Add me to your server!</a>
+                </li>
                 @* @if (User.IsAuthenticated()) *@
                 @* { *@
                 @*     <li class="nav-item"> *@
