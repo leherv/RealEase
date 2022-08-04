@@ -158,6 +158,10 @@ public class Startup
         app.UseStaticFiles();
         
         app.UseRouting();
+        app.UseCookiePolicy(new CookiePolicyOptions
+        {
+            MinimumSameSitePolicy = SameSiteMode.Lax
+        });
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseEndpoints(endpoint =>
