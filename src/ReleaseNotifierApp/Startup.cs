@@ -67,8 +67,8 @@ public class Startup
             })
             .AddCookie(options =>
             {
-                options.Cookie.SameSite = SameSiteMode.None;
-                options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                // options.Cookie.SameSite = SameSiteMode.None;
+                // options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
                 options.Cookie.HttpOnly = true;
             })
             .AddDiscord(options =>
