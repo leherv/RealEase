@@ -1,3 +1,4 @@
+@using Discord.Rest
 @using ReleaseNotifierApp.Extensions
 @{
     Layout = "_Layout";
@@ -6,5 +7,10 @@
 @{
     if (!User.IsAuthenticated() && !Context.Request.Path.Equals("/Login", StringComparison.OrdinalIgnoreCase)) {
         Context.Response.Redirect("/Login");
+    }
+    
+    if (User.IsAuthenticated() && !User.BotAdded())
+    {
+        Context.Response.Redirect("/AddBot");
     }
 }

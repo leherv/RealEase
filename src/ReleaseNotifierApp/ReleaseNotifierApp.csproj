@@ -25,6 +25,7 @@
 
     <ItemGroup>
       <_ContentIncludedByDefault Remove="Pages\Index.cshtml" />
+      <_ContentIncludedByDefault Remove="Pages\Components\AddBotView\AddBotView.cshtml" />
     </ItemGroup>
 
     <ItemGroup>

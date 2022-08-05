@@ -1,4 +1,5 @@
-﻿using Application.EventHandlers;
+﻿using System.Security.Claims;
+using Application.EventHandlers;
 using Application.EventHandlers.Base;
 using Application.Ports.General;
 using Application.Ports.Notification;
@@ -17,7 +18,9 @@ using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
 using Application.UseCases.Website.QueryAvailableWebsites;
 using AspNet.Security.OAuth.Discord;
+using Discord;
 using Discord.Commands;
+using Discord.Rest;
 using Discord.WebSocket;
 using Domain.Results;
 using Infrastructure.DB;
@@ -31,7 +34,6 @@ using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
 using Infrastructure.Scraper.Adapters;
 using Microsoft.AspNetCore.Authentication.Cookies;
-using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotifierApp.Extensions;
 
@@ -75,6 +77,28 @@ public class Startup
                 options.ClientId = discordSettings.ClientId;
                 options.ClientSecret = discordSettings.ClientSecret;
                 options.SaveTokens = true;
+                
+                options.Events.OnCreatingTicket = async ctx =>
+                {
+                    var client = new DiscordRestClient();
+                    var socketClient = ctx.HttpContext.RequestServices.GetRequiredService<DiscordSocketClient>();
+                    await client.LoginAsync(TokenType.Bearer, ctx.AccessToken);
+
+                    var botGuilds = await socketClient.Rest.GetGuildsAsync();
+                    
+                    var botAdded = false;
+                    foreach (var botGuild in botGuilds)
+                    {
+                        var currentUser = await botGuild.GetUserAsync(client.CurrentUser.Id);
+                        if (currentUser != null)
+                        {
+                            botAdded = true;
+                            break;
+                        }
+                    }
+                    
+                    ctx.Identity.AddClaim(new Claim("botAdded", botAdded.ToString()));
+                };
             });
 
         // Discord
