@@ -31,6 +31,7 @@ using Infrastructure.Discord.Settings;
 using Infrastructure.General.Adapters;
 using Infrastructure.Scraper.Adapters;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.OAuth.Claims;
 using Microsoft.EntityFrameworkCore;
 using ReleaseNotifierApp.Extensions;
 
@@ -158,6 +159,11 @@ public class Startup
         app.UseStaticFiles();
         
         app.UseRouting();
+        app.UseCookiePolicy(new CookiePolicyOptions
+        {
+            MinimumSameSitePolicy = SameSiteMode.None,
+            Secure = CookieSecurePolicy.Always
+        });
         app.UseAuthentication();
         app.UseAuthorization();
         app.UseEndpoints(endpoint =>
