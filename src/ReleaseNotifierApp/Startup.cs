@@ -185,8 +185,7 @@ public class Startup
         app.UseRouting();
         app.UseCookiePolicy(new CookiePolicyOptions
         {
-            MinimumSameSitePolicy = SameSiteMode.None,
-            Secure = CookieSecurePolicy.Always
+            MinimumSameSitePolicy = SameSiteMode.Lax
         });
         app.UseAuthentication();
         app.UseAuthorization();
