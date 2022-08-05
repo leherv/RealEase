@@ -23,4 +23,10 @@ public static class ClaimsPrincipalExtensions
     {
         return principal.Claims.SingleOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name")?.Value;
     }
+    
+    public static bool BotAdded(this ClaimsPrincipal principal)
+    {
+        var botAddedString = principal.Claims.SingleOrDefault(c => c.Type == "botAdded")?.Value;
+        return bool.TryParse(botAddedString, out var botAdded) && botAdded;
+    }
 }
