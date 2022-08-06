@@ -5,11 +5,11 @@
 }
 
 @{
-    if (!User.IsAuthenticated() && !Context.Request.Path.Equals("/Login", StringComparison.OrdinalIgnoreCase)) {
+    if (!User.IsAuthenticated() && !Context.Request.Path.Equals("/Login", StringComparison.InvariantCultureIgnoreCase)) {
         Context.Response.Redirect("/Login");
     }
     
-    if (User.IsAuthenticated() && !User.BotAdded())
+    if (User.IsAuthenticated() && !User.BotAdded() && !Context.Request.Path.Equals("/AddBot", StringComparison.InvariantCultureIgnoreCase))
     {
         Context.Response.Redirect("/AddBot");
     }
