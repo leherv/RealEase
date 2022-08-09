@@ -111,6 +111,10 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
         var mediaWithoutScrapeTarget = Given.A.Media.WithoutSubscribersWithoutReleasesWithoutScrapeTarget;
         var website = Given.The.Website.EarlyManga;
         var scrapeTarget = Given.The.ScrapeTarget.BorutoEarlyManga;
+
+        Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
+            Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaWithoutScrapeTarget.Name))
+        );
         Given.TheScraper.ScrapeForAnyMediaReturns(Result<ScrapedMediaRelease>.Success(
                 new ScrapedMediaRelease(
                     website.Url.Value + scrapeTarget.RelativeUrl.Value,
@@ -153,6 +157,10 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
         var mediaWithScrapeTarget = Given.A.Media.WithSubscriberWithReleases;
         var website = Given.The.Website.Manganato;
         var scrapeTarget = Given.The.ScrapeTarget.MartialPeakManganato;
+        
+        Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
+            Result<ScrapedMediaName>.Success(new ScrapedMediaName(mediaWithScrapeTarget.Name))
+        );
         Given.TheScraper.ScrapeForAnyMediaReturns(Result<ScrapedMediaRelease>.Success(
                 new ScrapedMediaRelease(
                     website.Url.Value + scrapeTarget.RelativeUrl.Value,
@@ -185,5 +193,42 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
         scrapeTargets.ScrapeTargetInformation
             .Should()
             .HaveCount(mediaWithScrapeTarget.ScrapeTargets.Count + 1);
+    }
+
+    [Theory]
+    [Trait("Category", "Integration")]
+    [InlineData("")]
+    [InlineData(null)]
+    [InlineData("something different that certainly does not match")]
+    public async Task Fails_if_ScrapeTarget_references_different_media(string scrapedMediaName)
+    {
+        await Given.TheDatabase.IsSeeded();
+        var website = Given.The.Website.EarlyManga;
+        var media = Given.A.Media.WithoutSubscribersWithoutReleasesWithoutScrapeTarget;
+        const string relativeUrl = "/some/relative/url/";
+        var addScrapeTargetCommand = new AddScrapeTargetCommand(
+            media.Name,
+            website.Name,
+            relativeUrl);
+
+        Given.TheMediaNameScraper.ScrapeForAnyMediaReturns(
+            Result<ScrapedMediaName>.Success(new ScrapedMediaName(scrapedMediaName)));
+        Given.TheScraper.ScrapeForAnyMediaReturns(Result<ScrapedMediaRelease>.Success(
+                new ScrapedMediaRelease(
+                    website.Url.Value + relativeUrl,
+                    1
+                )
+            )
+        );
+
+        var addScrapeTargetResult = await When.TheApplication
+            .ReceivesCommand<AddScrapeTargetCommand, Result>(addScrapeTargetCommand);
+
+        Then.TheResult(addScrapeTargetResult)
+            .IsSuccessful()
+            .Should()
+            .BeFalse();
+        Then.TheResult(addScrapeTargetResult)
+            .ContainsErrorWithCode(Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode);
     }
 }

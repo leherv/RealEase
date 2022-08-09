@@ -13,11 +13,17 @@ public class AddScrapeTargetHandler : ICommandHandler<AddScrapeTargetCommand, Re
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IScraper _scraper;
+    private readonly IMediaNameScraper _mediaNameScraper;
 
-    public AddScrapeTargetHandler(IUnitOfWork unitOfWork, IScraper scraper)
+    public AddScrapeTargetHandler(
+        IUnitOfWork unitOfWork,
+        IScraper scraper,
+        IMediaNameScraper mediaNameScraper
+    )
     {
         _unitOfWork = unitOfWork;
         _scraper = scraper;
+        _mediaNameScraper = mediaNameScraper;
     }
 
     public async Task<Result> Handle(AddScrapeTargetCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
@@ -52,10 +58,19 @@ public class AddScrapeTargetHandler : ICommandHandler<AddScrapeTargetCommand, Re
         var scrapeResult = await _scraper.Scrape(scrapeInstruction);
         if (scrapeResult.IsFailure)
             return scrapeResult.Error;
+        
+        var scrapeMediaNameInstruction = new ScrapeMediaNameInstruction(
+            website.Name,
+            resourceUrl.Value
+        );
+        var scrapeMediaNameResult = await _mediaNameScraper.ScrapeMediaName(scrapeMediaNameInstruction);
+        if (scrapeMediaNameResult.IsFailure)
+            return scrapeMediaNameResult.Error;
 
-        var addScrapeTargetResult = media.AddScrapeTarget(scrapeTargetToAdd);
+        var scrapedMediaName = scrapeMediaNameResult.Value.MediaName;
+        var addScrapeTargetResult = media.AddScrapeTarget(scrapeTargetToAdd, scrapedMediaName);
         if (addScrapeTargetResult.IsFailure)
-            return scrapeResult.Error;
+            return addScrapeTargetResult.Error;
 
         await _unitOfWork.SaveAsync();
 

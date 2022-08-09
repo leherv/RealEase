@@ -103,7 +103,7 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
         if (mediaResult.IsFailure)
             return mediaResult;
         
-        mediaResult.Value.AddScrapeTarget(scrapeTarget.Value);
+        mediaResult.Value.AddScrapeTarget(scrapeTarget.Value, mediaName);
         
         return mediaResult;
     }

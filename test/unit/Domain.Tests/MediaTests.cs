@@ -84,7 +84,7 @@ public class MediaTests
         var media = GivenTheMedia.Create().Value;
         var scrapeTarget = GivenTheScrapeTarget.Create().Value;
 
-        var result = media.AddScrapeTarget(scrapeTarget);
+        var result = media.AddScrapeTarget(scrapeTarget, media.Name);
 
         result.IsSuccess.Should().BeTrue();
         media.ScrapeTargets.Should().HaveCount(1);
@@ -99,11 +99,43 @@ public class MediaTests
         var scrapeTarget = GivenTheScrapeTarget.Create(website: website).Value;
         var scrapeTarget2 = GivenTheScrapeTarget.Create(website: website).Value;
 
-        media.AddScrapeTarget(scrapeTarget);
-        var result = media.AddScrapeTarget(scrapeTarget2);
+        media.AddScrapeTarget(scrapeTarget, media.Name);
+        var result = media.AddScrapeTarget(scrapeTarget2, media.Name);
 
         result.IsSuccess.Should().BeFalse();
         media.ScrapeTargets.Should().HaveCount(1);
         media.ScrapeTargets.First().Id.Should().Be(scrapeTarget.Id);
+    }
+    
+    [Theory]
+    [InlineData("Boruto", "Hunter X Hunter")]
+    [InlineData("Hunter X Hunter", "")]
+    [InlineData("Naruto", "Boruto")]
+    public void Adding_ScrapeTarget_fails_if_it_references_different_media(string mediaName, string scrapedMediaName)
+    {
+        var media = GivenTheMedia.Create(mediaName: mediaName).Value;
+        var website = GivenTheWebsite.Create().Value;
+        var scrapeTarget = GivenTheScrapeTarget.Create(website: website).Value;
+
+        var result = media.AddScrapeTarget(scrapeTarget, scrapedMediaName);
+
+        result.IsSuccess.Should().BeFalse();
+        result.Error.Code.Should().Be(Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode);
+        media.ScrapeTargets.Should().BeEmpty();
+    }
+    
+    [Theory]
+    [InlineData("Boruto", "Boruto: Naruto Next Generations")]
+    [InlineData("Boruto: Naruto Next Generations", "Boruto")]
+    public void Adding_ScrapeTarget_succeeds_if_it_references_same_media(string mediaName, string scrapedMediaName)
+    {
+        var media = GivenTheMedia.Create(mediaName: mediaName).Value;
+        var website = GivenTheWebsite.Create().Value;
+        var scrapeTarget = GivenTheScrapeTarget.Create(website: website).Value;
+
+        var result = media.AddScrapeTarget(scrapeTarget, scrapedMediaName);
+
+        result.IsSuccess.Should().BeTrue();
+        media.ScrapeTargets.Should().NotBeEmpty();
     }
 }
