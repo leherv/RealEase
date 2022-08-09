@@ -23,13 +23,13 @@ public class GivenTheMedia
             Guid.NewGuid(),
             "Hunter x Hunter"
         ).Value;
-        WithSubscriberWithoutRelease.AddScrapeTarget(givenTheScrapeTarget.HunterXHunterEarlyManga);
+        WithSubscriberWithoutRelease.AddScrapeTarget(givenTheScrapeTarget.HunterXHunterEarlyManga, "Hunter x Hunter");
 
         WithSubscriberWithReleases = Create(
             Guid.NewGuid(),
             "Martial Peak"
         ).Value;
-        WithSubscriberWithReleases.AddScrapeTarget(givenTheScrapeTarget.MartialPeakEarlyManga);
+        WithSubscriberWithReleases.AddScrapeTarget(givenTheScrapeTarget.MartialPeakEarlyManga, "Martial Peak");
         CurrentRelease = GivenTheRelease.Create(
             ReleaseNumber.Create(3, 0).Value,
             ResourceUrl.Create("https://www.thisIsATest.com/chapter/3").Value
@@ -40,7 +40,7 @@ public class GivenTheMedia
             Guid.NewGuid(),
             "Solo Leveling"
         ).Value;
-        WithoutSubscriberWithoutReleases.AddScrapeTarget(givenTheScrapeTarget.SoloLevelingEarlyManga);
+        WithoutSubscriberWithoutReleases.AddScrapeTarget(givenTheScrapeTarget.SoloLevelingEarlyManga, "Solo Leveling");
 
         WithoutSubscribersWithoutReleasesWithoutScrapeTarget = Create(
             Guid.NewGuid(),
@@ -51,14 +51,14 @@ public class GivenTheMedia
             Guid.NewGuid(),
             "Magic Emperor"
         ).Value;
-        WithSubscriberWithTwoScrapeTargets.AddScrapeTarget(givenTheScrapeTarget.MagicEmperorEarlyManga);
-        WithSubscriberWithTwoScrapeTargets.AddScrapeTarget(givenTheScrapeTarget.MagicEmperorManganato);
+        WithSubscriberWithTwoScrapeTargets.AddScrapeTarget(givenTheScrapeTarget.MagicEmperorEarlyManga, "Magic Emperor");
+        WithSubscriberWithTwoScrapeTargets.AddScrapeTarget(givenTheScrapeTarget.MagicEmperorManganato, "Magic Emperor");
 
         WithInActiveWebsite = Create(
             Guid.NewGuid(),
             "Faceless"
         ).Value;
-        WithInActiveWebsite.AddScrapeTarget(givenTheScrapeTarget.FacelessMangaWalker);
+        WithInActiveWebsite.AddScrapeTarget(givenTheScrapeTarget.FacelessMangaWalker, "Faceless");
         
         MediaList = new List<Media>
         {
@@ -89,7 +89,7 @@ public class GivenTheMedia
             RelativeUrl.Create("/manga/tower-of-god").Value
         ).Value;
         NotPersistedMedia = Create(Guid.NewGuid(), "Tower of God").Value;
-        NotPersistedMedia.AddScrapeTarget(notPersistedScrapeTarget);
+        NotPersistedMedia.AddScrapeTarget(notPersistedScrapeTarget, "Tower of God");
     }
 
     public static Result<Media> Create(

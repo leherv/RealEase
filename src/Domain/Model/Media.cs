@@ -46,14 +46,27 @@ public class Media : AggregateRoot
         return NewestRelease == null || release.IsNewerThan(NewestRelease);
     }
 
-    public Result AddScrapeTarget(ScrapeTarget scrapeTarget)
+    public Result AddScrapeTarget(ScrapeTarget scrapeTarget, string scrapedMediaName)
     {
         if (ScrapeTargetAlreadyConfigured(scrapeTarget))
             return Errors.Media.ScrapeTargetExistsError(Name);
 
+        if (!ReferencesSameMedia(scrapedMediaName))
+            return Errors.Media.ScrapeTargetReferencesOtherMediaError(Name, scrapedMediaName);
+
         _scrapeTargets.Add(scrapeTarget);
 
         return Result.Success();
+    }
+
+    private bool ReferencesSameMedia(string scrapedMediaName)
+    {
+        if (string.IsNullOrEmpty(scrapedMediaName))
+            return false;
+        
+        return Name.Equals(scrapedMediaName, StringComparison.InvariantCultureIgnoreCase) ||
+               Name.Contains(scrapedMediaName, StringComparison.InvariantCultureIgnoreCase) ||
+               scrapedMediaName.Contains(Name, StringComparison.InvariantCultureIgnoreCase);
     }
 
     public bool ScrapeTargetAlreadyConfigured(ScrapeTarget scrapeTarget)
