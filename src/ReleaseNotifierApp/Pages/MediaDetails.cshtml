@@ -67,12 +67,13 @@
                                     <label for="websiteName">Website</label>
                                     <select class="form-control"
                                             id="websiteName"
-                                            name="websiteName">
+                                            name="newScrapeTarget.websiteName">
                                         @foreach (var website in Model.WebsiteViewModels)
                                         {
                                             <option value="@website.Name">@(website.Name + " - " + website.Url)</option>
                                         }
                                     </select>
+                                    @Html.ValidationMessage("newScrapeTarget.websiteName")
                                 </div>
                             </div>
                             <div class="col">
@@ -80,9 +81,10 @@
                                     <label for="relativePath">Relative Path</label>
                                     <input type="text"
                                            class="form-control"
-                                           name="relativePath"
+                                           name="newScrapeTarget.relativePath"
                                            id="relativePath"
                                            placeholder="manga/hunter-x-hunter">
+                                    @Html.ValidationMessage("newScrapeTarget.relativePath")
                                 </div>
                             </div>
                         </div>
@@ -96,7 +98,7 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="mediaName" value="@Model.MediaName"/>
+                        <input type="hidden" name="newScrapeTarget.mediaName" value="@Model.MediaName"/>
                         @Html.AntiForgeryToken()
                     </div>
                 </form>
