@@ -115,12 +115,13 @@
                                     <label for="websiteName">Website</label>
                                     <select class="form-control"
                                             id="websiteName"
-                                            name="websiteName">
+                                            name="newMedia.WebsiteName">
                                         @foreach (var website in Model.WebsiteViewModels)
                                         {
                                             <option value="@website.Name">@(website.Name + " - " + website.Url)</option>
                                         }
                                     </select>
+                                    @Html.ValidationMessage("newMedia.WebsiteName")
                                 </div>
                             </div>
                             <div class="col">
@@ -128,9 +129,10 @@
                                     <label for="relativePath">Relative Path</label>
                                     <input type="text"
                                            class="form-control"
-                                           name="relativePath"
+                                           name="newMedia.RelativePath"
                                            id="relativePath"
                                            placeholder="manga/hunter-x-hunter">
+                                    @Html.ValidationMessage("newMedia.RelativePath")
                                 </div>
                             </div>
                         </div>

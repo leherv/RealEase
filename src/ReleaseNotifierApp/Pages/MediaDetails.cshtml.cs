@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Application.UseCases.Base;
 using Application.UseCases.Media.AddScrapeTarget;
 using Application.UseCases.Media.QueryMedia;
@@ -30,13 +31,19 @@ public class MediaDetailsModel : PageModel
         await SetupPage();
     }
 
-    public async Task<IActionResult> OnPost(string mediaName, string websiteName, string relativePath)
+    public async Task<IActionResult> OnPost(NewScrapeTarget newScrapeTarget)
     {
-        // TODO: handle validation
-        var addScrapeTargetResult =
-            await _commandDispatcher.Dispatch<AddScrapeTargetCommand, Result>(
-                new AddScrapeTargetCommand(mediaName, websiteName, relativePath));
-        // TODO: handle failure (toast or so)
+        if (ModelState.IsValid)
+        {
+            var addScrapeTargetResult =
+                await _commandDispatcher.Dispatch<AddScrapeTargetCommand, Result>(
+                    new AddScrapeTargetCommand(
+                        newScrapeTarget.MediaName,
+                        newScrapeTarget.WebsiteName,
+                        newScrapeTarget.RelativePath
+                    ));
+            // TODO: handle failure (toast or so)
+        }
 
         await SetupPage();
         return Page();
@@ -91,4 +98,16 @@ public class MediaDetailsModel : PageModel
     public string NewestChapterLink => HasRelease
         ? MediaDetails.ReleaseDetails.LatestReleaseUrl
         : "";
+}
+
+public record NewScrapeTarget
+{
+    [Required] 
+    public string MediaName { get; set; }
+
+    [Required]
+    public string WebsiteName { get; set; }
+
+    [Required]
+    public string RelativePath { get; set; }
 }

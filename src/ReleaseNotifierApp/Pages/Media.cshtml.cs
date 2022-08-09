@@ -1,3 +1,4 @@
+using System.ComponentModel.DataAnnotations;
 using Application.UseCases.Base;
 using Application.UseCases.Media.AddMedia;
 using Application.UseCases.Media.QueryAvailableMedia;
@@ -62,15 +63,17 @@ public class Media : PageModel
         return Page();
     }
 
-    public async Task<IActionResult> OnPostNewMedia(string websiteName, string relativePath)
+    public async Task<IActionResult> OnPostNewMedia(NewMedia newMedia)
     {
-        // TODO: handle validation
-        var addMediaCommand = new AddMediaCommand(websiteName, relativePath);
+        if (ModelState.IsValid)
+        {
+            var addMediaCommand = new AddMediaCommand(newMedia.WebsiteName, newMedia.RelativePath);
 
-        var addMediaResult =
-            await _commandDispatcher.Dispatch<AddMediaCommand, Result>(addMediaCommand);
-        // TODO: handle failure (toast or so)
-
+            var addMediaResult =
+                await _commandDispatcher.Dispatch<AddMediaCommand, Result>(addMediaCommand);
+            // TODO: handle failure (toast or so)
+        }
+        
         await SetupPage();
         return Page();
     }
@@ -127,4 +130,13 @@ public class Media : PageModel
     }
 
     public record MediaViewModel(Guid MediaId, string Name, bool UserSubscribed);
+
+    public record NewMedia
+    {
+        [Required]
+        public string WebsiteName { get; set; }
+
+        [Required] 
+        public string RelativePath { get; set; }
+    }
 }
