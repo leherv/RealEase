@@ -18,6 +18,7 @@ public sealed class QueryMediaHandler : IQueryHandler<MediaQuery, Result<MediaDe
 
     public async Task<Result<MediaDetails>> Handle(MediaQuery mediaQuery, CancellationToken cancellationToken)
     {
+        return  Result<MediaDetails>.Failure(Errors.General.NotFound(nameof(Domain.Model.Media)));
         var mediaDetails = await _mediaReadRepository.QueryById(mediaQuery.Id);
         
         return mediaDetails ?? Result<MediaDetails>.Failure(Errors.General.NotFound(nameof(Domain.Model.Media)));

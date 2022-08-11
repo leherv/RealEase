@@ -6,6 +6,7 @@ using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
 using Application.UseCases.Website.QueryAvailableWebsites;
+using AspNetCoreHero.ToastNotification.Abstractions;
 using Domain.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -27,11 +28,17 @@ public class Media : PageModel
 
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
+    private readonly INotyfService _notyfService;
 
-    public Media(IQueryDispatcher queryDispatcher, ICommandDispatcher commandDispatcher)
+    public Media(
+        IQueryDispatcher queryDispatcher,
+        ICommandDispatcher commandDispatcher,
+        INotyfService notyfService
+    )
     {
         _queryDispatcher = queryDispatcher;
         _commandDispatcher = commandDispatcher;
+        _notyfService = notyfService;
     }
 
     public async Task OnGet()
@@ -45,7 +52,11 @@ public class Media : PageModel
         var subscribeResult =
             await _commandDispatcher.Dispatch<SubscribeMediaCommand, Result>(
                 new SubscribeMediaCommand(externalIdentifier, mediaName));
-        // TODO: handle failure (toast or so)
+
+        if (subscribeResult.IsFailure)
+        {
+            _notyfService.Error(subscribeResult.Error.ToString());
+        }
 
         await SetupPage();
         return Page();
@@ -57,7 +68,11 @@ public class Media : PageModel
         var unsubscribeResult =
             await _commandDispatcher.Dispatch<UnsubscribeMediaCommand, Result>(
                 new UnsubscribeMediaCommand(externalIdentifier, mediaName));
-        // TODO: handle failure (toast or so)
+        
+        if (unsubscribeResult.IsFailure)
+        {
+            _notyfService.Error(unsubscribeResult.Error.ToString());
+        }
 
         await SetupPage();
         return Page();
@@ -71,7 +86,11 @@ public class Media : PageModel
 
             var addMediaResult =
                 await _commandDispatcher.Dispatch<AddMediaCommand, Result>(addMediaCommand);
-            // TODO: handle failure (toast or so)
+            
+            if (addMediaResult.IsFailure)
+            {
+                _notyfService.Error(addMediaResult.Error.ToString());
+            }
         }
         
         await SetupPage();
