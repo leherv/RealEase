@@ -6,16 +6,16 @@
         Media - Details
     </div>
     <div class="card-body">
-        <h5 class="card-title">@Model.MediaName</h5>
+        <h5 class="card-title">@Model.MediaDetailsViewModel.MediaName</h5>
 
-        <p class="card-text">LatestRelease: @Model.LatestReleaseDisplayString()</p>
-        @if (Model.HasRelease)
+        <p class="card-text">LatestRelease: @Model.MediaDetailsViewModel.LatestRelease</p>
+        @if (Model.MediaDetailsViewModel.HasRelease)
         {
-            <a href="@Model.NewestChapterLink" target="_blank" class="btn btn-primary">Read it!</a>
+            <a href="@Model.MediaDetailsViewModel.NewestChapterLink" target="_blank" class="btn btn-primary">Read it!</a>
         }
         <div class="mt-4">
             <p class="card-text">Scrape Targets:</p>
-            @if (Model.HasScrapeTargets)
+            @if (Model.MediaDetailsViewModel.HasScrapeTargets)
             {
                 <table class="table">
                     <thead>
@@ -27,9 +27,9 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @for (var i = 0; i < Model.ScrapeTargetDetails.Count; i++)
+                    @for (var i = 0; i < Model.MediaDetailsViewModel.ScrapeTargetDetailsViewModels.Count; i++)
                     {
-                        var scrapeTargetDetail = Model.ScrapeTargetDetails.ElementAt(i);
+                        var scrapeTargetDetail = Model.MediaDetailsViewModel.ScrapeTargetDetailsViewModels.ElementAt(i);
                         <tr>
                             <th scope="row">@(i + 1)</th>
                             <td>@scrapeTargetDetail.WebsiteName</td>
@@ -98,7 +98,7 @@
                             </div>
                         </div>
 
-                        <input type="hidden" name="newScrapeTarget.mediaName" value="@Model.MediaName"/>
+                        <input type="hidden" name="newScrapeTarget.mediaName" value="@Model.MediaDetailsViewModel.MediaName"/>
                         @Html.AntiForgeryToken()
                     </div>
                 </form>
