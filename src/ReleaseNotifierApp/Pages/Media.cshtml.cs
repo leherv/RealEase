@@ -7,6 +7,7 @@ using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
 using Application.UseCases.Website.QueryAvailableWebsites;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Domain.ApplicationErrors;
 using Domain.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -28,17 +29,17 @@ public class Media : PageModel
 
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
-    private readonly INotyfService _notyfService;
+    private readonly IToastifyService _toastifyService;
 
     public Media(
         IQueryDispatcher queryDispatcher,
         ICommandDispatcher commandDispatcher,
-        INotyfService notyfService
+        IToastifyService toastifyService
     )
     {
         _queryDispatcher = queryDispatcher;
         _commandDispatcher = commandDispatcher;
-        _notyfService = notyfService;
+        _toastifyService = toastifyService;
     }
 
     public async Task OnGet()
@@ -55,13 +56,13 @@ public class Media : PageModel
 
         if (subscribeResult.IsFailure)
         {
-            _notyfService.Error(subscribeResult.Error.ToString());
+            _toastifyService.Error(BuildSubscribeErrorMessage(subscribeResult));
         }
 
         await SetupPage();
         return Page();
     }
-
+    
     public async Task<IActionResult> OnPostUnsubscribe(string mediaName)
     {
         var externalIdentifier = User.GetExternalIdentifier();
@@ -71,13 +72,13 @@ public class Media : PageModel
         
         if (unsubscribeResult.IsFailure)
         {
-            _notyfService.Error(unsubscribeResult.Error.ToString());
+            _toastifyService.Error(BuildUnsubscribeErrorMessage(unsubscribeResult));
         }
 
         await SetupPage();
         return Page();
     }
-
+    
     public async Task<IActionResult> OnPostNewMedia(NewMedia newMedia)
     {
         if (ModelState.IsValid)
@@ -89,7 +90,7 @@ public class Media : PageModel
             
             if (addMediaResult.IsFailure)
             {
-                _notyfService.Error(addMediaResult.Error.ToString());
+                _toastifyService.Error(addMediaResult.Error.ToString());
             }
         }
         
@@ -118,7 +119,23 @@ public class Media : PageModel
             TotalResultCount
         );
     }
-
+    
+    private static string BuildSubscribeErrorMessage(Result result) =>
+        result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Entity was not found",
+            Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
+            _ => "Something went wrong"
+        };
+    
+    private static string BuildUnsubscribeErrorMessage(Result result) =>
+        result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Entity was not found",
+            Errors.Subscriber.UnsubscribeFailedErrorCode => "Unsubscribing failed",
+            _ => "Something went wrong"
+        };
+    
     private Task<AvailableMedia> FetchMedia()
     {
         return _queryDispatcher.Dispatch<AvailableMediaQuery, AvailableMedia>(
@@ -131,6 +148,11 @@ public class Media : PageModel
         return await _queryDispatcher.Dispatch<MediaSubscriptionsQuery, MediaSubscriptions>(
             new MediaSubscriptionsQuery(externalIdentifier));
     }
+    
+    private async Task<AvailableWebsites> FetchAvailableWebsites()
+    {
+        return await _queryDispatcher.Dispatch<AvailableWebsitesQuery, AvailableWebsites>(new AvailableWebsitesQuery());
+    }
 
     private static IReadOnlyCollection<MediaViewModel> BuildMediaViewModels(
         IEnumerable<MediaInformation> mediaInfos,
@@ -141,11 +163,6 @@ public class Media : PageModel
             mediaInfo.Name,
             subscribedToMedia.Contains(mediaInfo.Id))
         ).ToList();
-    }
-
-    private async Task<AvailableWebsites> FetchAvailableWebsites()
-    {
-        return await _queryDispatcher.Dispatch<AvailableWebsitesQuery, AvailableWebsites>(new AvailableWebsitesQuery());
     }
 
     public record MediaViewModel(Guid MediaId, string Name, bool UserSubscribed);

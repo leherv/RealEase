@@ -168,11 +168,11 @@ public class Startup
         services.AddQuartzJobs(Configuration);
 
         // Toasts
-        services.AddNotyf(config =>
+        services.AddToastify(config =>
         {
-            config.DurationInSeconds = 15;
-            config.IsDismissable = true;
-            config.Position = NotyfPosition.BottomRight;
+            config.DurationInSeconds = 10;
+            config.Position = Position.Right;
+            config.Gravity = Gravity.Bottom;
         });
     }
 
@@ -201,10 +201,7 @@ public class Startup
             endpoint.MapControllers();
             endpoint.MapRazorPages();
         });
-        
-        // Toasts
-        app.UseNotyf();
-        
+
         using var scope = app.ApplicationServices.CreateScope();
         var databaseContext = scope.ServiceProvider.GetRequiredService<DatabaseContext>();
         databaseContext.Database.Migrate();

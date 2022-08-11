@@ -4,6 +4,7 @@ using Application.UseCases.Media.AddScrapeTarget;
 using Application.UseCases.Media.QueryMedia;
 using Application.UseCases.Website.QueryAvailableWebsites;
 using AspNetCoreHero.ToastNotification.Abstractions;
+using Domain.ApplicationErrors;
 using Domain.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -12,24 +13,25 @@ namespace ReleaseNotifierApp.Pages;
 
 public class MediaDetailsModel : PageModel
 {
-    [BindProperty(SupportsGet = true)] public Guid Id { get; set; }
+    [BindProperty(SupportsGet = true)] 
+    public Guid Id { get; set; }
 
     public MediaDetailsViewModel? MediaDetailsViewModel { get; private set; }
     public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
 
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
-    private readonly INotyfService _notyfService;
+    private readonly IToastifyService _toastifyService;
 
     public MediaDetailsModel(
         IQueryDispatcher queryDispatcher,
         ICommandDispatcher commandDispatcher,
-        INotyfService notyfService
+        IToastifyService toastifyService
     )
     {
         _queryDispatcher = queryDispatcher;
         _commandDispatcher = commandDispatcher;
-        _notyfService = notyfService;
+        _toastifyService = toastifyService;
     }
 
     public async Task OnGet()
@@ -51,7 +53,7 @@ public class MediaDetailsModel : PageModel
 
             if (addScrapeTargetResult.IsFailure)
             {
-                _notyfService.Error(addScrapeTargetResult.Error.ToString());
+                _toastifyService.Error(BuildNewScrapeTargetErrorMessage(addScrapeTargetResult));
             }
         }
 
@@ -59,16 +61,27 @@ public class MediaDetailsModel : PageModel
         return Page();
     }
 
+    private static string BuildNewScrapeTargetErrorMessage(Result result) =>
+        result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Entity was not found",
+            Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
+            Errors.Media.ScrapeTargetExistsErrorCode => "ScrapeTarget already exists",
+            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed",
+            Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode => "ScrapeTarget references different media",
+            _ => "Something went wrong"
+        };
+
     private async Task SetupPage()
     {
         var mediaDetailsResult = await FetchMediaDetails();
         if (mediaDetailsResult.IsFailure)
         {
-            _notyfService.Success(mediaDetailsResult.Error.ToString());
+            _toastifyService.Error(BuildErrorMessage(mediaDetailsResult));
             MediaDetailsViewModel = new MediaDetailsViewModel(
                 "",
                 "",
-                "", 
+                "",
                 new List<ScrapeTargetDetailsViewModel>());
             WebsiteViewModels = new List<WebsiteViewModel>();
         }
@@ -78,6 +91,13 @@ public class MediaDetailsModel : PageModel
             MediaDetailsViewModel = BuildMediaDetailsViewModel(mediaDetails);
             WebsiteViewModels = await BuildWebsiteViewModel(mediaDetails);
         }
+    }
+
+    private static string BuildErrorMessage(Result<MediaDetails> mediaDetailsResult)
+    {
+        return mediaDetailsResult.Error.Code == Errors.General.NotFoundErrorCode
+            ? "Media not found"
+            : "Something went wrong";
     }
 
     private async Task<Result<MediaDetails>> FetchMediaDetails()
@@ -137,13 +157,18 @@ public record MediaDetailsViewModel(
     string MediaName,
     string LatestRelease,
     string NewestChapterLink,
-    IReadOnlyCollection<ScrapeTargetDetailsViewModel> ScrapeTargetDetailsViewModels)
+    IReadOnlyCollection<ScrapeTargetDetailsViewModel> ScrapeTargetDetailsViewModels
+)
 {
     public bool HasRelease => !string.IsNullOrEmpty(LatestRelease);
     public bool HasScrapeTargets => ScrapeTargetDetailsViewModels.Any();
 }
 
-public record ScrapeTargetDetailsViewModel(string WebsiteName, string WebsiteUrl, string ScrapeTargetUrl);
+public record ScrapeTargetDetailsViewModel(
+    string WebsiteName,
+    string WebsiteUrl,
+    string ScrapeTargetUrl
+);
 
 public record NewScrapeTarget
 {
