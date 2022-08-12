@@ -19,12 +19,12 @@ namespace ReleaseNotifierApp.Pages;
 public class Media : PageModel
 {
     [FromQuery] [HiddenInput] public int PageIndex { get; set; } = 1;
-    public const int PageSize = 25;
-    public int TotalResultCount = 0;
+    private const int PageSize = 10;
+    private int _totalResultCount = 0;
 
     public IReadOnlyCollection<MediaViewModel> MediaViewModels { get; private set; }
     public PaginationNavigation PaginationNavigation;
-    // TODO: create common component for select of website Media and MediaDetails use it
+    // TODO: create common component for select of website (Media and MediaDetails use it)
     public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
 
     private readonly IQueryDispatcher _queryDispatcher;
@@ -108,7 +108,7 @@ public class Media : PageModel
             .Select(website => new WebsiteViewModel(website.Name, website.Url))
             .ToList();
 
-        TotalResultCount = availableMedia.TotalResultCount;
+        _totalResultCount = availableMedia.TotalResultCount;
         MediaViewModels = BuildMediaViewModels(
             availableMedia.Media,
             subscribedToMedia.SubscribedToMedia.Select(subscribedToMedia => subscribedToMedia.MediaId)
@@ -116,7 +116,7 @@ public class Media : PageModel
         PaginationNavigation = PaginationNavigationBuilder.Build(
             PageIndex,
             PageSize,
-            TotalResultCount
+            _totalResultCount
         );
     }
     
