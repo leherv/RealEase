@@ -22,16 +22,19 @@ public class MediaDetailsModel : PageModel
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IToastifyService _toastifyService;
+    private readonly ILogger<MediaDetailsModel> _logger;
 
     public MediaDetailsModel(
         IQueryDispatcher queryDispatcher,
         ICommandDispatcher commandDispatcher,
-        IToastifyService toastifyService
+        IToastifyService toastifyService,
+        ILogger<MediaDetailsModel> logger
     )
     {
         _queryDispatcher = queryDispatcher;
         _commandDispatcher = commandDispatcher;
         _toastifyService = toastifyService;
+        _logger = logger;
     }
 
     public async Task OnGet()
@@ -53,6 +56,7 @@ public class MediaDetailsModel : PageModel
 
             if (addScrapeTargetResult.IsFailure)
             {
+                _logger.LogError(addScrapeTargetResult.Error.ToString());
                 _toastifyService.Error(BuildNewScrapeTargetErrorMessage(addScrapeTargetResult));
             }
         }
@@ -77,6 +81,7 @@ public class MediaDetailsModel : PageModel
         var mediaDetailsResult = await FetchMediaDetails();
         if (mediaDetailsResult.IsFailure)
         {
+            _logger.LogError(mediaDetailsResult.Error.ToString());
             _toastifyService.Error(BuildErrorMessage(mediaDetailsResult));
             MediaDetailsViewModel = new MediaDetailsViewModel(
                 "",

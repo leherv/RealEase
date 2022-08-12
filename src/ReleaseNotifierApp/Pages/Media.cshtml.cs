@@ -30,16 +30,19 @@ public class Media : PageModel
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IToastifyService _toastifyService;
+    private readonly ILogger<Media> _logger;
 
     public Media(
         IQueryDispatcher queryDispatcher,
         ICommandDispatcher commandDispatcher,
-        IToastifyService toastifyService
+        IToastifyService toastifyService,
+        ILogger<Media> logger
     )
     {
         _queryDispatcher = queryDispatcher;
         _commandDispatcher = commandDispatcher;
         _toastifyService = toastifyService;
+        _logger = logger;
     }
 
     public async Task OnGet()
@@ -56,6 +59,7 @@ public class Media : PageModel
 
         if (subscribeResult.IsFailure)
         {
+            _logger.LogError(subscribeResult.Error.ToString());
             _toastifyService.Error(BuildSubscribeErrorMessage(subscribeResult));
         }
 
@@ -72,6 +76,7 @@ public class Media : PageModel
         
         if (unsubscribeResult.IsFailure)
         {
+            _logger.LogError(unsubscribeResult.Error.ToString());
             _toastifyService.Error(BuildUnsubscribeErrorMessage(unsubscribeResult));
         }
 
@@ -90,13 +95,26 @@ public class Media : PageModel
             
             if (addMediaResult.IsFailure)
             {
-                _toastifyService.Error(addMediaResult.Error.ToString());
+                _logger.LogError(addMediaResult.Error.ToString());
+                _toastifyService.Error(BuildAddMediaErrorMessage(addMediaResult));
             }
         }
         
         await SetupPage();
         return Page();
     }
+    
+    private static string BuildAddMediaErrorMessage(Result result) =>
+        result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Website was not found",
+            Errors.Media.MediaWithScrapeTargetExistsErrorCode => "Media for this URL exists",
+            Errors.Media.MediaWithNameExistsErrorCode => "Media with this name exists",
+            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed",
+            Errors.Scraper.ScrapeMediaNameFailedErrorCode => "Scraping for media name failed",
+            Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
+            _ => "Something went wrong"
+        };
 
     private async Task SetupPage()
     {

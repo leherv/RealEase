@@ -23,23 +23,31 @@ public class AddMedia : ModuleBase<SocketCommandContext>
     internal async Task AddMediaHandler(string websiteName, string relativePath)
     {
         var addMediaCommand = new AddMediaCommand(websiteName, relativePath);
-        
         var addMediaResult =
             await _commandDispatcher.Dispatch<AddMediaCommand, Result>(addMediaCommand);
 
         var message = "Media successfully added.";
         if (addMediaResult.IsFailure)
         {
-            message = "Adding media failed";
-            _logger.LogWarning(addMediaResult.Error.ToString());
-            if (addMediaResult.Error.Code == Errors.Media.MediaWithNameExistsErrorCode)
-                message += " as media with this name already exists";
-            if (addMediaResult.Error.Code == Errors.Media.MediaWithScrapeTargetExistsErrorCode)
-                message += " as another media already is configured for this URL";
-            if (addMediaResult.Error.Code == Errors.General.NotFoundErrorCode)
-                message += $" as website with name {websiteName} could not be found";
+            _logger.LogError(addMediaResult.Error.ToString());
+            message = BuildErrorMessage(addMediaResult);
         }
-        
+
         await Context.Message.Channel.SendMessageAsync(message);
+    }
+
+    private static string BuildErrorMessage(Result result)
+    {
+        const string message = "Adding media failed: ";
+        return message + result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Website was not found",
+            Errors.Media.MediaWithScrapeTargetExistsErrorCode => "Media for this URL exists",
+            Errors.Media.MediaWithNameExistsErrorCode => "Media with this name exists",
+            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed",
+            Errors.Scraper.ScrapeMediaNameFailedErrorCode => "Scraping for media name failed",
+            Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
+            _ => "Something went wrong"
+        };
     }
 }

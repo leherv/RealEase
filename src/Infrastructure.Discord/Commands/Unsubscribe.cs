@@ -1,6 +1,7 @@
 ﻿using Application.UseCases.Base;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
 using Discord.Commands;
+using Domain.ApplicationErrors;
 using Domain.Results;
 using Infrastructure.Discord.Extensions;
 using Microsoft.Extensions.Logging;
@@ -29,10 +30,21 @@ public class Unsubscribe : ModuleBase<SocketCommandContext>
         var message = "Done.";
         if (unsubscribeResult.IsFailure)
         {
-            _logger.LogInformation(unsubscribeResult.Error.ToString());
-            message = "Unsubscribe failed.";
+            _logger.LogError(unsubscribeResult.Error.ToString());
+            message = BuildErrorMessage(unsubscribeResult);
         }
         
         await Context.Message.Channel.SendMessageAsync(message);
+    }
+    
+    private static string BuildErrorMessage(Result result)
+    {
+        const string message = "Unsubscribing failed: ";
+        return message + result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Entity was not found",
+            Errors.Subscriber.UnsubscribeFailedErrorCode => "Subscription not found",
+            _ => "Something went wrong"
+        };
     }
 }

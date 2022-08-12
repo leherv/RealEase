@@ -29,26 +29,40 @@ public class ListScrapeTargets : ModuleBase<SocketCommandContext>
         string message;
         if (scrapeTargetsResult.IsFailure)
         {
-            message = "Listing ScrapeTargets failed";
-            _logger.LogWarning(scrapeTargetsResult.Error.ToString());
-            if (scrapeTargetsResult.Error.Code == Errors.General.NotFoundErrorCode)
-                message += " as media with this name could not be found";
-            message += ".";
+            _logger.LogError(scrapeTargetsResult.Error.ToString());
+            message = BuildErrorMessage(scrapeTargetsResult);
         }
         else
         {
-            var scrapeTargetInformation = scrapeTargetsResult.Value.ScrapeTargetInformation;
-            message = scrapeTargetInformation.Any()
-                ? "ScrapeTargets:" +
-                  scrapeTargetInformation
-                      .OrderBy(scrapeTargetInfo => scrapeTargetInfo.WebsiteName)
-                      .Aggregate("", (current, scrapeTargetInfo) => current +
-                                                                    $"\n Website: {scrapeTargetInfo.WebsiteName}" +
-                                                                    $"\n Website URL: {scrapeTargetInfo.WebsiteUrl}" +
-                                                                    $"\n Relative URL: {scrapeTargetInfo.RelativeUrl}")
-                : "\nNo ScrapeTargets yet.";
+            message = BuildSuccessMessage(scrapeTargetsResult.Value);
         }
 
         await Context.Message.Channel.SendMessageAsync(message);
+    }
+    
+    private static string BuildErrorMessage(Result result)
+    {
+        const string message = "Listing ScrapeTargets failed: ";
+        return message + result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Entity was not found",
+            _ => "Something went wrong"
+        };
+    }
+
+    private static string BuildSuccessMessage(ScrapeTargets scrapeTargets)
+    {
+        var scrapeTargetInformation = scrapeTargets.ScrapeTargetInformation;
+        var message = scrapeTargetInformation.Any()
+            ? "ScrapeTargets:" +
+              scrapeTargetInformation
+                  .OrderBy(scrapeTargetInfo => scrapeTargetInfo.WebsiteName)
+                  .Aggregate("", (current, scrapeTargetInfo) => current +
+                                                                $"\n Website: {scrapeTargetInfo.WebsiteName}" +
+                                                                $"\n Website URL: {scrapeTargetInfo.WebsiteUrl}" +
+                                                                $"\n Relative URL: {scrapeTargetInfo.RelativeUrl}")
+            : "\nNo ScrapeTargets yet.";
+
+        return message;
     }
 }
