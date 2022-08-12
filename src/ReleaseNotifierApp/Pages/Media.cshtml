@@ -37,7 +37,7 @@
                     <td>
                         <div class="float-left">
                             <a class="btn btn-primary" href="/Media/@mediaViewModel.MediaId">
-                                Open <i class="fa fa-external-link" aria-hidden="true"></i>
+                                Open <i class="fa fa-pencil" aria-hidden="true"></i>
                             </a>
                         </div>
 
@@ -46,8 +46,9 @@
                             {
                                 <form method="post">
                                     <button class="btn btn-danger"
-                                            asp-page-handler="Unsubscribe"
-                                            type="submit">
+                                            type="submit"
+                                            onclick="showSpinner()"
+                                            asp-page-handler="Unsubscribe">
                                         Unsubscribe
                                     </button>
 
@@ -61,6 +62,7 @@
                                 <form method="post">
                                     <button class="btn btn-primary"
                                             type="submit"
+                                            onclick="showSpinner()"
                                             asp-page-handler="Subscribe">
                                         Subscribe
                                     </button>
@@ -80,7 +82,12 @@
         <nav aria-label="Media page navigation">
             <ul class="pagination">
                 <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
-                    <a class="page-link" href="/Media?pageIndex=@(Model.PageIndex - 1)" tabindex="-1">Previous</a>
+                    <a class="page-link"
+                       onclick="showSpinner()"
+                       href="/Media?pageIndex=@(Model.PageIndex - 1)"
+                       tabindex="-1">
+                        Previous
+                    </a>
                 </li>
                 @foreach (var navigationItem in Model.PaginationNavigation.NavigationItems)
                 {
@@ -88,6 +95,7 @@
                     {
                         <li class="page-item @(navigationItem.Active ? "active" : "")">
                             <a class="page-link"
+                               onclick="showSpinner()"
                                href="/Media?pageIndex=@(navigationItem.Value)">
                                 @navigationItem.Value
                             </a>
@@ -95,7 +103,11 @@
                     }
                 }
                 <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
-                    <a class="page-link" href="/Media?pageIndex=@(Model.PageIndex + 1)">Next</a>
+                    <a class="page-link"
+                       onclick="showSpinner()"
+                       href="/Media?pageIndex=@(Model.PageIndex + 1)">
+                        Next
+                    </a>
                 </li>
             </ul>
         </nav>
@@ -140,7 +152,8 @@
                             <div class="col">
                                 <button class="btn btn-success"
                                         type="submit"
-                                        asp-page-handler="NewMedia">
+                                        asp-page-handler="NewMedia"
+                                        onclick="showSpinner()">
                                     Add Media
                                 </button>
                             </div>

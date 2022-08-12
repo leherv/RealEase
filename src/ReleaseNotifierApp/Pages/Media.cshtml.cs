@@ -19,7 +19,7 @@ namespace ReleaseNotifierApp.Pages;
 public class Media : PageModel
 {
     [FromQuery] [HiddenInput] public int PageIndex { get; set; } = 1;
-    public const int PageSize = 25;
+    public const int PageSize = 2;
     public int TotalResultCount = 0;
 
     public IReadOnlyCollection<MediaViewModel> MediaViewModels { get; private set; }
