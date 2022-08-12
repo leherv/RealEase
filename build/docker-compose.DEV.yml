@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  releaseNotifier:
+  real_ease:
     build:
       target: runDEV
     volumes:
@@ -10,17 +10,17 @@ services:
       - "5000:80"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
-      RN_CONNECTIONSTRINGS__DEFAULT: "Host=release_notifier_db;Port=5432;Database=releasenotifier;Username=postgres;Password=admin"
+      RN_CONNECTIONSTRINGS__DEFAULT: "Host=real_ease_db;Port=5432;Database=real_ease;Username=postgres;Password=admin"
     depends_on:
-      - release_notifier_db
+      - real_ease_db
       
-  release_notifier_db:
-    container_name: release_notifier_db
+  real_ease_db:
+    container_name: real_ease_db
     image: library/postgres:13.0
     ports:
       - "5433:5432"
     environment:
-      POSTGRES_DB: "releasenotifier"
+      POSTGRES_DB: "real_ease"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "admin"
     restart: always
