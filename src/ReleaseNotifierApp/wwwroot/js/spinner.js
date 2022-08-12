@@ -1,15 +1,18 @@
+let timeoutId;
+
 window.addEventListener("load", (_) => {
     hideSpinner();
 });
 
 function hideSpinner() {
     let spinnerOverlayContainer = getSpinnerOverlayContainer();
+    clearTimeout(timeoutId);
     spinnerOverlayContainer.classList.add("d-none");
 }
 
 function showSpinner() {
     let spinnerOverlayContainer = getSpinnerOverlayContainer();
-    spinnerOverlayContainer.classList.remove("d-none");
+    timeoutId = setTimeout(() => spinnerOverlayContainer.classList.remove("d-none"), 500);
 }
 
 function getSpinnerOverlayContainer() {

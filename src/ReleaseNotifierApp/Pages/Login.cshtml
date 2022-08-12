@@ -4,7 +4,10 @@
 
 <div class="container">
     <div class="text-center">
-        <div>To use the service please login first</div>
+        @if (!User.IsAuthenticated())
+        {
+            <div>To use the service please login first</div>
+        }
         @await Component.InvokeAsync(typeof(LoginViewComponent))
     </div>
 </div>
