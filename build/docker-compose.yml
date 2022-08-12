@@ -1,9 +1,9 @@
 version: '3.7'
 
 services:
-  releaseNotifier:
-    container_name: release_notifier
-    image: release_notifier:latest
+  real_ease:
+    container_name: real_ease
+    image: real_ease:latest
     build:
       context: ..
       dockerfile: build/Dockerfile

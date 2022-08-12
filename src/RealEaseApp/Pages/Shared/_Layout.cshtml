@@ -1,0 +1,61 @@
+@using Infrastructure.Discord.Settings
+@using RealEaseApp.Pages.ViewComponents.Login
+@inject Microsoft.Extensions.Options.IOptions<DiscordSettings> _discordSettings
+@using RealEaseApp.Extensions
+@* @using RealEaseApp.Extensions *@
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="theme-color" content="#ffffff">
+
+    <link rel="stylesheet" href="~/lib/bootstrap/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="~/css/site.css">
+
+    <title>RealEase</title>
+</head>
+<body>
+@await Html.PartialAsync("~/Pages/PartialViews/_LoadingSpinner.cshtml")
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand mx-2" href="/">RealEase</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto">
+                @if (User.BotAdded())
+                {
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-light" href="@_discordSettings.Value.AddBotUri">Add me to an additional server!</a>
+                    </li>
+                }
+                else
+                {
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-light" href="@_discordSettings.Value.AddBotUri">Add me to your server!</a>
+                    </li>
+                }
+            </ul>
+            <div>@await Component.InvokeAsync(typeof(LoginViewComponent))</div>
+        </div>
+    </nav>
+</header>
+<div class="container-fluid">
+    <main role="main" class="py-3">
+        @RenderBody()
+    </main>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/spinner.js"></script>
+@await Component.InvokeAsync("Toastify")
+</body>
+</html>

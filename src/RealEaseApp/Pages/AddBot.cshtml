@@ -1,0 +1,19 @@
+@page
+@model RealEaseApp.Pages.AddBot
+
+<div class="container">
+    <div class="text-center">
+  
+
+        @if (User.BotAdded())
+        {
+            <div>You already added the bot to one of your servers. You are welcome to add it to even more servers!</div>
+            <a class="btn btn-primary" href="@Model.AddBotUri">Add me to an additional server!</a>
+        }
+        else
+        {
+            <div>To be able to receive notifications as well as to interact via commands you need to add the bot to your server. After adding it you will have to login again.</div>
+            <a class="btn btn-primary" href="@Model.AddBotUri">Add me to your server!</a>
+        }
+    </div>
+</div>
