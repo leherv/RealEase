@@ -24,7 +24,7 @@ COPY --from=publish /app/out .
 FROM run as runDEV
 RUN apt-get update && \
 apt-get install -y netcat 
-CMD sh -c 'chmod +x *.sh; ./wait-for.sh real_ease_db:5432 -t 30 -- dotnet ReleaseNotifierApp.dll'
+CMD sh -c 'chmod +x *.sh; ./wait-for.sh real_ease_db:5432 -t 30 -- dotnet RealEaseApp.dll'
 
 FROM run as runPROD
-CMD ["dotnet", "ReleaseNotifierApp.dll"]
+CMD ["dotnet", "RealEaseApp.dll"]

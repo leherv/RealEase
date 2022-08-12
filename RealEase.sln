@@ -58,7 +58,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper.Tests", "test\unit\Infrastructure.Scraper.Tests\Infrastructure.Scraper.Tests.csproj", "{F1217747-8148-44F9-A420-DEBAEF8CF18C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotifierApp.Tests", "test\unit\ReleaseNotifierApp.Tests\ReleaseNotifierApp.Tests.csproj", "{1C2C479D-4C04-4097-9B36-F75798129DE3}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEaseApp.Tests", "test\unit\RealEaseApp.Tests\RealEaseApp.Tests.csproj", "{1C2C479D-4C04-4097-9B36-F75798129DE3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

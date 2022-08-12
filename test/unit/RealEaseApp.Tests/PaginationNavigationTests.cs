@@ -2,7 +2,7 @@ using FluentAssertions;
 using RealEaseApp.Pages.Pagination;
 using Xunit;
 
-namespace ReleaseNotifierApp.Tests;
+namespace RealEaseApp.Tests;
 
 public class PaginationNavigationTests
 {
