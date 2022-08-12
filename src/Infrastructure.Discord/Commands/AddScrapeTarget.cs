@@ -26,16 +26,27 @@ public class AddScrapeTarget : ModuleBase<SocketCommandContext>
             await _commandDispatcher.Dispatch<AddScrapeTargetCommand, Result>(
                 new AddScrapeTargetCommand(mediaName, websiteName, relativeUrl));
 
-        var message = "Done.";
+        var message = "ScrapeTarget successfully added.";
         if (addScrapeTargetResult.IsFailure)
         {
-            message = "Adding ScrapeTarget failed";
-            _logger.LogWarning(addScrapeTargetResult.Error.ToString());
-            if (addScrapeTargetResult.Error.Code == Errors.Media.ScrapeTargetExistsErrorCode)
-                message += " as this ScrapeTarget is already configured";
-            message += ".";
+            _logger.LogError(addScrapeTargetResult.Error.ToString());
+            message = BuildErrorMessage(addScrapeTargetResult);
         }
 
         await Context.Message.Channel.SendMessageAsync(message);
+    }
+
+    private static string BuildErrorMessage(Result result)
+    {
+        const string message = "Adding ScrapeTarget failed: ";
+        return message + result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Entity was not found",
+            Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
+            Errors.Media.ScrapeTargetExistsErrorCode => "ScrapeTarget already exists",
+            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed",
+            Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode => "ScrapeTarget references different media",
+            _ => "Something went wrong"
+        };
     }
 }
