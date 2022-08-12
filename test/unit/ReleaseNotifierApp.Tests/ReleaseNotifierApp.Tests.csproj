@@ -21,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\..\src\ReleaseNotifierApp\ReleaseNotifierApp.csproj" />
+      <ProjectReference Include="..\..\..\src\RealEaseApp\RealEaseApp.csproj" />
     </ItemGroup>
 
 </Project>

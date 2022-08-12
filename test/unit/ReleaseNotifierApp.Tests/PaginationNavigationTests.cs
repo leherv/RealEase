@@ -1,5 +1,5 @@
 using FluentAssertions;
-using ReleaseNotifierApp.Pages.Pagination;
+using RealEaseApp.Pages.Pagination;
 using Xunit;
 
 namespace ReleaseNotifierApp.Tests;

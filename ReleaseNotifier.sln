@@ -23,7 +23,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain.Tests", "test\unit\D
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.DB", "src\Infrastructure.DB\Infrastructure.DB.csproj", "{B574637A-B607-44C6-88A3-52038A8AB323}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ReleaseNotifierApp", "src\ReleaseNotifierApp\ReleaseNotifierApp.csproj", "{1C0317F0-FEC0-43B0-B41E-445B48C6F9D2}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEaseApp", "src\RealEaseApp\RealEaseApp.csproj", "{1C0317F0-FEC0-43B0-B41E-445B48C6F9D2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "doc", "doc", "{5250E6DD-DF12-45FF-9B86-C14364FC88FE}"
 	ProjectSection(SolutionItems) = preProject

@@ -28,7 +28,7 @@
     <ItemGroup>
       <ProjectReference Include="..\..\..\src\Application\Application.csproj" />
       <ProjectReference Include="..\..\..\src\Infrastructure.DB\Infrastructure.DB.csproj" />
-      <ProjectReference Include="..\..\..\src\ReleaseNotifierApp\ReleaseNotifierApp.csproj" />
+      <ProjectReference Include="..\..\..\src\RealEaseApp\RealEaseApp.csproj" />
       <ProjectReference Include="..\..\shared\Shared\Shared.csproj" />
     </ItemGroup>
 
