@@ -12,13 +12,13 @@ CMD sh -c 'chmod +x ./build/*.sh; \
            ./build/wait-for.sh real_ease_db:5432 -t 30 -- dotnet test --configuration Release --verbosity normal --collect:"XPlat Code Coverage" --results-directory ./test-results --logger trx --no-restore; \
            dotnet reportgenerator "-reports:test-results/**/*.xml" "-targetdir:test-results" "-reporttypes:Cobertura;Badges"'
 
-
 FROM base as publish
 COPY --from=base app/build/ out/
 RUN dotnet publish -c Release -o out --no-restore
 
 FROM mcr.microsoft.com/playwright/dotnet:v1.21.0-focal as run
 WORKDIR /app
+EXPOSE 80
 COPY --from=publish /app/out .
 
 FROM run as runDEV

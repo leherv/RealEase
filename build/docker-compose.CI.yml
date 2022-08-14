@@ -11,6 +11,7 @@ services:
       RN_CONNECTIONSTRINGS__DEFAULT: "Host=real_ease_db;Port=5432;Database=real_ease;Username=postgres;Password=admin"
     depends_on:
       - real_ease_db
+    restart: "no"
 
   real_ease_db:
     container_name: real_ease_db
@@ -21,4 +22,4 @@ services:
       POSTGRES_DB: "real_ease"
       POSTGRES_USER: "postgres"
       POSTGRES_PASSWORD: "admin"
-    restart: always
+    restart: "no"
