@@ -30,7 +30,7 @@ jobs:
     - name: Build and start via docker
       uses: fifsky/ssh-action@v0.0.6
       with:
-        command: cd ${{ secrets.PROD_APPLICATION_PATH }} && docker-compose -f ./build/docker-compose.yml up --build --force-recreate -d
+        command: cd ${{ secrets.PROD_APPLICATION_PATH }} && docker-compose -f ./build/docker-compose.yml up --build --force-recreate --remove-orphans -d
         host: ${{ secrets.PROD_IP }}
         user: ${{ secrets.PROD_APPLICATION_USERNAME }}
         port: ${{ secrets.PROD_SFTP_PORT }}
