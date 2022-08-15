@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using Domain.ApplicationErrors;
 using Domain.Model;
@@ -137,5 +138,44 @@ public class MediaTests
 
         result.IsSuccess.Should().BeTrue();
         media.ScrapeTargets.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void Removing_ScrapeTarget_works_if_it_exists()
+    {
+        var media = GivenTheMedia.Create().Value;
+        var scrapeTarget = GivenTheScrapeTarget.Create().Value;
+        media.AddScrapeTarget(scrapeTarget, media.Name);
+
+        var result = media.RemoveScrapeTarget(scrapeTarget.Id);
+
+        result.Should().BeTrue();
+        media.ScrapeTargets.Should().BeEmpty();
+    }
+
+    [Fact]
+    public void Removing_ScrapeTarget_fails_if_it_does_not_exist()
+    {
+        var media = GivenTheMedia.Create().Value;
+        var scrapeTarget = GivenTheScrapeTarget.Create().Value;
+        media.AddScrapeTarget(scrapeTarget, media.Name);
+        var scrapeTargetIdThatDoesNotExist = Guid.NewGuid();
+
+        var result = media.RemoveScrapeTarget(scrapeTargetIdThatDoesNotExist);
+
+        result.Should().BeFalse();
+        media.ScrapeTargets.Should().NotBeEmpty();
+    }
+
+    [Fact]
+    public void Removing_ScrapeTarget_fails_if_no_ScrapeTargets_yet()
+    {
+        var media = GivenTheMedia.Create().Value;
+        var scrapeTargetIdThatDoesNotExist = Guid.NewGuid();
+
+        var result = media.RemoveScrapeTarget(scrapeTargetIdThatDoesNotExist);
+
+        result.Should().BeFalse();
+        media.ScrapeTargets.Should().BeEmpty();
     }
 }

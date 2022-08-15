@@ -30,6 +30,14 @@ public class ThenTheDatabase : TheDatabase
     {
         return await Query(unitOfWork => unitOfWork.MediaRepository.GetByName(name));
     }
-
-   
+    
+    public async Task<Media?> GetMediaById(Guid id)
+    {
+        return await Query(unitOfWork => unitOfWork.MediaRepository.GetById(id));
+    }
+    
+    public async Task<Subscriber?> GetSubscriberByExternalId(string externalId)
+    {
+        return await Query(unitOfWOrk => unitOfWOrk.SubscriberRepository.GetByExternalId(externalId));
+    }
 }
