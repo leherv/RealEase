@@ -9,6 +9,8 @@ using Application.Ports.Scraper;
 using Application.UseCases.Base;
 using Application.UseCases.Media.AddMedia;
 using Application.UseCases.Media.AddScrapeTarget;
+using Application.UseCases.Media.DeleteMedia;
+using Application.UseCases.Media.DeleteScrapeTarget;
 using Application.UseCases.Media.QueryAvailableMedia;
 using Application.UseCases.Media.QueryMedia;
 using Application.UseCases.Media.QueryScrapeTargets;
@@ -17,9 +19,9 @@ using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
 using Application.UseCases.Subscriber.UnsubscribeMedia;
 using Application.UseCases.Website.QueryAvailableWebsites;
+using Application.UseCases.Website.SetInactive;
 using AspNet.Security.OAuth.Discord;
 using AspNetCoreHero.ToastNotification;
-using AspNetCoreHero.ToastNotification.Extensions;
 using Discord;
 using Discord.Commands;
 using Discord.Rest;
@@ -128,7 +130,10 @@ public class Startup
             .AddScoped<ICommandHandler<UnsubscribeMediaCommand, Result>, UnsubscribeMediaHandler>()
             .AddScoped<ICommandHandler<ScrapeNewReleasesCommand, Result>, ScrapeNewReleasesHandler>()
             .AddScoped<ICommandHandler<AddMediaCommand, Result>, AddMediaHandler>()
-            .AddScoped<ICommandHandler<AddScrapeTargetCommand, Result>, AddScrapeTargetHandler>();
+            .AddScoped<ICommandHandler<AddScrapeTargetCommand, Result>, AddScrapeTargetHandler>()
+            .AddScoped<ICommandHandler<DeleteScrapeTargetCommand, Result>, DeleteScrapeTargetHandler>()
+            .AddScoped<ICommandHandler<DeleteMediaCommand, Result>, DeleteMediaHandler>()
+            .AddScoped<ICommandHandler<SetWebsiteInactiveCommand, Result>, SetWebsiteInactiveHandler>();
 
         // Repositories(Write)
         services

@@ -58,7 +58,14 @@ public class Media : AggregateRoot
 
         return Result.Success();
     }
-
+    
+    public bool ScrapeTargetAlreadyConfigured(ScrapeTarget scrapeTarget)
+    {
+        return _scrapeTargets.Any(existingScrapeTarget =>
+            existingScrapeTarget.RelativeUrl == scrapeTarget.RelativeUrl &&
+            existingScrapeTarget.WebsiteId == scrapeTarget.WebsiteId);
+    }
+    
     private bool ReferencesSameMedia(string scrapedMediaName)
     {
         if (string.IsNullOrEmpty(scrapedMediaName))
@@ -69,11 +76,12 @@ public class Media : AggregateRoot
                scrapedMediaName.Contains(Name, StringComparison.InvariantCultureIgnoreCase);
     }
 
-    public bool ScrapeTargetAlreadyConfigured(ScrapeTarget scrapeTarget)
+    public bool RemoveScrapeTarget(Guid scrapeTargetId)
     {
-        return _scrapeTargets.Any(existingScrapeTarget =>
-            existingScrapeTarget.RelativeUrl == scrapeTarget.RelativeUrl &&
-            existingScrapeTarget.WebsiteId == scrapeTarget.WebsiteId);
+        var scrapeTarget = ScrapeTargets
+            .SingleOrDefault(scrapeTarget => scrapeTarget.Id.Equals(scrapeTargetId));
+
+        return scrapeTarget != null && _scrapeTargets.Remove(scrapeTarget);
     }
 
     public bool HasScrapeTargets => ScrapeTargets.Any();

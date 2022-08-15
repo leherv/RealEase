@@ -13,6 +13,14 @@ public class MediaRepository : IMediaRepository
         _databaseContext = databaseContext;
     }
 
+    public async Task<Media?> GetById(Guid id)
+    {
+        return await _databaseContext.Media
+            .Where(media => media.Id == id)
+            .Include(media => media.ScrapeTargets)
+            .SingleOrDefaultAsync();
+    }
+
     public async Task<Media?> GetByName(string mediaName)
     {
         return await _databaseContext.Media
@@ -39,5 +47,10 @@ public class MediaRepository : IMediaRepository
     public async Task AddMedia(Media media)
     {
         await _databaseContext.MediaDbSet.AddAsync(media);
+    }
+
+    public void RemoveMedia(Media media)
+    {
+        _databaseContext.MediaDbSet.Remove(media);
     }
 }

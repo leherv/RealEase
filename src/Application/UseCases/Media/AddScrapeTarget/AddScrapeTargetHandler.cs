@@ -9,7 +9,7 @@ namespace Application.UseCases.Media.AddScrapeTarget;
 
 public record AddScrapeTargetCommand(string MediaName, string WebsiteName, string RelativeUrl);
 
-public class AddScrapeTargetHandler : ICommandHandler<AddScrapeTargetCommand, Result>
+public sealed class AddScrapeTargetHandler : ICommandHandler<AddScrapeTargetCommand, Result>
 {
     private readonly IUnitOfWork _unitOfWork;
     private readonly IScraper _scraper;
