@@ -17,7 +17,7 @@ public class WebsiteReadRepository : IWebsiteReadRepository
     {
         var websites = await _databaseContext.Websites
             .Where(website => website.Active)
-            .Select(website => new AvailableWebsite(website.Name, website.Url.Value))
+            .Select(website => new AvailableWebsite(website.Id, website.Name, website.Url.Value))
             .ToListAsync();
 
         return new AvailableWebsites(websites);

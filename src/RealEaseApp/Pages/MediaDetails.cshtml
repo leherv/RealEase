@@ -1,5 +1,6 @@
 @page "/Media/{id:Guid}"
 @model MediaDetailsModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <div class="card">
     <div class="card-header">
@@ -24,6 +25,7 @@
                         <th scope="col">Website</th>
                         <th scope="col">Website Url</th>
                         <th scope="col">ScrapeTarget Url</th>
+                        <th scope="col">Actions</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -42,6 +44,20 @@
                                 <a href="@scrapeTargetDetail.ScrapeTargetUrl" target="_blank">
                                     @scrapeTargetDetail.ScrapeTargetUrl
                                 </a>
+                            </td>
+                            <td>
+                                <form method="post">
+                                    <button class="btn btn-danger"
+                                            type="submit"
+                                            onclick="showSpinner()"
+                                            asp-page-handler="Delete">
+                                        Delete <i class="fa-solid fa-circle-trash"></i>
+                                    </button>
+
+                                    <input type="hidden" id="mediaId" name="mediaId" value="@Model.MediaDetailsViewModel.MediaId"/>
+                                    <input type="hidden" id="scrapeTargetId" name="scrapeTargetId" value="@scrapeTargetDetail.ScrapeTargetId"/>
+                                    @Html.AntiForgeryToken()
+                                </form>
                             </td>
                         </tr>
                     }
@@ -93,7 +109,7 @@
                                 <button class="btn btn-success"
                                         type="submit"
                                         onclick="showSpinner()"
-                                        asp-page-handler="NewMedia">
+                                        asp-page-handler="NewScrapeTarget">
                                     Add Scrape Target
                                 </button>
                             </div>

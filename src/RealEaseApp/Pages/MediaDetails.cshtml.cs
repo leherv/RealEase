@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Application.UseCases.Base;
 using Application.UseCases.Media.AddScrapeTarget;
+using Application.UseCases.Media.DeleteScrapeTarget;
 using Application.UseCases.Media.QueryMedia;
 using Application.UseCases.Website.QueryAvailableWebsites;
 using AspNetCoreHero.ToastNotification.Abstractions;
@@ -42,7 +43,7 @@ public class MediaDetailsModel : PageModel
         await SetupPage();
     }
 
-    public async Task<IActionResult> OnPost(NewScrapeTarget newScrapeTarget)
+    public async Task<IActionResult> OnPostNewScrapeTarget(NewScrapeTarget newScrapeTarget)
     {
         if (ModelState.IsValid)
         {
@@ -65,6 +66,28 @@ public class MediaDetailsModel : PageModel
         return Page();
     }
 
+    public async Task<IActionResult> OnPostDelete(Guid mediaId, Guid scrapeTargetId)
+    {
+        var deleteScrapeTargetCommand = new DeleteScrapeTargetCommand(mediaId, scrapeTargetId);
+        
+        var deleteScrapeTargetResult = await _commandDispatcher.Dispatch<DeleteScrapeTargetCommand, Result>(deleteScrapeTargetCommand);
+        if (deleteScrapeTargetResult.IsFailure)
+        {
+            _logger.LogError(deleteScrapeTargetResult.Error.ToString());
+            _toastifyService.Error(BuildDeleteScrapeTargetErrorMessage(deleteScrapeTargetResult));
+        }
+        
+        await SetupPage();
+        return Page();
+    }
+
+    private static string BuildDeleteScrapeTargetErrorMessage(Result result) =>
+        result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Entity was not found",
+            _ => "Something went wrong"
+        };
+
     private static string BuildNewScrapeTargetErrorMessage(Result result) =>
         result.Error.Code switch
         {
@@ -84,6 +107,7 @@ public class MediaDetailsModel : PageModel
             _logger.LogError(mediaDetailsResult.Error.ToString());
             _toastifyService.Error(BuildErrorMessage(mediaDetailsResult));
             MediaDetailsViewModel = new MediaDetailsViewModel(
+                Guid.NewGuid(),
                 "",
                 "",
                 "",
@@ -114,12 +138,14 @@ public class MediaDetailsModel : PageModel
     {
         var scrapeTargetViewModels = mediaDetails.ScrapeTargetDetails
             .Select(scrapeTargetDetail => new ScrapeTargetDetailsViewModel(
+                scrapeTargetDetail.ScrapeTargetId,
                 scrapeTargetDetail.WebsiteName,
                 scrapeTargetDetail.WebsiteUrl,
                 scrapeTargetDetail.ScrapeTargetUrl))
             .ToList();
 
         return new MediaDetailsViewModel(
+            mediaDetails.Id,
             mediaDetails.Name,
             LatestReleaseDisplayString(mediaDetails.ReleaseDetails),
             mediaDetails.ReleaseDetails != null
@@ -136,7 +162,7 @@ public class MediaDetailsModel : PageModel
             .Where(website => !mediaDetails.ScrapeTargetDetails
                 .Select(scrapeTargetDetail => scrapeTargetDetail.WebsiteName)
                 .Contains(website.Name, StringComparer.InvariantCultureIgnoreCase))
-            .Select(website => new WebsiteViewModel(website.Name, website.Url))
+            .Select(website => new WebsiteViewModel(website.Id, website.Name, website.Url))
             .ToList();
     }
 
@@ -159,6 +185,7 @@ public class MediaDetailsModel : PageModel
 }
 
 public record MediaDetailsViewModel(
+    Guid MediaId,
     string MediaName,
     string LatestRelease,
     string NewestChapterLink,
@@ -170,6 +197,7 @@ public record MediaDetailsViewModel(
 }
 
 public record ScrapeTargetDetailsViewModel(
+    Guid ScrapeTargetId,
     string WebsiteName,
     string WebsiteUrl,
     string ScrapeTargetUrl

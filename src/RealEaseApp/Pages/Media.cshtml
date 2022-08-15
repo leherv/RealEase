@@ -73,6 +73,21 @@
                                 </form>
                             }
                         </div>
+
+                        <div class="float-left ml-1">
+                            <form method="post">
+                                <button class="btn btn-danger"
+                                        type="submit"
+                                        onclick="showSpinner()"
+                                        asp-page-handler="Delete">
+                                    Delete <i class="fa-solid fa-circle-trash"></i>
+                                </button>
+
+                                <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                <input type="hidden" id="mediaId" name="mediaId" value="@mediaViewModel.MediaId"/>
+                                @Html.AntiForgeryToken()
+                            </form>
+                        </div>
                     </td>
                 </tr>
             }

@@ -26,17 +26,17 @@ public sealed class AddScrapeTargetHandler : ICommandHandler<AddScrapeTargetComm
         _mediaNameScraper = mediaNameScraper;
     }
 
-    public async Task<Result> Handle(AddScrapeTargetCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AddScrapeTargetCommand addScrapeTargetCommand, CancellationToken cancellationToken)
     {
-        var media = await _unitOfWork.MediaRepository.GetByName(scrapeNewReleasesCommand.MediaName);
+        var media = await _unitOfWork.MediaRepository.GetByName(addScrapeTargetCommand.MediaName);
         if (media == null)
             return Errors.General.NotFound(nameof(Domain.Model.Media));
 
-        var website = await _unitOfWork.WebsiteRepository.GetByName(scrapeNewReleasesCommand.WebsiteName);
+        var website = await _unitOfWork.WebsiteRepository.GetByName(addScrapeTargetCommand.WebsiteName);
         if (website == null)
             return Errors.General.NotFound(nameof(Domain.Model.Website));
 
-        var relativeUrlResult = RelativeUrl.Create(scrapeNewReleasesCommand.RelativeUrl);
+        var relativeUrlResult = RelativeUrl.Create(addScrapeTargetCommand.RelativeUrl);
         if (relativeUrlResult.IsFailure)
             return relativeUrlResult.Error;
         

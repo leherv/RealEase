@@ -17,13 +17,13 @@ public sealed class DeleteScrapeTargetHandler : ICommandHandler<DeleteScrapeTarg
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(DeleteScrapeTargetCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
+    public async Task<Result> Handle(DeleteScrapeTargetCommand deleteScrapeTargetCommand, CancellationToken cancellationToken)
     {
-        var media = await _unitOfWork.MediaRepository.GetById(scrapeNewReleasesCommand.MediaId);
+        var media = await _unitOfWork.MediaRepository.GetById(deleteScrapeTargetCommand.MediaId);
         if (media == null)
             return Errors.General.NotFound(nameof(Domain.Model.Media));
 
-        var result = media.RemoveScrapeTarget(scrapeNewReleasesCommand.ScrapeTargetId) 
+        var result = media.RemoveScrapeTarget(deleteScrapeTargetCommand.ScrapeTargetId) 
             ? Result.Success() 
             : Result.Failure(Errors.General.NotFound(nameof(ScrapeTarget)));
 

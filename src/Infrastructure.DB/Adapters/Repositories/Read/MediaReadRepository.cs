@@ -23,8 +23,7 @@ public class MediaReadRepository : IMediaReadRepository
         var scrapeTargetDetails = await BuildScrapeTargetDetailsFor(media);
         var releaseDetails = BuildReleaseDetails(media.NewestRelease);
 
-        return new MediaDetails(id, media.Name, scrapeTargetDetails, releaseDetails);
-
+        return new MediaDetails(media.Id, media.Name, scrapeTargetDetails, releaseDetails);
     }
 
     private static ReleaseDetails? BuildReleaseDetails(Release? newestRelease)
@@ -45,7 +44,7 @@ public class MediaReadRepository : IMediaReadRepository
             var website = await FetchWebsiteForId(scrapeTarget.WebsiteId);
 
             scrapeTargetDetails.Add(new ScrapeTargetDetails(
-                    scrapeTarget.WebsiteId,
+                    scrapeTarget.Id,
                     website.Name,
                     website.Url.Value,
                     ResourceUrl.Create(website.Url, scrapeTarget.RelativeUrl).Value

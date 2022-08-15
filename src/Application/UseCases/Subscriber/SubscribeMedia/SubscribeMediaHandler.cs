@@ -16,10 +16,10 @@ public sealed class SubscribeMediaHandler : ICommandHandler<SubscribeMediaComman
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(SubscribeMediaCommand scrapeNewReleasesCommand,
+    public async Task<Result> Handle(SubscribeMediaCommand subscribeMediaCommand,
         CancellationToken cancellationToken)
     {
-        var (externalIdentifier, mediaName) = scrapeNewReleasesCommand;
+        var (externalIdentifier, mediaName) = subscribeMediaCommand;
 
         var media = await GetMedia(mediaName);
         if (media == null)

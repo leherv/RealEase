@@ -1,6 +1,7 @@
 using System.ComponentModel.DataAnnotations;
 using Application.UseCases.Base;
 using Application.UseCases.Media.AddMedia;
+using Application.UseCases.Media.DeleteMedia;
 using Application.UseCases.Media.QueryAvailableMedia;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Application.UseCases.Subscriber.SubscribeMedia;
@@ -89,7 +90,6 @@ public class Media : PageModel
         if (ModelState.IsValid)
         {
             var addMediaCommand = new AddMediaCommand(newMedia.WebsiteName, newMedia.RelativePath);
-
             var addMediaResult =
                 await _commandDispatcher.Dispatch<AddMediaCommand, Result>(addMediaCommand);
             
@@ -98,6 +98,21 @@ public class Media : PageModel
                 _logger.LogError(addMediaResult.Error.ToString());
                 _toastifyService.Error(BuildAddMediaErrorMessage(addMediaResult));
             }
+        }
+        
+        await SetupPage();
+        return Page();
+    }
+
+    public async Task<IActionResult> OnPostDelete(Guid mediaId)
+    {
+        var deleteMediaCommand = new DeleteMediaCommand(mediaId);
+        var deleteMediaResult = await _commandDispatcher.Dispatch<DeleteMediaCommand, Result>(deleteMediaCommand);
+        
+        if (deleteMediaResult.IsFailure)
+        {
+            _logger.LogError(deleteMediaResult.Error.ToString());
+            _toastifyService.Error(BuildDeleteMediaErrorMessage(deleteMediaResult));
         }
         
         await SetupPage();
@@ -116,6 +131,13 @@ public class Media : PageModel
             _ => "Something went wrong"
         };
 
+    private static string BuildDeleteMediaErrorMessage(Result result) =>
+        result.Error.Code switch
+        {
+            Errors.General.NotFoundErrorCode => "Media not found",
+            _ => "Something went wrong"
+        };
+    
     private async Task SetupPage()
     {
         var availableMedia = await FetchMedia();
@@ -123,7 +145,7 @@ public class Media : PageModel
         var availableWebsites = await FetchAvailableWebsites();
 
         WebsiteViewModels = availableWebsites.Websites
-            .Select(website => new WebsiteViewModel(website.Name, website.Url))
+            .Select(website => new WebsiteViewModel(website.Id, website.Name, website.Url))
             .ToList();
 
         _totalResultCount = availableMedia.TotalResultCount;
