@@ -1,3 +1,3 @@
 namespace RealEaseApp.Pages;
 
-public record WebsiteViewModel(string Name, string Url);
+public record WebsiteViewModel(Guid Id, string Name, string Url);

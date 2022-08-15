@@ -42,6 +42,7 @@ public class ScrapeTargetReadRepository : IScrapeTargetReadRepository
                 continue;
 
             scrapeTargetInformation.Add(new ScrapeTargetInformation(
+                scrapeTarget.Id,
                 website.Name,
                 website.Url.Value,
                 scrapeTarget.RelativeUrl.Value)

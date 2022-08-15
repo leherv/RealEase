@@ -16,9 +16,9 @@ public sealed class UnsubscribeMediaHandler : ICommandHandler<UnsubscribeMediaCo
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(UnsubscribeMediaCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
+    public async Task<Result> Handle(UnsubscribeMediaCommand unsubscribeMediaCommand, CancellationToken cancellationToken)
     {
-        var (externalIdentifier, mediaName) = scrapeNewReleasesCommand;
+        var (externalIdentifier, mediaName) = unsubscribeMediaCommand;
         
         var subscriber = await _unitOfWork.SubscriberRepository.GetByExternalId(externalIdentifier);
         if (subscriber == null)

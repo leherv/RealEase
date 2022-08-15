@@ -26,9 +26,9 @@ public class AddMediaHandler : ICommandHandler<AddMediaCommand, Result>
         _unitOfWork = unitOfWork;
     }
 
-    public async Task<Result> Handle(AddMediaCommand scrapeNewReleasesCommand, CancellationToken cancellationToken)
+    public async Task<Result> Handle(AddMediaCommand addMediaCommand, CancellationToken cancellationToken)
     {
-        var (websiteName, relativeUrl) = scrapeNewReleasesCommand;
+        var (websiteName, relativeUrl) = addMediaCommand;
         
         var website = await _unitOfWork.WebsiteRepository.GetByName(websiteName);
         if (website == null)

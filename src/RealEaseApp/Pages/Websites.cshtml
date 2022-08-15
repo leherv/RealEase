@@ -1,0 +1,46 @@
+﻿@page
+@model RealEaseApp.Pages.Websites
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<div class="container-fluid">
+    <h2 class="text-center">Available Websites</h2>
+    <div class="row justify-content-center">
+        <table class="table">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Url</th>
+                <th scope="col">Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            @for (var i = 0; i < Model.WebsiteViewModels.Count; i++)
+            {
+                var websiteViewModel = Model.WebsiteViewModels.ElementAt(i);
+                <tr>
+                    <th scope="row">@(i + 1)</th>
+                    <td>@websiteViewModel.Name</td>
+
+                    <td>@websiteViewModel.Url</td>
+
+                    <td>
+                        <div class="float-left">
+                            <form method="post">
+                                <button class="btn btn-danger"
+                                        type="submit"
+                                        onclick="showSpinner()">
+                                    Set Inactive
+                                </button>
+
+                                <input type="hidden" id="websiteId" name="websiteId" value="@websiteViewModel.Id"/>
+                                @Html.AntiForgeryToken()
+                            </form>
+                        </div>
+                    </td>
+                </tr>
+            }
+            </tbody>
+        </table>
+    </div>
+</div>
