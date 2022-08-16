@@ -121,7 +121,10 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
             await When.TheApplication.ReceivesCommand<ScrapeNewReleasesCommand, Result>(scrapeNewReleasesCommand);
 
         Then.TheResult(scrapeResult).IsAFailure();
-        Then.TheResult(scrapeResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+        Then.TheResult(scrapeResult)
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
     }
 
     [Fact]

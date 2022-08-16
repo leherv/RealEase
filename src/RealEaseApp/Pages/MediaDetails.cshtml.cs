@@ -9,6 +9,7 @@ using Domain.ApplicationErrors;
 using Domain.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RealEaseApp.Extensions;
 
 namespace RealEaseApp.Pages;
 
@@ -68,7 +69,11 @@ public class MediaDetailsModel : PageModel
 
     public async Task<IActionResult> OnPostDelete(Guid mediaId, Guid scrapeTargetId)
     {
-        var deleteScrapeTargetCommand = new DeleteScrapeTargetCommand(mediaId, scrapeTargetId);
+        var deleteScrapeTargetCommand = new DeleteScrapeTargetCommand(
+            mediaId,
+            scrapeTargetId,
+            User.GetExternalIdentifier()
+        );
         
         var deleteScrapeTargetResult = await _commandDispatcher.Dispatch<DeleteScrapeTargetCommand, Result>(deleteScrapeTargetCommand);
         if (deleteScrapeTargetResult.IsFailure)

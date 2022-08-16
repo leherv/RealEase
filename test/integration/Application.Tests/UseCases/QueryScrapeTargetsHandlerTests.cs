@@ -24,7 +24,9 @@ public class QueryScrapeTargetsHandlerTests : IntegrationTestBase
             .Should()
             .BeFalse();
         Then.TheResult(scrapeTargetsResult)
-            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
     }
     
     [Fact]

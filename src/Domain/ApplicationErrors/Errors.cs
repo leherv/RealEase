@@ -34,6 +34,12 @@ public static class Errors
             new(NotFoundErrorCode, $"'{entityName}' not found.");
     }
 
+    public static class Authorization
+    {
+        public const string AdminRightsMissingErrorCode = "admin.rights.missing";
+        public static Error AdminRightsMissing => new(AdminRightsMissingErrorCode, "Admin rights are missing.");
+    }
+
     public static class Subscriber
     {
         public const string UnsubscribeFailedErrorCode = "unsubsribe.failed";

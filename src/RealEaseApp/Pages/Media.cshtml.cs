@@ -106,7 +106,7 @@ public class Media : PageModel
 
     public async Task<IActionResult> OnPostDelete(Guid mediaId)
     {
-        var deleteMediaCommand = new DeleteMediaCommand(mediaId);
+        var deleteMediaCommand = new DeleteMediaCommand(mediaId, User.GetExternalIdentifier());
         var deleteMediaResult = await _commandDispatcher.Dispatch<DeleteMediaCommand, Result>(deleteMediaCommand);
         
         if (deleteMediaResult.IsFailure)
