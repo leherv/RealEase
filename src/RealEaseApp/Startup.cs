@@ -108,7 +108,7 @@ public class Startup
             });
 
         services.AddAuthorization(options =>
-            options.AddPolicy("admin", policy => policy.RequireClaim("isAdmin", "true")));
+            options.AddPolicy("admin", policy => policy.RequireClaim("isAdmin", "True", "true")));
 
         // Discord
         services
