@@ -94,7 +94,8 @@ public class MediaDetailsModel : PageModel
             Errors.General.NotFoundErrorCode => "Entity was not found",
             Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
             Errors.Media.ScrapeTargetExistsErrorCode => "ScrapeTarget already exists",
-            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed",
+            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed. It is likely this is due to a problem with the target site. Please try again later.",
+            Errors.Scraper.ScrapeMediaNameFailedErrorCode => "Scraping for media name failed. It is likely this is due to a problem with the target site. Please try again later.",
             Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode => "ScrapeTarget references different media",
             _ => "Something went wrong"
         };
