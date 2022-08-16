@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Application.EventHandlers;
 using Application.EventHandlers.Base;
+using Application.Ports.Authorization;
 using Application.Ports.General;
 using Application.Ports.Notification;
 using Application.Ports.Persistence.Read;
@@ -58,10 +59,13 @@ public class Startup
     {
         // Settings
         services.Configure<DiscordSettings>(Configuration.GetSection(nameof(DiscordSettings)));
+        services.Configure<AdminSettings>(Configuration.GetSection(nameof(AdminSettings)),
+            binderOptions => binderOptions.BindNonPublicProperties = true);
 
         // General
         services.AddControllers();
-        services.AddRazorPages();
+        services.AddRazorPages()
+            .AddRazorPagesOptions(options => options.Conventions.AuthorizePage("/Websites", "admin"));
         services.AddHttpContextAccessor();
 
         // Authentication
@@ -72,7 +76,11 @@ public class Startup
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = DiscordAuthenticationDefaults.AuthenticationScheme;
             })
-            .AddCookie(options => { options.Cookie.HttpOnly = true; })
+            .AddCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.AccessDeniedPath = "/AccessDenied";
+            })
             .AddDiscord(options =>
             {
                 options.ClientId = discordSettings.ClientId;
@@ -81,26 +89,26 @@ public class Startup
 
                 options.Events.OnCreatingTicket = async ctx =>
                 {
+                    // TODO: improve this
                     var client = new DiscordRestClient();
-                    var socketClient = ctx.HttpContext.RequestServices.GetRequiredService<DiscordSocketClient>();
                     await client.LoginAsync(TokenType.Bearer, ctx.AccessToken);
+                    var currentUserId = client.CurrentUser.Id;
 
-                    var botGuilds = await socketClient.Rest.GetGuildsAsync();
+                    var botAddedCondition = ctx.HttpContext.RequestServices.GetRequiredService<BotAddedCondition>();
+                    var hasAddedBot = await botAddedCondition.Evaluate(currentUserId);
 
-                    var botAdded = false;
-                    foreach (var botGuild in botGuilds)
-                    {
-                        var currentUser = await botGuild.GetUserAsync(client.CurrentUser.Id);
-                        if (currentUser != null)
-                        {
-                            botAdded = true;
-                            break;
-                        }
-                    }
+                    ctx.Identity.AddClaim(new Claim("botAdded", hasAddedBot.ToString()));
 
-                    ctx.Identity.AddClaim(new Claim("botAdded", botAdded.ToString()));
+
+                    var adminCondition = ctx.HttpContext.RequestServices.GetRequiredService<IAuthorizationService>();
+                    var isAdmin = adminCondition.IsAdmin(currentUserId.ToString());
+
+                    ctx.Identity.AddClaim(new Claim("isAdmin", isAdmin.ToString()));
                 };
             });
+
+        services.AddAuthorization(options =>
+            options.AddPolicy("admin", policy => policy.RequireClaim("isAdmin", "true")));
 
         // Discord
         services
@@ -158,7 +166,9 @@ public class Startup
         // General
         services
             .AddTransient<ITimeProvider, TimeProvider>()
-            .AddTransient<IApplicationLogger, ApplicationLogger>();
+            .AddTransient<IApplicationLogger, ApplicationLogger>()
+            .AddScoped<IAuthorizationService, DiscordAuthorizationService>()
+            .AddScoped<BotAddedCondition>();
 
         // DomainEvent
         services

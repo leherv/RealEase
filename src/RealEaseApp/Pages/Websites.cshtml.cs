@@ -6,6 +6,7 @@ using Domain.ApplicationErrors;
 using Domain.Results;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using RealEaseApp.Extensions;
 
 namespace RealEaseApp.Pages;
 
@@ -38,7 +39,7 @@ public class Websites : PageModel
 
     public async Task<IActionResult> OnPost(Guid websiteId)
     {
-        var setWebsiteInactiveCommand = new SetWebsiteInactiveCommand(websiteId);
+        var setWebsiteInactiveCommand = new SetWebsiteInactiveCommand(websiteId, User.GetExternalIdentifier());
 
         var setWebsiteInactiveResult =
             await _commandDispatcher.Dispatch<SetWebsiteInactiveCommand, Result>(setWebsiteInactiveCommand);

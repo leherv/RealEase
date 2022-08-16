@@ -8,7 +8,7 @@ public class ThenTheResult
 
     public ThenTheResult(Result result)
     {
-        this._result = result;
+        _result = result;
     }
 
     public bool IsSuccessful()

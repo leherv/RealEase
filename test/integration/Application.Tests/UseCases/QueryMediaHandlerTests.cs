@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Application.Test.UseCases;
 
-public class QueryMedia : IntegrationTestBase
+public class QueryMediaHandlerTests : IntegrationTestBase
 {
     [Fact]
     [Trait("Category", "Integration")]

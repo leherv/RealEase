@@ -25,7 +25,10 @@
                         <th scope="col">Website</th>
                         <th scope="col">Website Url</th>
                         <th scope="col">ScrapeTarget Url</th>
-                        <th scope="col">Actions</th>
+                        @if (User.IsAdmin())
+                        {
+                            <th scope="col">Actions</th>
+                        }
                     </tr>
                     </thead>
                     <tbody>
@@ -45,20 +48,23 @@
                                     @scrapeTargetDetail.ScrapeTargetUrl
                                 </a>
                             </td>
-                            <td>
-                                <form method="post">
-                                    <button class="btn btn-danger"
-                                            type="submit"
-                                            onclick="showSpinner()"
-                                            asp-page-handler="Delete">
-                                        Delete <i class="fa-solid fa-circle-trash"></i>
-                                    </button>
+                            @if (User.IsAdmin())
+                            {
+                                <td>
+                                    <form method="post">
+                                        <button class="btn btn-danger"
+                                                type="submit"
+                                                onclick="showSpinner()"
+                                                asp-page-handler="Delete">
+                                            Delete <i class="fa-solid fa-circle-trash"></i>
+                                        </button>
 
-                                    <input type="hidden" id="mediaId" name="mediaId" value="@Model.MediaDetailsViewModel.MediaId"/>
-                                    <input type="hidden" id="scrapeTargetId" name="scrapeTargetId" value="@scrapeTargetDetail.ScrapeTargetId"/>
-                                    @Html.AntiForgeryToken()
-                                </form>
-                            </td>
+                                        <input type="hidden" id="mediaId" name="mediaId" value="@Model.MediaDetailsViewModel.MediaId"/>
+                                        <input type="hidden" id="scrapeTargetId" name="scrapeTargetId" value="@scrapeTargetDetail.ScrapeTargetId"/>
+                                        @Html.AntiForgeryToken()
+                                    </form>
+                                </td>
+                            }
                         </tr>
                     }
                     </tbody >
