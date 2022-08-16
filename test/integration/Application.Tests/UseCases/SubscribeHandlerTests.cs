@@ -64,8 +64,14 @@ public class SubscribeHandlerTests : IntegrationTestBase
 
         var subscribeMediaResult = await When.TheApplication.ReceivesCommand<SubscribeMediaCommand, Result>(subscribeMediaCommand);
 
-        Then.TheResult(subscribeMediaResult).IsAFailure();
-        Then.TheResult(subscribeMediaResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+        Then.TheResult(subscribeMediaResult)
+            .IsAFailure()
+            .Should()
+            .BeTrue();
+        Then.TheResult(subscribeMediaResult)
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
     }
 
     [Fact]
@@ -78,8 +84,14 @@ public class SubscribeHandlerTests : IntegrationTestBase
 
         var subscribeMediaResult = await When.TheApplication.ReceivesCommand<SubscribeMediaCommand, Result>(subscribeMediaCommand);
         
-        Then.TheResult(subscribeMediaResult).IsAFailure();
-        Then.TheResult(subscribeMediaResult).ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+        Then.TheResult(subscribeMediaResult)
+            .IsAFailure()
+            .Should()
+            .BeTrue();
+        Then.TheResult(subscribeMediaResult)
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
         
         var mediaSubscriptions = await Then.TheApplication.ReceivesQuery<MediaSubscriptionsQuery, MediaSubscriptions>(new MediaSubscriptionsQuery(newExternalIdentifier));
         mediaSubscriptions.SubscribedToMedia.Should().HaveCount(0);

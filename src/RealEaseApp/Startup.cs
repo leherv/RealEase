@@ -1,6 +1,7 @@
 ﻿using System.Security.Claims;
 using Application.EventHandlers;
 using Application.EventHandlers.Base;
+using Application.Ports.Authorization;
 using Application.Ports.General;
 using Application.Ports.Notification;
 using Application.Ports.Persistence.Read;
@@ -58,6 +59,8 @@ public class Startup
     {
         // Settings
         services.Configure<DiscordSettings>(Configuration.GetSection(nameof(DiscordSettings)));
+        services.Configure<AdminSettings>(Configuration.GetSection(nameof(AdminSettings)),
+            binderOptions => binderOptions.BindNonPublicProperties = true);
 
         // General
         services.AddControllers();
@@ -81,24 +84,21 @@ public class Startup
 
                 options.Events.OnCreatingTicket = async ctx =>
                 {
+                    // TODO: improve this
                     var client = new DiscordRestClient();
-                    var socketClient = ctx.HttpContext.RequestServices.GetRequiredService<DiscordSocketClient>();
                     await client.LoginAsync(TokenType.Bearer, ctx.AccessToken);
+                    var currentUserId = client.CurrentUser.Id;
 
-                    var botGuilds = await socketClient.Rest.GetGuildsAsync();
-
-                    var botAdded = false;
-                    foreach (var botGuild in botGuilds)
-                    {
-                        var currentUser = await botGuild.GetUserAsync(client.CurrentUser.Id);
-                        if (currentUser != null)
-                        {
-                            botAdded = true;
-                            break;
-                        }
-                    }
-
-                    ctx.Identity.AddClaim(new Claim("botAdded", botAdded.ToString()));
+                    var botAddedCondition = ctx.HttpContext.RequestServices.GetRequiredService<BotAddedCondition>();
+                    var hasAddedBot = await botAddedCondition.Evaluate(currentUserId);
+                    
+                    ctx.Identity.AddClaim(new Claim("botAdded", hasAddedBot.ToString()));
+                    
+                    
+                    var adminCondition = ctx.HttpContext.RequestServices.GetRequiredService<IAuthorizationService>();
+                    var isAdmin = adminCondition.IsAdmin(currentUserId.ToString());
+                    
+                    ctx.Identity.AddClaim(new Claim("isAdmin", isAdmin.ToString()));
                 };
             });
 
@@ -158,7 +158,9 @@ public class Startup
         // General
         services
             .AddTransient<ITimeProvider, TimeProvider>()
-            .AddTransient<IApplicationLogger, ApplicationLogger>();
+            .AddTransient<IApplicationLogger, ApplicationLogger>()
+            .AddScoped<IAuthorizationService, DiscordAuthorizationService>()
+            .AddScoped<BotAddedCondition>();
 
         // DomainEvent
         services

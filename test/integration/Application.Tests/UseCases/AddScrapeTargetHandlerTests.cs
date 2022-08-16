@@ -30,7 +30,9 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
             .Should()
             .BeFalse();
         Then.TheResult(addScrapeTargetResult)
-            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
     }
 
     [Fact]
@@ -51,7 +53,9 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
             .Should()
             .BeFalse();
         Then.TheResult(addScrapeTargetResult)
-            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
     }
 
     [Fact]
@@ -76,7 +80,9 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
             .Should()
             .BeFalse();
         Then.TheResult(addScrapeTargetResult)
-            .ContainsErrorWithCode(Errors.Media.ScrapeTargetExistsErrorCode);
+            .ContainsErrorWithCode(Errors.Media.ScrapeTargetExistsErrorCode)
+            .Should()
+            .BeTrue();
     }
 
     [Fact]
@@ -100,7 +106,9 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
             .Should()
             .BeFalse();
         Then.TheResult(addScrapeTargetResult)
-            .ContainsErrorWithCode(Errors.Scraper.ScrapeFailedErrorCode);
+            .ContainsErrorWithCode(Errors.Scraper.ScrapeFailedErrorCode)
+            .Should()
+            .BeTrue();
     }
 
     [Fact]
@@ -229,6 +237,8 @@ public class AddScrapeTargetHandlerTests : IntegrationTestBase
             .Should()
             .BeFalse();
         Then.TheResult(addScrapeTargetResult)
-            .ContainsErrorWithCode(Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode);
+            .ContainsErrorWithCode(Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode)
+            .Should()
+            .BeTrue();
     }
 }

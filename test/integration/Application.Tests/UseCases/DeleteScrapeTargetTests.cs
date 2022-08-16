@@ -15,14 +15,15 @@ public class DeleteScrapeTargetTests : IntegrationTestBase
 {
     [Fact]
     [Trait("Category", "Integration")]
-    public async Task Fails_if_ScrapeTarget_does_not_exist()
+    public async Task Fails_if_logged_in_user_is_no_admin()
     {
         await Given.TheDatabase.IsSeeded();
         var media = Given.A.Media.WithSubscriberWithReleases;
-        var scrapeTargetIdThatDoesNotExist = Guid.NewGuid();
+        var scrapeTargetToRemove = media.ScrapeTargets.First();
         var deleteScrapeTargetCommand = new DeleteScrapeTargetCommand(
             media.Id,
-            scrapeTargetIdThatDoesNotExist
+            scrapeTargetToRemove.Id,
+            GivenTheExternalIdentifier.NonAdminIdentifier
         );
         
         var deleteScrapeTargetResult = await When.TheApplication
@@ -33,7 +34,38 @@ public class DeleteScrapeTargetTests : IntegrationTestBase
             .Should()
             .BeFalse();
         Then.TheResult(deleteScrapeTargetResult)
-            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+            .ContainsErrorWithCode(Errors.Authorization.AdminRightsMissingErrorCode)
+            .Should()
+            .BeTrue();
+        var mediaResult = await Then.TheDatabase.GetMediaById(media.Id);
+        mediaResult.Should().NotBeNull();
+        mediaResult.ScrapeTargets.Should().Contain(scrapeTargetToRemove);
+    }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Fails_if_ScrapeTarget_does_not_exist()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var media = Given.A.Media.WithSubscriberWithReleases;
+        var scrapeTargetIdThatDoesNotExist = Guid.NewGuid();
+        var deleteScrapeTargetCommand = new DeleteScrapeTargetCommand(
+            media.Id,
+            scrapeTargetIdThatDoesNotExist,
+            GivenTheExternalIdentifier.AdminIdentifier
+        );
+        
+        var deleteScrapeTargetResult = await When.TheApplication
+            .ReceivesCommand<DeleteScrapeTargetCommand, Result>(deleteScrapeTargetCommand);
+
+        Then.TheResult(deleteScrapeTargetResult)
+            .IsSuccessful()
+            .Should()
+            .BeFalse();
+        Then.TheResult(deleteScrapeTargetResult)
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
         var mediaResult = await Then.TheDatabase.GetMediaById(media.Id);
         mediaResult.Should().NotBeNull();
     }
@@ -46,7 +78,8 @@ public class DeleteScrapeTargetTests : IntegrationTestBase
         var scrapeTargetIdThatDoesNotExist = Guid.NewGuid();
         var deleteScrapeTargetCommand = new DeleteScrapeTargetCommand(
             mediaThatDoesNotExist.Id,
-            scrapeTargetIdThatDoesNotExist
+            scrapeTargetIdThatDoesNotExist,
+            GivenTheExternalIdentifier.AdminIdentifier
         );
         
         var deleteScrapeTargetResult = await When.TheApplication
@@ -57,7 +90,9 @@ public class DeleteScrapeTargetTests : IntegrationTestBase
             .Should()
             .BeFalse();
         Then.TheResult(deleteScrapeTargetResult)
-            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode);
+            .ContainsErrorWithCode(Errors.General.NotFoundErrorCode)
+            .Should()
+            .BeTrue();
     }
     
     [Fact]
@@ -69,7 +104,8 @@ public class DeleteScrapeTargetTests : IntegrationTestBase
         var scrapeTargetToRemove = media.ScrapeTargets.First();
         var deleteScrapeTargetCommand = new DeleteScrapeTargetCommand(
             media.Id,
-            scrapeTargetToRemove.Id
+            scrapeTargetToRemove.Id,
+            GivenTheExternalIdentifier.AdminIdentifier
         );
         
         var deleteScrapeTargetResult = await When.TheApplication
