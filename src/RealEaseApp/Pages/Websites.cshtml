@@ -22,7 +22,9 @@
                     <th scope="row">@(i + 1)</th>
                     <td>@websiteViewModel.Name</td>
 
-                    <td>@websiteViewModel.Url</td>
+                    <td>
+                        <a target="_blank" href="@websiteViewModel.Url">@websiteViewModel.Url</a>
+                    </td>
 
                     <td>
                         <div class="float-left">

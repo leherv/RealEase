@@ -64,7 +64,8 @@ public class Startup
 
         // General
         services.AddControllers();
-        services.AddRazorPages();
+        services.AddRazorPages()
+            .AddRazorPagesOptions(options => options.Conventions.AuthorizePage("/Websites", "admin"));
         services.AddHttpContextAccessor();
 
         // Authentication
@@ -75,7 +76,11 @@ public class Startup
                 options.DefaultSignInScheme = CookieAuthenticationDefaults.AuthenticationScheme;
                 options.DefaultChallengeScheme = DiscordAuthenticationDefaults.AuthenticationScheme;
             })
-            .AddCookie(options => { options.Cookie.HttpOnly = true; })
+            .AddCookie(options =>
+            {
+                options.Cookie.HttpOnly = true;
+                options.AccessDeniedPath = "/AccessDenied";
+            })
             .AddDiscord(options =>
             {
                 options.ClientId = discordSettings.ClientId;
@@ -91,16 +96,19 @@ public class Startup
 
                     var botAddedCondition = ctx.HttpContext.RequestServices.GetRequiredService<BotAddedCondition>();
                     var hasAddedBot = await botAddedCondition.Evaluate(currentUserId);
-                    
+
                     ctx.Identity.AddClaim(new Claim("botAdded", hasAddedBot.ToString()));
-                    
-                    
+
+
                     var adminCondition = ctx.HttpContext.RequestServices.GetRequiredService<IAuthorizationService>();
                     var isAdmin = adminCondition.IsAdmin(currentUserId.ToString());
-                    
+
                     ctx.Identity.AddClaim(new Claim("isAdmin", isAdmin.ToString()));
                 };
             });
+
+        services.AddAuthorization(options =>
+            options.AddPolicy("admin", policy => policy.RequireClaim("isAdmin", "true")));
 
         // Discord
         services

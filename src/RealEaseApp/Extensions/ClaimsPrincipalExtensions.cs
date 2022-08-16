@@ -29,4 +29,10 @@ public static class ClaimsPrincipalExtensions
         var botAddedString = principal.Claims.SingleOrDefault(c => c.Type == "botAdded")?.Value;
         return bool.TryParse(botAddedString, out var botAdded) && botAdded;
     }
+    
+    public static bool IsAdmin(this ClaimsPrincipal principal)
+    {
+        var isAdminString = principal.Claims.SingleOrDefault(c => c.Type == "isAdmin")?.Value;
+        return bool.TryParse(isAdminString, out var isAdmin) && isAdmin;
+    }
 }
