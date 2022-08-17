@@ -52,6 +52,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{B5B45A45-FA71-
 		.github\workflows\build.yml = .github\workflows\build.yml
 		.github\workflows\deploy_heroku_DEV.yml = .github\workflows\deploy_heroku_DEV.yml
 		.github\workflows\deploy_heroku_PROD.yml = .github\workflows\deploy_heroku_PROD.yml
+		.github\workflows\deploy_PROD.yml = .github\workflows\deploy_PROD.yml
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper", "src\Infrastructure.Scraper\Infrastructure.Scraper.csproj", "{FE931D1E-E986-4A1A-A1A7-0E9C2D9D1EDE}"
