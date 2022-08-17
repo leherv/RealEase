@@ -12,17 +12,17 @@ jobs:
     - name: SFTP Deploy
       uses: wlixcc/SFTP-Deploy-Action@v1.2.2
       with:
-        delete_remote_files: true
         username: ${{ secrets.PROD_SFTP_USER }}
         server: ${{ secrets.PROD_IP }}
         port: ${{ secrets.PROD_SFTP_PORT }}
         ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
         remote_path: ${{ secrets.PROD_SFTP_PATH }}
+        delete_remote_files: true
         
     - name: Delete previous & move new files
       uses: fifsky/ssh-action@v0.0.6
       with:
-        command: rm -r ${{ secrets.PROD_APPLICATION_PATH }}/* && cp -r ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/
+        command: rm -r ${{ secrets.PROD_APPLICATION_PATH }}* && cp -r ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/
         host: ${{ secrets.PROD_IP }}
         user: ${{ secrets.PROD_APPLICATION_USERNAME }}
         port: ${{ secrets.PROD_SFTP_PORT }}
