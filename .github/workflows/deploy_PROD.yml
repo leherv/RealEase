@@ -17,7 +17,7 @@ jobs:
         port: ${{ secrets.PROD_SFTP_PORT }}
         ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
         remote_path: ${{ secrets.PROD_SFTP_PATH }}
-        delete_remote_files: true
+        delete_remote_files: "true"
         
     - name: Delete previous & move new files
       uses: fifsky/ssh-action@v0.0.6
