@@ -1,4 +1,4 @@
-name: Deploy to PROD
+giname: Deploy to PROD
 
 on:
   workflow_dispatch:
@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
-    
+
     - name: SFTP Deploy
       uses: wlixcc/SFTP-Deploy-Action@v1.2.2
       with:
@@ -17,11 +17,12 @@ jobs:
         port: ${{ secrets.PROD_SFTP_PORT }}
         ssh_private_key: ${{ secrets.SSH_PRIVATE_KEY }}
         remote_path: ${{ secrets.PROD_SFTP_PATH }}
+        delete_remote_files: true
         
-    - name: Move Files
+    - name: Delete previous & move new files
       uses: fifsky/ssh-action@v0.0.6
       with:
-        command: cp -r ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/
+        command: rm -r ${{ secrets.PROD_APPLICATION_PATH }}/* && cp -r ${{ secrets.PROD_SFTP_PATH }}/* ${{ secrets.PROD_APPLICATION_PATH }}/
         host: ${{ secrets.PROD_IP }}
         user: ${{ secrets.PROD_APPLICATION_USERNAME }}
         port: ${{ secrets.PROD_SFTP_PORT }}
