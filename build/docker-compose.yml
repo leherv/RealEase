@@ -10,7 +10,6 @@ services:
       target: runProd
     ports:
       - "${RN_CONNECTIONSTRINGS__PORT:-5000}"
-    network_mode: bridge
     environment:
       ASPNETCORE_ENVIRONMENT: Production
       RN_CONNECTIONSTRINGS__DEFAULT: "${RN_CONNECTIONSTRINGS__DEFAULT}"
