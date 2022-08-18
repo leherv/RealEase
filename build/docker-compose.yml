@@ -9,7 +9,7 @@ services:
       dockerfile: build/Dockerfile
       target: runProd
     ports:
-      - "${RN_CONNECTIONSTRINGS__PORT}"
+      - "${RN_CONNECTIONSTRINGS__PORT:-5000}"
     network_mode: bridge
     environment:
       ASPNETCORE_ENVIRONMENT: Production
