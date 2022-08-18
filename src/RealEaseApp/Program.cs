@@ -2,7 +2,7 @@ using RealEaseApp;
 
 await Host.CreateDefaultBuilder(args)
     .ConfigureWebHostDefaults(webBuilder =>
-        webBuilder.UseKestrel().UseUrls("http://localhost:" + DeterminePort())
+        webBuilder.UseKestrel().UseUrls("http://0.0.0.0:" + DeterminePort())
         .UseStartup<Startup>()
     )
     .ConfigureAppConfiguration((context, builder) =>
