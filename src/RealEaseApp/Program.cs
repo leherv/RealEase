@@ -2,9 +2,8 @@ using RealEaseApp;
 
 await Host.CreateDefaultBuilder(args)
     .ConfigureWebHostDefaults(webBuilder =>
-        webBuilder.UseKestrel().UseUrls("http://0.0.0.0:" + Environment.GetEnvironmentVariable("PORT"))
+        webBuilder.UseKestrel().UseUrls("http://0.0.0.0:" + DeterminePort())
         .UseStartup<Startup>()
-        // .UseWebRoot(Environment.CurrentDirectory)
     )
     .ConfigureAppConfiguration((context, builder) =>
     {
@@ -14,3 +13,12 @@ await Host.CreateDefaultBuilder(args)
     })
     .Build()
     .RunAsync();
+
+
+
+static string? DeterminePort()
+{
+    var herokuPort = Environment.GetEnvironmentVariable("PORT");
+    var port = Environment.GetEnvironmentVariable("RN_CONNECTIONSTRINGS__PORT");
+    return herokuPort ?? port;
+}

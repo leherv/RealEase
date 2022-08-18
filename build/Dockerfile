@@ -19,7 +19,6 @@ RUN dotnet publish -c Release -o out --no-restore
 FROM mcr.microsoft.com/playwright/dotnet:v1.21.0-focal as run
 RUN apt-get update && apt-get -f install && apt-get -y install dumb-init
 WORKDIR /app
-EXPOSE 80
 COPY --from=publish /app/out .
 #(to avoid zombie-processes, see: https://github.com/Yelp/dumb-init and https://blog.phusion.nl/2015/01/20/docker-and-the-pid-1-zombie-reaping-problem/)
 ENTRYPOINT ["/usr/bin/dumb-init", "--"]
