@@ -18,7 +18,7 @@ jobs:
       uses: parisk/setup-compose-cli@v1
     
     - name: Run docker-compose
-      run: docker-compose -f ./build/docker-compose.yml -f ./build/docker-compose.CI.yml up --build --abort-on-container-exit --force-recreate
+      run: docker-compose -f ./build/docker-compose.CI.yml up --build --abort-on-container-exit --force-recreate --remove-orphans
     
     - name: Publish test results
       id: publishTestResults
