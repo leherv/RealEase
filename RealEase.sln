@@ -43,8 +43,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "build", "build", "{E6BFE6A2
 		build\docker-compose.yml = build\docker-compose.yml
 		build\Dockerfile = build\Dockerfile
 		build\wait-for.sh = build\wait-for.sh
-		build\docker-compose.DEV.yml = build\docker-compose.DEV.yml
 		build\docker-compose.CI.yml = build\docker-compose.CI.yml
+		build\docker-compose.DOCKER.yml = build\docker-compose.DOCKER.yml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ci", "ci", "{B5B45A45-FA71-4468-9690-26DF1E12AC86}"
