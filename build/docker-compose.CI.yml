@@ -2,13 +2,24 @@ version: '3.7'
 
 services:
   real_ease:
+    container_name: real_ease_ci
+    image: real_ease_ci:latest
     build:
+      context: ..
+      dockerfile: build/Dockerfile
       target: test
     volumes:
       - ../test-results:/app/test-results
     environment:
-      ASPNETCORE_ENVIRONMENT: Docker
+      ASPNETCORE_ENVIRONMENT: Development
       RN_CONNECTIONSTRINGS__DEFAULT: "Host=real_ease_db;Port=5432;Database=real_ease;Username=postgres;Password=admin"
+      RN_CONNECTIONSTRINGS__WEB: "${RN_CONNECTIONSTRINGS__WEB}"
+      RN_CONNECTIONSTRINGS__PORT: "${RN_CONNECTIONSTRINGS__PORT}"
+      RN_DISCORDSETTINGS__TOKEN: "${RN_DISCORDSETTINGS__TOKEN}"
+      RN_DISCORDSETTINGS__CLIENTID: "${RN_DISCORDSETTINGS__CLIENTID}"
+      RN_DISCORDSETTINGS__CLIENTSECRET: "${RN_DISCORDSETTINGS__CLIENTSECRET}"
+      RN_DISCORDSETTINGS__ADDBOTURI: "${RN_DISCORDSETTINGS__ADDBOTURI}"
+      RN_DISCORDSETTINGS__REDIRECTURI: "${RN_DISCORDSETTINGS__REDIRECTURI}"
     depends_on:
       - real_ease_db
     restart: "no"

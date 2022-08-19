@@ -19,7 +19,7 @@ Run the app locally
 > dotnet run
 
 and only start the database via docker 
-> docker-compose -f ./build/docker-compose.yml -f ./build/docker-compose.DEV.yml up real_ease_db --build --abort-on-container-exit --force-recreate
+> docker-compose -f ./build/docker-compose.DOCKER.yml up real_ease_db --build --abort-on-container-exit --force-recreate --remove-orphans
 
 Do not forget that to set up playwright locally if you do not use docker. The simplest way is uncommenting the following line in PlaywrightScraper.cs:
 > Program.Main(new[] {"install"});
@@ -36,14 +36,14 @@ Run only unit tests
 > dotnet test --filter=Category!=Integration
 
 Running everything in docker is also possible
-> docker-compose -f ./build/docker-compose.yml -f ./build/docker-compose.DEV.yml up --build --abort-on-container-exit --force-recreate
+> docker-compose -f ./build/docker-compose.DOCKER.yml up --build --abort-on-container-exit --force-recreate --remove-orphans
 
 Before each PR, check if everything works with docker
-> docker-compose -f ./build/docker-compose.yml -f ./build/docker-compose.CI.yml up --build --abort-on-container-exit --force-recreate
+> docker-compose -f ./build/docker-compose.CI.yml up --build --abort-on-container-exit --force-recreate --remove-orphans
 
 
 ## PROD
-> docker-compose -f ./build/docker-compose.yml up --build --abort-on-container-exit --force-recreate
+> docker-compose -f ./build/docker-compose.yml up --build --abort-on-container-exit --force-recreate --remove-orphans
 
 
 ## Troubleshooting
