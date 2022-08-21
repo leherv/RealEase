@@ -19,7 +19,7 @@ public class SubscribeHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         var subscriber = Given.A.Subscriber.WithoutSubscriptions;
-        var mediaToSubscribeTo = Given.A.Media.MediaList.First();
+        var mediaToSubscribeTo = Given.A.Media.PersistedMediaList.First();
         var subscribeMedia = new SubscribeMediaCommand(subscriber.ExternalIdentifier, mediaToSubscribeTo.Name);
 
         var subscribeMediaResult = await When.TheApplication.ReceivesCommand<SubscribeMediaCommand, Result>(subscribeMedia);
@@ -40,7 +40,7 @@ public class SubscribeHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         var newExternalIdentifier = Guid.NewGuid().ToString();
-        var mediaToSubscribeTo = Given.A.Media.MediaList.First();
+        var mediaToSubscribeTo = Given.A.Media.PersistedMediaList.First();
         var subscribeMediaCommand = new SubscribeMediaCommand(newExternalIdentifier, mediaToSubscribeTo.Name);
 
         var subscribeMediaResult = await When.TheApplication.ReceivesCommand<SubscribeMediaCommand, Result>(subscribeMediaCommand);
