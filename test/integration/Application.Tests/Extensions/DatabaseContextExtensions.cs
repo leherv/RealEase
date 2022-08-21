@@ -30,7 +30,7 @@ namespace Application.Test.Extensions
 
         private static DatabaseContext SeedMedia(this DatabaseContext databaseContext, GivenTheData givenTheData)
         {
-            databaseContext.MediaDbSet.AddRange(givenTheData.Media.MediaList);
+            databaseContext.MediaDbSet.AddRange(givenTheData.Media.PersistedMediaList);
             databaseContext.SaveChanges();
         
             return databaseContext;

@@ -5,191 +5,311 @@
 
 
 <div class="container-fluid">
-    <h2 class="text-center">Available Media</h2>
-    <div class="row justify-content-end">
-        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMediaModal">
-            Add media
-        </button>
+<h2 class="text-center">Available Media</h2>
+<div class="row mb-2">
+    <div class="col-10 col-md-7 col-xl-5">
+        <form method="post" asp-page-handler="Search" onsubmit="showSpinner()">
+            <div class="input-group">
+                <input type="text"
+                       class="form-control"
+                       value="@Model.QueryString"
+                       placeholder="Search..."
+                       aria-label="media name to search for"
+                       aria-describedby="media name to search for"
+                       id="mediaNameSearchString"
+                       name="mediaNameSearchString">
+                <div class="input-group-append">
+                    <button class="btn btn-primary"
+                            type="submit"
+                            onclick="showSpinner()">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </div>
+            <input type="hidden" name="PageIndex" asp-for="PageIndex" value="0"/>
+            @Html.AntiForgeryToken()
+        </form>
     </div>
-    <div class="row justify-content-center">
-        <table class="table">
-            <thead>
+    <div class="col">
+        <div class="row justify-content-end">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMediaModal">
+                Add media
+            </button>
+        </div>
+    </div>
+</div>
+<div class="row justify-content-center">
+    <table class="table">
+        <thead>
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">Name</th>
+            <th scope="col">Subscribed</th>
+            <th scope="col">Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        @for (var i = 0; i < Model.MediaViewModels.Count; i++)
+        {
+            var mediaViewModel = Model.MediaViewModels.ElementAt(i);
             <tr>
-                <th scope="col">#</th>
-                <th scope="col">Name</th>
-                <th scope="col">Subscribed</th>
-                <th scope="col">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            @for (var i = 0; i < Model.MediaViewModels.Count; i++)
-            {
-                var mediaViewModel = Model.MediaViewModels.ElementAt(i);
-                <tr>
-                    <th scope="row">@(i + 1)</th>
-                    <td>@mediaViewModel.Name</td>
+                <th scope="row">@(i + 1)</th>
+                <td>@mediaViewModel.Name</td>
 
-                    <td>
+                <td>
+                    @if (mediaViewModel.UserSubscribed)
+                    {
+                        <i style="color: green" class="fa fa-check" aria-hidden="true"></i>
+                    }
+                    else
+                    {
+                        <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                    }
+                </td>
+
+                <td>
+                    <div class="float-left">
+                        <a class="btn btn-primary" href="/Media/@mediaViewModel.MediaId">
+                            Open <i class="fa fa-pencil" aria-hidden="true"></i>
+                        </a>
+                    </div>
+
+                    <div class="float-left ml-1">
                         @if (mediaViewModel.UserSubscribed)
                         {
-                            <i style="color: green" class="fa fa-check" aria-hidden="true"></i>
+                            <form method="post">
+                                <button class="btn btn-danger"
+                                        type="submit"
+                                        onclick="showSpinner()"
+                                        asp-page-handler="Unsubscribe">
+                                    Unsubscribe
+                                </button>
+
+                                <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
+                                @Html.AntiForgeryToken()
+                            </form>
                         }
                         else
                         {
-                            <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
-                        }
-                    </td>
-
-                    <td>
-                        <div class="float-left">
-                            <a class="btn btn-primary" href="/Media/@mediaViewModel.MediaId">
-                                Open <i class="fa fa-pencil" aria-hidden="true"></i>
-                            </a>
-                        </div>
-
-                        <div class="float-left ml-1">
-                            @if (mediaViewModel.UserSubscribed)
-                            {
-                                <form method="post">
-                                    <button class="btn btn-danger"
-                                            type="submit"
-                                            onclick="showSpinner()"
-                                            asp-page-handler="Unsubscribe">
-                                        Unsubscribe
-                                    </button>
-
-                                    <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                    <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
-                                    @Html.AntiForgeryToken()
-                                </form>
-                            }
-                            else
-                            {
-                                <form method="post">
-                                    <button class="btn btn-primary"
-                                            type="submit"
-                                            onclick="showSpinner()"
-                                            asp-page-handler="Subscribe">
-                                        Subscribe
-                                    </button>
-
-                                    <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                    <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
-                                    @Html.AntiForgeryToken()
-                                </form>
-                            }
-                        </div>
-
-                        @if (User.IsAdmin())
-                        {
-                            <div class="float-left ml-1">
-                                <form method="post">
-                                    <button class="btn btn-danger"
-                                            type="submit"
-                                            onclick="showSpinner()"
-                                            asp-page-handler="Delete">
-                                        Delete <i class="fa-solid fa-circle-trash"></i>
-                                    </button>
-
-                                    <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                    <input type="hidden" id="mediaId" name="mediaId" value="@mediaViewModel.MediaId"/>
-                                    @Html.AntiForgeryToken()
-                                </form>
-                            </div>
-                        }
-                    </td>
-                </tr>
-            }
-            </tbody>
-        </table>
-
-        <nav aria-label="Media page navigation">
-            <ul class="pagination">
-                <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
-                    <a class="page-link"
-                       onclick="showSpinner()"
-                       href="/Media?pageIndex=@(Model.PageIndex - 1)"
-                       tabindex="-1">
-                        Previous
-                    </a>
-                </li>
-                @foreach (var navigationItem in Model.PaginationNavigation.NavigationItems)
-                {
-                    @if (navigationItem.Visible)
-                    {
-                        <li class="page-item @(navigationItem.Active ? "active" : "")">
-                            <a class="page-link"
-                               onclick="showSpinner()"
-                               href="/Media?pageIndex=@(navigationItem.Value)">
-                                @navigationItem.Value
-                            </a>
-                        </li>
-                    }
-                }
-                <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
-                    <a class="page-link"
-                       onclick="showSpinner()"
-                       href="/Media?pageIndex=@(Model.PageIndex + 1)">
-                        Next
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
-
-    <div class="row mt-5">
-        <div class="container-fluid">
-            <div class="row justify-content-center">
-                <h3>Add new Media</h3>
-            </div>
-            <div class="row">
-                <form method="post" class="w-100">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="websiteName">Website</label>
-                                    <select class="form-control"
-                                            id="websiteName"
-                                            name="newMedia.WebsiteName">
-                                        @foreach (var website in Model.WebsiteViewModels)
-                                        {
-                                            <option value="@website.Name">@(website.Name + " - " + website.Url)</option>
-                                        }
-                                    </select>
-                                    @Html.ValidationMessage("newMedia.WebsiteName")
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="relativePath">Relative Path</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           name="newMedia.RelativePath"
-                                           id="relativePath"
-                                           placeholder="manga/hunter-x-hunter">
-                                    @Html.ValidationMessage("newMedia.RelativePath")
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <button class="btn btn-success"
+                            <form method="post">
+                                <button class="btn btn-primary"
                                         type="submit"
-                                        asp-page-handler="NewMedia"
-                                        onclick="showSpinner()">
-                                    Add Media
+                                        onclick="showSpinner()"
+                                        asp-page-handler="Subscribe">
+                                    Subscribe
                                 </button>
+
+                                <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
+                                @Html.AntiForgeryToken()
+                            </form>
+                        }
+                    </div>
+
+                    @if (User.IsAdmin())
+                    {
+                        <div class="float-left ml-1">
+                            <form method="post">
+                                <button class="btn btn-danger"
+                                        type="submit"
+                                        onclick="showSpinner()"
+                                        asp-page-handler="Delete">
+                                    Delete <i class="fa-solid fa-circle-trash"></i>
+                                </button>
+
+                                <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                <input type="hidden" id="mediaId" name="mediaId" value="@mediaViewModel.MediaId"/>
+                                @Html.AntiForgeryToken()
+                            </form>
+                        </div>
+                    }
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+
+    <nav aria-label="Media page navigation">
+        <ul class="pagination">
+            <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
+                <a class="page-link"
+                   onclick="showSpinner()"
+                   href="/Media?pageIndex=@(Model.PageIndex - 1)"
+                   tabindex="-1">
+                    Previous
+                </a>
+            </li>
+            @foreach (var navigationItem in Model.PaginationNavigation.NavigationItems)
+            {
+                @if (navigationItem.Visible)
+                {
+                    <li class="page-item @(navigationItem.Active ? "active" : "")">
+                        <a class="page-link"
+                           onclick="showSpinner()"
+                           href="/Media?pageIndex=@(navigationItem.Value)">
+                            @navigationItem.Value
+                        </a>
+                    </li>
+                }
+            }
+            <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
+                <a class="page-link"
+                   onclick="showSpinner()"
+                   href="/Media?pageIndex=@(Model.PageIndex + 1)">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+<div class="row mt-5">
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <h3>Add new Media</h3>
+        </div>
+        <div class="row">
+            <form method="post" class="w-100">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="websiteName">Website</label>
+                                <select class="form-control"
+                                        id="websiteName"
+                                        name="newMedia.WebsiteName">
+                                    @foreach (var website in Model.WebsiteViewModels)
+                                    {
+                                        <option value="@website.Name">@(website.Name + " - " + website.Url)</option>
+                                    }
+                                </select>
+                                @Html.ValidationMessage("newMedia.WebsiteName")
                             </div>
                         </div>
-
-                        <input type="hidden" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                        @Html.AntiForgeryToken()
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="relativePath">Relative Path</label>
+                                <input type="text"
+                                       class="form-control"
+                                       name="newMedia.RelativePath"
+                                       id="relativePath"
+                                       placeholder="manga/hunter-x-hunter">
+                                @Html.ValidationMessage("newMedia.RelativePath")
+                            </div>
+                        </div>
                     </div>
-                </form>
+                    <div class="row">
+                        <div class="col">
+                            <button class="btn btn-success"
+                                    type="submit"
+                                    asp-page-handler="NewMedia"
+                                    onclick="showSpinner()">
+                                Add Media
+                            </button>
+                        </div>
+                    </div>
+
+                    <input type="hidden" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                    @Html.AntiForgeryToken()
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+        <div class="col">
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Name</th>
+                        <th scope="col">Subscribed</th>
+                        <th scope="col">Actions</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    @for (var i = 0; i < Model.MediaViewModels.Count; i++)
+                    {
+                        var mediaViewModel = Model.MediaViewModels.ElementAt(i);
+                        <tr>
+                            <th scope="row">@(i + 1)</th>
+                            <td>@mediaViewModel.Name</td>
+                            <td>
+                                @if (mediaViewModel.UserSubscribed)
+                                {
+                                    <i style="color: green" class="fa fa-check" aria-hidden="true"></i>
+                                }
+                                else
+                                {
+                                    <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                                }
+                            </td>
+                            <td>
+                                <div class="float-left">
+                                    <a class="btn btn-primary" href="/Media/@mediaViewModel.MediaId">
+                                        Open <i class="fa fa-pencil" aria-hidden="true"></i>
+                                    </a>
+                                </div>
+                                <div class="float-left ml-1">
+                                    @if (mediaViewModel.UserSubscribed)
+                                    {
+                                        <form method="post">
+                                            <button class="btn btn-danger"
+                                                    type="submit"
+                                                    onclick="showSpinner()"
+                                                    asp-page-handler="Unsubscribe">
+                                                Unsubscribe
+                                            </button>
+                                            <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                            <input type="hidden" name="queryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                            <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
+                                            @Html.AntiForgeryToken()
+                                        </form>
+                                    }
+                                    else
+                                    {
+                                        <form method="post">
+                                            <button class="btn btn-primary"
+                                                    type="submit"
+                                                    onclick="showSpinner()"
+                                                    asp-page-handler="Subscribe">
+                                                Subscribe
+                                            </button>
+                                            <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                            <input type="hidden" name="queryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                            <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
+                                            @Html.AntiForgeryToken()
+                                        </form>
+                                    }
+                                </div>
+                                @if (User.IsAdmin())
+                                {
+                                    <div class="float-left ml-1">
+                                        <form method="post">
+                                            <button class="btn btn-danger"
+                                                    type="submit"
+                                                    onclick="showSpinner()"
+                                                    asp-page-handler="Delete">
+                                                Delete <i class="fa-solid fa-circle-trash"></i>
+                                            </button>
+                                            <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                            <input type="hidden" name="queryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                            <input type="hidden" id="mediaId" name="mediaId" value="@mediaViewModel.MediaId"/>
+                                            @Html.AntiForgeryToken()
+                                        </form>
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+                    }
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
+    <div class="row justify-content-center">
+    <input type="hidden" name="queryString" asp-for="QueryString" value="@Model.QueryString"/>
 </div>
 
 @await Component.InvokeAsync(typeof(AddMediaViewComponent))

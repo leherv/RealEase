@@ -2,14 +2,16 @@ version: '3.7'
 
 services:
   real_ease:
-    container_name: real_ease_ci
-    image: real_ease_ci:latest
+    container_name: real_ease_docker
+    image: real_ease_docker:latest
     build:
       context: ..
       dockerfile: build/Dockerfile
-      target: test
+      target: runDEV
     volumes:
       - ../test-results:/app/test-results
+    ports:
+      - "${RN_CONNECTIONSTRINGS__PORT}:${RN_CONNECTIONSTRINGS__PORT}"
     environment:
       ASPNETCORE_ENVIRONMENT: Development
       RN_CONNECTIONSTRINGS__DEFAULT: "Host=real_ease_db;Port=5432;Database=real_ease;Username=postgres;Password=admin"
@@ -24,7 +26,7 @@ services:
     depends_on:
       - real_ease_db
     restart: "no"
-
+      
   real_ease_db:
     container_name: real_ease_db
     image: library/postgres:13.0

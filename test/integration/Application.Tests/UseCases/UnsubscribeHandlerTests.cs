@@ -40,7 +40,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         var subscriber = Given.A.Subscriber.WithoutSubscriptions;
-        var mediaToUnsubscribeFrom = Given.A.Media.MediaList.First();
+        var mediaToUnsubscribeFrom = Given.A.Media.PersistedMediaList.First();
         var unsubscribeMediaCommand = new UnsubscribeMediaCommand(subscriber.ExternalIdentifier, mediaToUnsubscribeFrom.Name);
 
         var unSubscribeMediaResult = await When.TheApplication.ReceivesCommand<UnsubscribeMediaCommand, Result>(unsubscribeMediaCommand);
@@ -100,7 +100,7 @@ public class UnsubscribeHandlerTests : IntegrationTestBase
     {
         await Given.TheDatabase.IsSeeded();
         const string nonExistentSubscriberExternalId = "non existent";
-        var mediaToUnsubscribeFrom = Given.A.Media.MediaList.First();
+        var mediaToUnsubscribeFrom = Given.A.Media.PersistedMediaList.First();
         var unsubscribeMediaCommand = new UnsubscribeMediaCommand(nonExistentSubscriberExternalId, mediaToUnsubscribeFrom.Name);
 
         var unSubscribeMediaResult = await When.TheApplication.ReceivesCommand<UnsubscribeMediaCommand, Result>(unsubscribeMediaCommand);
