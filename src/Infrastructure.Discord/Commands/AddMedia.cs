@@ -44,8 +44,8 @@ public class AddMedia : ModuleBase<SocketCommandContext>
             Errors.General.NotFoundErrorCode => "Website was not found",
             Errors.Media.MediaWithScrapeTargetExistsErrorCode => "Media for this URL exists",
             Errors.Media.MediaWithNameExistsErrorCode => "Media with this name exists",
-            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed. It is likely this is due to a problem with the target site. Please try again later.",
-            Errors.Scraper.ScrapeMediaNameFailedErrorCode => "Scraping for media name failed. It is likely this is due to a problem with the target site. Please try again later.",
+            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed. Check if you inserted the relative path correctly. If it is correct it is likely this is due to a problem with the target site. Please try again later.",
+            Errors.Scraper.ScrapeMediaNameFailedErrorCode => "Scraping for media name failed. Check if you inserted the relative path correctly. If it is correct it is likely this is due to a problem with the target site. Please try again later.",
             Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
             _ => "Something went wrong"
         };
