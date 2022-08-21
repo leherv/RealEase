@@ -20,12 +20,12 @@ namespace RealEaseApp.Pages;
 public class Media : PageModel
 {
     [FromQuery] [HiddenInput] public int PageIndex { get; set; } = 1;
+    [FromQuery] [HiddenInput] public string QueryString { get; set; } = "";
     private const int PageSize = 10;
     private int _totalResultCount = 0;
 
     public IReadOnlyCollection<MediaViewModel> MediaViewModels { get; private set; }
     public PaginationNavigation PaginationNavigation;
-    // TODO: create common component for select of website (Media and MediaDetails use it)
     public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
 
     private readonly IQueryDispatcher _queryDispatcher;
@@ -119,6 +119,13 @@ public class Media : PageModel
         return Page();
     }
     
+    public async Task<IActionResult> OnPostSearch(string mediaNameSearchString)
+    {
+        QueryString = mediaNameSearchString;
+        await SetupPage();
+        return Page();
+    }
+    
     private static string BuildAddMediaErrorMessage(Result result) =>
         result.Error.Code switch
         {
@@ -140,7 +147,7 @@ public class Media : PageModel
     
     private async Task SetupPage()
     {
-        var availableMedia = await FetchMedia();
+        var availableMedia = await FetchMedia(QueryString);
         var subscribedToMedia = await FetchSubscribedToMedia();
         var availableWebsites = await FetchAvailableWebsites();
 
@@ -176,10 +183,10 @@ public class Media : PageModel
             _ => "Something went wrong"
         };
     
-    private Task<AvailableMedia> FetchMedia()
+    private Task<AvailableMedia> FetchMedia(string mediaNameSearchString)
     {
         return _queryDispatcher.Dispatch<AvailableMediaQuery, AvailableMedia>(
-            new AvailableMediaQuery(PageIndex, PageSize));
+            new AvailableMediaQuery(PageIndex, PageSize, mediaNameSearchString));
     }
 
     private async Task<MediaSubscriptions> FetchSubscribedToMedia()

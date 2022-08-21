@@ -20,7 +20,7 @@ public class ScrapeNewReleasesHandlerTests : IntegrationTestBase
     public async Task Calls_Scraper_for_each_media_sent()
     {
         await Given.TheDatabase.IsSeeded();
-        var mediaToScrape = Given.The.Media.MediaList
+        var mediaToScrape = Given.The.Media.PersistedMediaList
             .Take(2)
             .Select(media => media.Name)
             .ToList();

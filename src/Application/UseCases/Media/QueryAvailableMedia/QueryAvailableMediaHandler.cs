@@ -14,7 +14,9 @@ public sealed class QueryAvailableMediaHandler : IQueryHandler<AvailableMediaQue
 
     public async Task<AvailableMedia> Handle(AvailableMediaQuery mediaQuery, CancellationToken cancellationToken)
     {
-        var (pageIndex, pageSize) = mediaQuery;
-        return await _availableMediaReadRepository.QueryAvailableMedia(new QueryParameters(pageIndex, pageSize));
+        var (pageIndex, pageSize, mediaNameSearchString) = mediaQuery;
+        var queryParameters = new QueryParameters(pageIndex, pageSize, mediaNameSearchString);
+        
+        return await _availableMediaReadRepository.QueryAvailableMedia(queryParameters);
     }
 }

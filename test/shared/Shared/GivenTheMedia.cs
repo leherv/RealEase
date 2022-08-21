@@ -5,7 +5,7 @@ namespace Shared;
 
 public class GivenTheMedia
 {
-    public List<Media> MediaList { get; }
+    public List<Media> PersistedMediaList { get; }
     public List<Media> MediaWithScrapeTargets { get; }
     public List<Media> MediaWithScrapeTargetsPointingToInActiveWebsites { get; }
     public Media WithoutSubscribersWithoutReleasesWithoutScrapeTarget { get; }
@@ -60,7 +60,7 @@ public class GivenTheMedia
         ).Value;
         WithInActiveWebsite.AddScrapeTarget(givenTheScrapeTarget.FacelessMangaWalker, "Faceless");
         
-        MediaList = new List<Media>
+        PersistedMediaList = new List<Media>
         {
             WithSubscriberWithoutRelease,
             WithSubscriberWithReleases,
