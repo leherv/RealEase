@@ -1,0 +1,73 @@
+﻿<div class="modal" id="addScrapeTargetModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new Scrape Target</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form method="post"
+                  class="w-100"
+                  action="/Media/@Model.Id?handler=NewScrapeTarget"
+                  name="addScrapeTargetForm">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="websiteName">Website</label>
+                                    <select class="form-control"
+                                            required
+                                            id="websiteName"
+                                            name="newScrapeTarget.websiteName">
+                                        @foreach (var website in Model.WebsiteViewModels)
+                                        {
+                                            <option value="@website.Name">@(website.Name + " - " + website.Url)</option>
+                                        }
+                                    </select>
+                                    @Html.ValidationMessage("newScrapeTarget.websiteName")
+                                </div>
+                            </div>
+                            <div class="col">
+                                <div class="form-group">
+                                    <label for="relativePath">Relative Path</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           required
+                                           name="newScrapeTarget.relativePath"
+                                           id="relativePath"
+                                           placeholder="manga/hunter-x-hunter">
+                                    @Html.ValidationMessage("newScrapeTarget.relativePath")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success"
+                            type="submit"
+                            onclick="return formValidate()">
+                        Add Scrape Target
+                    </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+                <input type="hidden" name="newScrapeTarget.mediaName" value="@Model.MediaDetailsViewModel.MediaName"/>
+                @Html.AntiForgeryToken()
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function formValidate() {
+        let addScrapeTargetForm = document.forms.namedItem("addScrapeTargetForm");   
+        if (addScrapeTargetForm.checkValidity()) {
+            showSpinner()
+            return true;    
+        } else {
+            addScrapeTargetForm.reportValidity();
+            return false;
+        }
+    }
+</script>

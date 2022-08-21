@@ -61,6 +61,10 @@ public class MediaDetailsModel : PageModel
                 _logger.LogError(addScrapeTargetResult.Error.ToString());
                 _toastifyService.Error(BuildNewScrapeTargetErrorMessage(addScrapeTargetResult));
             }
+            else
+            {
+                _toastifyService.Success("Scrape Target successfully added");
+            }
         }
 
         await SetupPage();
@@ -99,8 +103,8 @@ public class MediaDetailsModel : PageModel
             Errors.General.NotFoundErrorCode => "Entity was not found",
             Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
             Errors.Media.ScrapeTargetExistsErrorCode => "ScrapeTarget already exists",
-            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed. It is likely this is due to a problem with the target site. Please try again later.",
-            Errors.Scraper.ScrapeMediaNameFailedErrorCode => "Scraping for media name failed. It is likely this is due to a problem with the target site. Please try again later.",
+            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed. Check if you inserted the relative path correctly. If it is correct it is likely this is due to a problem with the target site. Please try again later.",
+            Errors.Scraper.ScrapeMediaNameFailedErrorCode => "Scraping for media name failed. Check if you inserted the relative path correctly. If it is correct it is likely this is due to a problem with the target site. Please try again later.",
             Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode => "ScrapeTarget references different media",
             _ => "Something went wrong"
         };

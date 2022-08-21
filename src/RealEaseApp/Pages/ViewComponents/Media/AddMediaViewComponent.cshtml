@@ -1,0 +1,70 @@
+﻿<div class="modal" id="addMediaModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Add new media</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+            <form method="post" class="w-100" action="/Media?handler=NewMedia" name="addMediaForm">
+                <div class="modal-body">
+                    <div class="container-fluid">
+                        <div class="row">
+                            <div class="col-12 col-lg">
+                                <div class="form-group">
+                                    <label for="websiteName">Website</label>
+                                    <select class="form-control"
+                                            id="websiteName"
+                                            required
+                                            name="newMedia.WebsiteName">
+                                        @foreach (var website in Model.WebsiteViewModels)
+                                        {
+                                            <option value="@website.Name">@(website.Name + " - " + website.Url)</option>
+                                        }
+                                    </select>
+                                    @Html.ValidationMessage("newMedia.WebsiteName")
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg">
+                                <div class="form-group">
+                                    <label for="relativePath">Relative Path</label>
+                                    <input type="text"
+                                           class="form-control"
+                                           required
+                                           name="newMedia.RelativePath"
+                                           id="relativePath"
+                                           placeholder="manga/hunter-x-hunter">
+                                    @Html.ValidationMessage("newMedia.RelativePath")
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-success"
+                            type="submit"
+                            onclick="return formValidate()">
+                        Add Media
+                    </button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                </div>
+                @Html.AntiForgeryToken()
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function formValidate() {
+        let addMediaForm = document.forms.namedItem("addMediaForm");   
+        if (addMediaForm.checkValidity()) {
+            showSpinner()
+            return true;    
+        } else {
+            addMediaForm.reportValidity();
+            return false;
+        }
+    }
+</script>
