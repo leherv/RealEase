@@ -1,133 +1,108 @@
 @page "/Media/{id:Guid}"
+@using RealEaseApp.Pages.ViewComponents.Media
 @model MediaDetailsModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 <div class="card">
     <div class="card-header">
-        Media - Details
+        @Model.MediaDetailsViewModel.MediaName - Details
     </div>
-    <div class="card-body">
-        <h5 class="card-title">@Model.MediaDetailsViewModel.MediaName</h5>
 
-        <p class="card-text">LatestRelease: @Model.MediaDetailsViewModel.LatestRelease</p>
-        @if (Model.MediaDetailsViewModel.HasRelease)
-        {
-            <a href="@Model.MediaDetailsViewModel.NewestChapterLink" target="_blank" class="btn btn-primary">Read it!</a>
-        }
-        <div class="mt-4">
-            <p class="card-text">Scrape Targets:</p>
+    <div class="card-body">
+        <div class="container-fluid">
+            <div class="row">
+                <h5 class="card-title">@Model.MediaDetailsViewModel.MediaName</h5>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <p class="card-text d-inline">LatestRelease: @Model.MediaDetailsViewModel.LatestRelease</p>
+                    @if (Model.MediaDetailsViewModel.HasRelease)
+                    {
+                        <a href="@Model.MediaDetailsViewModel.NewestChapterLink" target="_blank" class="btn btn-primary d-inline">Read it!</a>
+                    }
+                </div>
+            </div>
+            <div class="row justify-content-center mt-4">
+                <p class="card-text">
+                    <b style="font-size: 1.2rem">Scrape Targets</b>
+                </p>
+            </div>
             @if (Model.MediaDetailsViewModel.HasScrapeTargets)
             {
-                <table class="table">
-                    <thead>
-                    <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Website</th>
-                        <th scope="col">Website Url</th>
-                        <th scope="col">ScrapeTarget Url</th>
-                        @if (User.IsAdmin())
-                        {
-                            <th scope="col">Actions</th>
-                        }
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for (var i = 0; i < Model.MediaDetailsViewModel.ScrapeTargetDetailsViewModels.Count; i++)
-                    {
-                        var scrapeTargetDetail = Model.MediaDetailsViewModel.ScrapeTargetDetailsViewModels.ElementAt(i);
-                        <tr>
-                            <th scope="row">@(i + 1)</th>
-                            <td>@scrapeTargetDetail.WebsiteName</td>
-                            <td>
-                                <a href="@scrapeTargetDetail.WebsiteUrl" target="_blank">
-                                    @scrapeTargetDetail.WebsiteUrl
-                                </a>
-                            </td>
-                            <td>
-                                <a href="@scrapeTargetDetail.ScrapeTargetUrl" target="_blank">
-                                    @scrapeTargetDetail.ScrapeTargetUrl
-                                </a>
-                            </td>
-                            @if (User.IsAdmin())
-                            {
-                                <td>
-                                    <form method="post">
-                                        <button class="btn btn-danger"
-                                                type="submit"
-                                                onclick="showSpinner()"
-                                                asp-page-handler="Delete">
-                                            <i class="fa fa-trash" aria-hidden="true"></i>
-                                        </button>
+                <div class="row">
+                    <div class="col">
+                        <div>
+                            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addScrapeTargetModal">
+                                Add Scrape Target
+                                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <div class="table-responsive">
+                            <table class="table">
+                                <thead>
+                                <tr>
+                                    <th scope="col">#</th>
+                                    <th scope="col">Website</th>
+                                    <th scope="col">Website Url</th>
+                                    <th scope="col">ScrapeTarget Url</th>
+                                    @if (User.IsAdmin())
+                                    {
+                                        <th scope="col">Actions</th>
+                                    }
+                                </tr>
+                                </thead>
+                                <tbody>
+                                @for (var i = 0; i < Model.MediaDetailsViewModel.ScrapeTargetDetailsViewModels.Count; i++)
+                                {
+                                    var scrapeTargetDetail = Model.MediaDetailsViewModel.ScrapeTargetDetailsViewModels.ElementAt(i);
+                                    <tr>
+                                        <th scope="row">@(i + 1)</th>
+                                        <td>@scrapeTargetDetail.WebsiteName</td>
+                                        <td>
+                                            <a href="@scrapeTargetDetail.WebsiteUrl" target="_blank">
+                                                @scrapeTargetDetail.WebsiteUrl
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="@scrapeTargetDetail.ScrapeTargetUrl" target="_blank">
+                                                @scrapeTargetDetail.ScrapeTargetUrl
+                                            </a>
+                                        </td>
+                                        @if (User.IsAdmin())
+                                        {
+                                            <td>
+                                                <form method="post">
+                                                    <button class="btn btn-danger"
+                                                            type="submit"
+                                                            onclick="showSpinner()"
+                                                            asp-page-handler="Delete">
+                                                        <i class="fa fa-trash" aria-hidden="true"></i>
+                                                    </button>
 
-                                        <input type="hidden" id="mediaId" name="mediaId" value="@Model.MediaDetailsViewModel.MediaId"/>
-                                        <input type="hidden" id="scrapeTargetId" name="scrapeTargetId" value="@scrapeTargetDetail.ScrapeTargetId"/>
-                                        @Html.AntiForgeryToken()
-                                    </form>
-                                </td>
-                            }
-                        </tr>
-                    }
-                    </tbody >
-                </table>
+                                                    <input type="hidden" id="mediaId" name="mediaId" value="@Model.MediaDetailsViewModel.MediaId"/>
+                                                    <input type="hidden" id="scrapeTargetId" name="scrapeTargetId" value="@scrapeTargetDetail.ScrapeTargetId"/>
+                                                    @Html.AntiForgeryToken()
+                                                </form>
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                                </tbody >
+                            </table>
+                        </div>
+                    </div>
+                </div>
             }
             else
             {
                 <p>No ScrapeTargets yet</p>
             }
         </div>
-
-        <div class="container-fluid mt-3">
-            <div class="row justify-content-center">
-                <h3>Add new Scrape Target</h3>
-            </div>
-            <div class="row">
-                <form method="post" class="w-100">
-                    <div class="container-fluid">
-                        <div class="row">
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="websiteName">Website</label>
-                                    <select class="form-control"
-                                            id="websiteName"
-                                            name="newScrapeTarget.websiteName">
-                                        @foreach (var website in Model.WebsiteViewModels)
-                                        {
-                                            <option value="@website.Name">@(website.Name + " - " + website.Url)</option>
-                                        }
-                                    </select>
-                                    @Html.ValidationMessage("newScrapeTarget.websiteName")
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="form-group">
-                                    <label for="relativePath">Relative Path</label>
-                                    <input type="text"
-                                           class="form-control"
-                                           name="newScrapeTarget.relativePath"
-                                           id="relativePath"
-                                           placeholder="manga/hunter-x-hunter">
-                                    @Html.ValidationMessage("newScrapeTarget.relativePath")
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col">
-                                <button class="btn btn-success"
-                                        type="submit"
-                                        onclick="showSpinner()"
-                                        asp-page-handler="NewScrapeTarget">
-                                    Add Scrape Target 
-                                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                                </button>
-                            </div>
-                        </div>
-
-                        <input type="hidden" name="newScrapeTarget.mediaName" value="@Model.MediaDetailsViewModel.MediaName"/>
-                        @Html.AntiForgeryToken()
-                    </div>
-                </form>
-            </div>
-        </div>
-
     </div>
 </div>
+
+@await Component.InvokeAsync(typeof(AddScrapeTargetViewComponent))

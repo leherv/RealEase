@@ -61,6 +61,10 @@ public class MediaDetailsModel : PageModel
                 _logger.LogError(addScrapeTargetResult.Error.ToString());
                 _toastifyService.Error(BuildNewScrapeTargetErrorMessage(addScrapeTargetResult));
             }
+            else
+            {
+                _toastifyService.Success("Scrape Target successfully added");
+            }
         }
 
         await SetupPage();
