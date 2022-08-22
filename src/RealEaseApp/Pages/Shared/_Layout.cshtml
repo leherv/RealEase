@@ -38,16 +38,28 @@
                 }
                 @if (User.BotAdded())
                 {
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-light" href="@_discordSettings.Value.AddBotUri">Add me to an additional server!</a>
+                    <li class="nav-item ml-lg-4">
+                        <a href="@_discordSettings.Value.AddBotUri"
+                           class="nav-link">
+                            Add me to an additional server! <i class="fa fa-link fa-lg" aria-hidden="true"></i>
+                        </a>
                     </li>
                 }
                 else
                 {
-                    <li class="nav-item">
-                        <a class="nav-link btn btn-light" href="@_discordSettings.Value.AddBotUri">Add me to your server!</a>
+                    <li class="nav-item ml-lg-4">
+                        <a class="nav-link" href="@_discordSettings.Value.AddBotUri">
+                            Add me to your server! <i class="fa fa-link fa-lg" aria-hidden="true"></i>
+                        </a>
                     </li>
                 }
+                <li class="nav-item ml-lg-4">
+                    <a href="https://github.com/leherv/RealEase"
+                       class="nav-link"
+                       target="_blank">
+                        Visit on <i class="fa fa-github fa-lg" aria-hidden="true"></i>
+                    </a>
+                </li>
             </ul>
             <div>@await Component.InvokeAsync(typeof(LoginViewComponent))</div>
         </div>

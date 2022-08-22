@@ -25,6 +25,7 @@ public class Media : PageModel
     private int _totalResultCount = 0;
 
     public IReadOnlyCollection<MediaViewModel> MediaViewModels { get; private set; }
+    public int ItemStartNumber => (PageIndex - 1) * PageSize + 1;
     public PaginationNavigation PaginationNavigation;
     public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
 

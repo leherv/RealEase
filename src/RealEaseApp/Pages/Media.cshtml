@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <h2 class="text-center">Available Media</h2>
     <div class="row mb-2">
-        <div class="col-10 col-md-7 col-xl-5">
+        <div class="col-8 col-md-7 col-xl-5">
             <form method="post" asp-page-handler="Search" onsubmit="showSpinner()">
                 <div class="input-group">
                     <input type="text"
@@ -31,7 +31,7 @@
                 @Html.AntiForgeryToken()
             </form>
         </div>
-        <div class="col">
+        <div class="col-4 col-md-5 col-xl-7">
             <div class="text-right">
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMediaModal">
                     Add media
@@ -57,7 +57,7 @@
                     {
                         var mediaViewModel = Model.MediaViewModels.ElementAt(i);
                         <tr>
-                            <th scope="row">@(i + 1)</th>
+                            <th scope="row">@(Model.ItemStartNumber + i)</th>
                             <td>@mediaViewModel.Name</td>
 
                             <td>
@@ -70,15 +70,14 @@
                                     <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
                                 }
                             </td>
-
                             <td>
-                                <div class="float-left">
+                                <div class="float-left mr-1">
                                     <a class="btn btn-primary" href="/Media/@mediaViewModel.MediaId">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                     </a>
                                 </div>
 
-                                <div class="float-left ml-1">
+                                <div class="float-left mr-1">
                                     @if (mediaViewModel.UserSubscribed)
                                     {
                                         <form method="post">
@@ -115,7 +114,7 @@
 
                                 @if (User.IsAdmin())
                                 {
-                                    <div class="float-left ml-1">
+                                    <div class="float-left">
                                         <form method="post">
                                             <button class="btn btn-danger"
                                                     type="submit"
