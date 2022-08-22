@@ -16,13 +16,19 @@
 
 @if (loggedIn)
 {
-    <div>
-        <span>Logged in as @username</span>
-        <form method="get" action="@Url.Action("Logout", "Auth")" class="d-flex justify-content-center">
-            <button class="btn btn-primary"
-                    type="submit">
+    <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle"
+                type="button"
+                id="profileDropdown"
+                data-toggle="dropdown"
+                aria-haspopup="true" aria-expanded="false">
+            @username <i class="fa fa-user-circle-o" aria-hidden="true"></i>
+        </button>
+        <div class="dropdown-menu" aria-labelledby="profileDropdown">
+            <a href="@Url.Action("Logout", "Auth")"
+               class="dropdown-item">
                 Log out
-            </button>
-        </form>
+            </a>
+        </div>
     </div>
 }
