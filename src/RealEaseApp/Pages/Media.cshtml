@@ -57,7 +57,7 @@
                     {
                         var mediaViewModel = Model.MediaViewModels.ElementAt(i);
                         <tr>
-                            <th scope="row">@(i + 1)</th>
+                            <th scope="row">@(Model.ItemStartNumber + i)</th>
                             <td>@mediaViewModel.Name</td>
 
                             <td>
