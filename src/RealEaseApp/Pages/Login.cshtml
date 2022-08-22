@@ -6,8 +6,13 @@
     <div class="text-center">
         @if (!User.IsAuthenticated())
         {
-            <div>To use the service please login first</div>
+            <div>To use the service please login first.</div>
+            @await Component.InvokeAsync(typeof(LoginViewComponent))
         }
-        @await Component.InvokeAsync(typeof(LoginViewComponent))
+        else
+        {
+            <div>You are already logged in. You can use the profile on the upper right to log out.</div>
+        }
+     
     </div>
 </div>
