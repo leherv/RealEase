@@ -5,33 +5,22 @@
 
 <div class="card">
     <div class="card-header">
-        @Model.MediaDetailsViewModel.MediaName - Details
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <span style="font-size: 1.2rem"><b>@Model.MediaDetailsViewModel.MediaName</b> - Details</span>
+            </div>
+        </div>
     </div>
-
     <div class="card-body">
         <div class="container-fluid">
-            <div class="row">
-                <div class="col">
-                     <h5 class="card-title">@Model.MediaDetailsViewModel.MediaName</h5>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col">
-                    <p class="card-text d-inline">Latest Release: @Model.MediaDetailsViewModel.LatestRelease</p>
-                    @if (Model.MediaDetailsViewModel.HasRelease)
-                    {
-                        <a href="@Model.MediaDetailsViewModel.NewestChapterLink" target="_blank" class="btn btn-primary d-inline">Read it!</a>
-                    }
-                </div>
-            </div>
-            <div class="row justify-content-center mt-4">
+            <div class="row justify-content-center">
                 <p class="card-text">
-                    <b style="font-size: 1.2rem">Scrape Targets</b>
+                    <b style="font-size: 1.1rem">Scrape Targets</b>
                 </p>
             </div>
             @if (Model.MediaDetailsViewModel.HasScrapeTargets)
             {
-                <div class="row m-2">
+                <div class="row mb-2">
                     <div class="col">
                         <div class="text-right">
                             <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addScrapeTargetModal">
@@ -103,6 +92,25 @@
             {
                 <p>No ScrapeTargets yet</p>
             }
+        </div>
+    </div>
+    <div class="card-footer text-muted">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col">
+                    <p class="card-text">Latest Release: @Model.MediaDetailsViewModel.LatestRelease</p>
+                </div>
+                <div class="col text-right">
+                     @if (Model.MediaDetailsViewModel.HasRelease)
+                     {
+                         <a href="@Model.MediaDetailsViewModel.NewestChapterLink"
+                            target="_blank"
+                            class="btn btn-primary">
+                             Read it! <i class="fa fa-book" aria-hidden="true"></i>
+                         </a>
+                     }
+                </div>
+            </div>
         </div>
     </div>
 </div>
