@@ -7,7 +7,7 @@
 <div class="container-fluid">
     <h2 class="text-center">Available Media</h2>
     <div class="row mb-2">
-        <div class="col-8 col-md-7 col-xl-5">
+        <div class="col-12 col-sm-8 col-md-7 col-xl-5">
             <form method="post" asp-page-handler="Search" onsubmit="showSpinner()">
                 <div class="input-group">
                     <input type="text"
@@ -31,7 +31,7 @@
                 @Html.AntiForgeryToken()
             </form>
         </div>
-        <div class="col-4 col-md-5 col-xl-7">
+        <div class="col-12 col-sm-4 col-md-5 col-xl-7 mt-1 mt-sm-0">
             <div class="text-right">
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMediaModal">
                     Add media
@@ -72,7 +72,7 @@
                             </td>
                             <td>
                                 <div class="float-left mr-1">
-                                    <a class="btn btn-primary" href="/Media/@mediaViewModel.MediaId">
+                                    <a class="btn btn-primary btn-sm" href="/Media/@mediaViewModel.MediaId">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                     </a>
                                 </div>
@@ -97,7 +97,7 @@
                                     else
                                     {
                                         <form method="post">
-                                            <button class="btn btn-primary"
+                                            <button class="btn btn-primary btn-sm"
                                                     type="submit"
                                                     onclick="showSpinner()"
                                                     asp-page-handler="Subscribe">
@@ -116,7 +116,7 @@
                                 {
                                     <div class="float-left">
                                         <form method="post">
-                                            <button class="btn btn-danger"
+                                            <button class="btn btn-danger btn-sm"
                                                     type="submit"
                                                     onclick="showSpinner()"
                                                     asp-page-handler="Delete">

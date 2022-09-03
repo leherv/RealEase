@@ -1,10 +1,12 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
+using Application.Ports.Persistence.Read;
 using Application.Test.Fixture;
 using Application.UseCases.Media.QueryAvailableMedia;
 using FluentAssertions;
 using Xunit;
+using UserQueryParameters = Application.UseCases.Media.QueryAvailableMedia.UserQueryParameters;
 
 namespace Application.Test.UseCases;
 
@@ -108,6 +110,40 @@ public class QueryAvailableMediaHandlerTests : IntegrationTestBase
             .Should()
             .HaveCount(mediaCount > 50 ? 50 : mediaCount);
         availableMedia.TotalResultCount.Should().Be(mediaCount);
+    }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Returns_only_media_user_is_subscribed_to_when_filter_is_set()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var subscriberWithSubscriptions = Given.A.Subscriber.WithSubscriptions;
+        var availableMediaQuery = new AvailableMediaQuery(
+            1, 
+            50,
+            UserQueryParameters: new UserQueryParameters(subscriberWithSubscriptions.ExternalIdentifier, SubscribeState.Subscribed)
+        );
+
+        var availableMediaResult = await When.TheApplication.ReceivesQuery<AvailableMediaQuery, AvailableMedia>(availableMediaQuery);
+        
+        availableMediaResult.TotalResultCount.Should().Be(subscriberWithSubscriptions.Subscriptions.Count);
+    }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Returns_only_media_the_user_is_not_subscribed_to_when_filter_is_set()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var subscriberWithSubscriptions = Given.A.Subscriber.WithSubscriptions;
+        var availableMediaQuery = new AvailableMediaQuery(
+            1, 
+            50,
+            UserQueryParameters: new UserQueryParameters(subscriberWithSubscriptions.ExternalIdentifier, SubscribeState.Unsubscribed)
+        );
+
+        var availableMediaResult = await When.TheApplication.ReceivesQuery<AvailableMediaQuery, AvailableMedia>(availableMediaQuery);
+        
+        availableMediaResult.TotalResultCount.Should().Be(Given.A.Media.PersistedMediaList.Count - subscriberWithSubscriptions.Subscriptions.Count);
     }
 
     private int MediaCountContaining(string mediaNameSearchString)

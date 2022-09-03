@@ -191,7 +191,12 @@ public class Media : PageModel
     private Task<AvailableMedia> FetchMedia(string mediaNameSearchString)
     {
         return _queryDispatcher.Dispatch<AvailableMediaQuery, AvailableMedia>(
-            new AvailableMediaQuery(PageIndex, PageSize, mediaNameSearchString));
+            new AvailableMediaQuery(
+                PageIndex,
+                PageSize,
+                mediaNameSearchString
+            )
+        );
     }
 
     private async Task<MediaSubscriptions> FetchSubscribedToMedia()
