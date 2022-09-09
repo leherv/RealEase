@@ -33,7 +33,7 @@ public class Media : PageModel
     public PaginationNavigation PaginationNavigation;
     public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
     
-    private const int PageSize = 10;
+    private const int PageSize = 2;
     private int _totalResultCount = 0;
     
     private readonly IQueryDispatcher _queryDispatcher;
@@ -180,11 +180,9 @@ public class Media : PageModel
             availableMedia.Media,
             subscribedToMedia.SubscribedToMedia.Select(subscribedToMedia => subscribedToMedia.MediaId)
         );
-        PaginationNavigation = PaginationNavigationBuilder.Build(
-            PageIndex,
-            PageSize,
-            _totalResultCount
-        );
+
+        var paginationNavigationBuilder = new PaginationNavigationBuilder(PageIndex, PageSize, _totalResultCount);
+        PaginationNavigation = paginationNavigationBuilder.Build();
     }
 
     private static string BuildSubscribeErrorMessage(Result result) =>
