@@ -42,7 +42,7 @@ namespace Infrastructure.Discord;
 
             var argPos = 0;
             // Perform prefix check. 
-            if (!message.HasStringPrefix("rn!", ref argPos)) return;
+            if (!message.HasStringPrefix("re!", ref argPos)) return;
 
             var context = new SocketCommandContext(_client, message);
             
