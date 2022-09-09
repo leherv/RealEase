@@ -20,13 +20,13 @@ public class Help : ModuleBase<SocketCommandContext>
     private string HelpText => "Welcome to RealEase!\n" +
                                $"Everything can be controlled via the official website {WebsiteUrl}\n\n" +
                                "Commands can be used as well:\n" +
-                               "rn!subscribe \"[mediaName]\"\n" +
-                               "rn!unsubscribe \"[mediaName]\"\n" +
-                               "rn!listAvailable (50 max)\n" +
-                               "rn!listSubscribed\n" +
-                               "rn!listWebsites\n" +
-                               "rn!addMedia [websiteName] [relativeUrl]\n" +
-                               "\te.g.: rn!addMedia earlymanga /manga/tower-of-god\n" +
-                               "rn!addScrapeTarget \"[mediaName]\" [websiteName] [relativeUrl]\n" +
-                               "rn!listScrapeTargets \"[mediaName]\"";
+                               "re!subscribe \"[mediaName]\"\n" +
+                               "re!unsubscribe \"[mediaName]\"\n" +
+                               "re!listAvailable (50 max)\n" +
+                               "re!listSubscribed\n" +
+                               "re!listWebsites\n" +
+                               "re!addMedia [websiteName] [relativeUrl]\n" +
+                               "\te.g.: re!addMedia earlymanga /manga/tower-of-god\n" +
+                               "re!addScrapeTarget \"[mediaName]\" [websiteName] [relativeUrl]\n" +
+                               "re!listScrapeTargets \"[mediaName]\"";
 }
