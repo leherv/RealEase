@@ -6,6 +6,9 @@ using Application.Test.Fixture;
 using Application.UseCases.Media.QueryAvailableMedia;
 using FluentAssertions;
 using Xunit;
+using SortBy = Application.UseCases.Media.QueryAvailableMedia.SortBy;
+using SortColumn = Application.UseCases.Media.QueryAvailableMedia.SortColumn;
+using SortDirection = Application.UseCases.Media.QueryAvailableMedia.SortDirection;
 using UserQueryParameters = Application.UseCases.Media.QueryAvailableMedia.UserQueryParameters;
 
 namespace Application.Test.UseCases;
@@ -144,6 +147,55 @@ public class QueryAvailableMediaHandlerTests : IntegrationTestBase
         var availableMediaResult = await When.TheApplication.ReceivesQuery<AvailableMediaQuery, AvailableMedia>(availableMediaQuery);
         
         availableMediaResult.TotalResultCount.Should().Be(Given.A.Media.PersistedMediaList.Count - subscriberWithSubscriptions.Subscriptions.Count);
+    }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Subscribed_to_media_should_be_first_in_list()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var subscriberWithSubscriptions = Given.A.Subscriber.WithSubscriptions;
+        var availableMediaQuery = new AvailableMediaQuery(
+            1,
+            50,
+            UserQueryParameters: new UserQueryParameters(subscriberWithSubscriptions.ExternalIdentifier),
+            SortBy: new SortBy(SortColumn.SubscribeState, SortDirection.Desc)
+        );
+
+        var availableMediaResult = await When.TheApplication.ReceivesQuery<AvailableMediaQuery, AvailableMedia>(availableMediaQuery);
+        
+        availableMediaResult.TotalResultCount.Should().Be(Given.The.Media.PersistedMediaList.Count);
+        var firstXMediaIds = availableMediaResult.Media
+            .Take(subscriberWithSubscriptions.Subscriptions.Count)
+            .Select(media => media.Id);
+        firstXMediaIds.Should()
+            .OnlyContain(mediaId => subscriberWithSubscriptions.SubscribedToMediaIds.Contains(mediaId));
+    }
+    
+    [Fact]
+    [Trait("Category", "Integration")]
+    public async Task Subscribed_to_media_should_be_last_in_list()
+    {
+        await Given.TheDatabase.IsSeeded();
+        var subscriberWithSubscriptions = Given.A.Subscriber.WithSubscriptions;
+        var availableMediaQuery = new AvailableMediaQuery(
+            1,
+            50,
+            UserQueryParameters: new UserQueryParameters(subscriberWithSubscriptions.ExternalIdentifier),
+            SortBy: new SortBy(SortColumn.SubscribeState, SortDirection.Asc)
+        );
+
+        var availableMediaResult = await When.TheApplication.ReceivesQuery<AvailableMediaQuery, AvailableMedia>(availableMediaQuery);
+
+        var totalMediaCount = Given.The.Media.PersistedMediaList.Count;
+        var userSubscriptionsCount = subscriberWithSubscriptions.Subscriptions.Count;
+        availableMediaResult.TotalResultCount.Should().Be(totalMediaCount);
+        var lastXMediaIds = availableMediaResult.Media
+            .Skip(availableMediaResult.TotalResultCount - userSubscriptionsCount)
+            .Take(userSubscriptionsCount)
+            .Select(media => media.Id);
+        lastXMediaIds.Should()
+            .OnlyContain(mediaId => subscriberWithSubscriptions.SubscribedToMediaIds.Contains(mediaId));
     }
 
     private int MediaCountContaining(string mediaNameSearchString)

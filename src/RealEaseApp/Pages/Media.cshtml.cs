@@ -19,16 +19,23 @@ namespace RealEaseApp.Pages;
 
 public class Media : PageModel
 {
-    [FromQuery] [HiddenInput] public int PageIndex { get; set; } = 1;
-    [FromQuery] [HiddenInput] public string? QueryString { get; set; } = "";
-    private const int PageSize = 10;
-    private int _totalResultCount = 0;
-
+    [BindProperty]
+    public int PageIndex { get; set; } = 1;
+    [BindProperty]
+    public string QueryString { get; set; } = "";
+    [BindProperty]
+    public SortDirection SortDirection { get; set; } = SortDirection.Asc;
+    [BindProperty]
+    public SortColumn SortColumn { get; set; } = SortColumn.MediaName;
+    
     public IReadOnlyCollection<MediaViewModel> MediaViewModels { get; private set; }
     public int ItemStartNumber => (PageIndex - 1) * PageSize + 1;
     public PaginationNavigation PaginationNavigation;
     public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
-
+    
+    private const int PageSize = 10;
+    private int _totalResultCount = 0;
+    
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IToastifyService _toastifyService;
@@ -47,8 +54,18 @@ public class Media : PageModel
         _logger = logger;
     }
 
-    public async Task OnGet()
+    public async Task OnGet(
+        int? pageIndex,
+        string? queryString,
+        SortColumn? sortColumn,
+        SortDirection? sortDirection
+    )
     {
+        PageIndex = pageIndex is > 0  ? pageIndex.Value : 1;
+        QueryString = queryString ?? "";
+        SortColumn = sortColumn ?? SortColumn.MediaName;
+        SortDirection = sortDirection ?? SortDirection.Asc;
+
         await SetupPage();
     }
 
@@ -65,27 +82,25 @@ public class Media : PageModel
             _toastifyService.Error(BuildSubscribeErrorMessage(subscribeResult));
         }
 
-        await SetupPage();
-        return Page();
+        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
     }
-    
+
     public async Task<IActionResult> OnPostUnsubscribe(string mediaName)
     {
         var externalIdentifier = User.GetExternalIdentifier();
         var unsubscribeResult =
             await _commandDispatcher.Dispatch<UnsubscribeMediaCommand, Result>(
                 new UnsubscribeMediaCommand(externalIdentifier, mediaName));
-        
+
         if (unsubscribeResult.IsFailure)
         {
             _logger.LogError(unsubscribeResult.Error.ToString());
             _toastifyService.Error(BuildUnsubscribeErrorMessage(unsubscribeResult));
         }
 
-        await SetupPage();
-        return Page();
+        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
     }
-    
+
     public async Task<IActionResult> OnPostNewMedia(NewMedia newMedia)
     {
         if (ModelState.IsValid)
@@ -93,7 +108,7 @@ public class Media : PageModel
             var addMediaCommand = new AddMediaCommand(newMedia.WebsiteName, newMedia.RelativePath);
             var addMediaResult =
                 await _commandDispatcher.Dispatch<AddMediaCommand, Result>(addMediaCommand);
-            
+
             if (addMediaResult.IsFailure)
             {
                 _logger.LogError(addMediaResult.Error.ToString());
@@ -104,31 +119,29 @@ public class Media : PageModel
                 _toastifyService.Success("Added media successfully");
             }
         }
-        
-        await SetupPage();
-        return Page();
+
+        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
     }
 
     public async Task<IActionResult> OnPostDelete(Guid mediaId)
     {
         var deleteMediaCommand = new DeleteMediaCommand(mediaId, User.GetExternalIdentifier());
         var deleteMediaResult = await _commandDispatcher.Dispatch<DeleteMediaCommand, Result>(deleteMediaCommand);
-        
+
         if (deleteMediaResult.IsFailure)
         {
             _logger.LogError(deleteMediaResult.Error.ToString());
             _toastifyService.Error(BuildDeleteMediaErrorMessage(deleteMediaResult));
         }
-        
-        await SetupPage();
-        return Page();
+
+        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
     }
-    
+
     public async Task<IActionResult> OnPostSearch(string mediaNameSearchString)
     {
         QueryString = mediaNameSearchString;
-        await SetupPage();
-        return Page();
+        
+        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
     }
     
     private static string BuildAddMediaErrorMessage(Result result) =>
@@ -137,8 +150,10 @@ public class Media : PageModel
             Errors.General.NotFoundErrorCode => "Website was not found",
             Errors.Media.MediaWithScrapeTargetExistsErrorCode => "Media for this URL exists",
             Errors.Media.MediaWithNameExistsErrorCode => "Media with this name exists",
-            Errors.Scraper.ScrapeFailedErrorCode => "Scraping for media failed. Check if you inserted the relative path correctly. If it is correct it is likely this is due to a problem with the target site. Please try again later.",
-            Errors.Scraper.ScrapeMediaNameFailedErrorCode => "Scraping for media name failed. Check if you inserted the relative path correctly. If it is correct it is likely this is due to a problem with the target site. Please try again later.",
+            Errors.Scraper.ScrapeFailedErrorCode =>
+                "Scraping for media failed. Check if you inserted the relative path correctly. If it is correct it is likely this is due to a problem with the target site. Please try again later.",
+            Errors.Scraper.ScrapeMediaNameFailedErrorCode =>
+                "Scraping for media name failed. Check if you inserted the relative path correctly. If it is correct it is likely this is due to a problem with the target site. Please try again later.",
             Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
             _ => "Something went wrong"
         };
@@ -149,10 +164,10 @@ public class Media : PageModel
             Errors.General.NotFoundErrorCode => "Media not found",
             _ => "Something went wrong"
         };
-    
+
     private async Task SetupPage()
     {
-        var availableMedia = await FetchMedia(QueryString);
+        var availableMedia = await FetchMedia();
         var subscribedToMedia = await FetchSubscribedToMedia();
         var availableWebsites = await FetchAvailableWebsites();
 
@@ -171,7 +186,7 @@ public class Media : PageModel
             _totalResultCount
         );
     }
-    
+
     private static string BuildSubscribeErrorMessage(Result result) =>
         result.Error.Code switch
         {
@@ -179,7 +194,7 @@ public class Media : PageModel
             Errors.Validation.InvariantViolationErrorCode => "Creating entity failed",
             _ => "Something went wrong"
         };
-    
+
     private static string BuildUnsubscribeErrorMessage(Result result) =>
         result.Error.Code switch
         {
@@ -187,14 +202,16 @@ public class Media : PageModel
             Errors.Subscriber.UnsubscribeFailedErrorCode => "Unsubscribing failed",
             _ => "Something went wrong"
         };
-    
-    private Task<AvailableMedia> FetchMedia(string mediaNameSearchString)
+
+    private Task<AvailableMedia> FetchMedia()
     {
         return _queryDispatcher.Dispatch<AvailableMediaQuery, AvailableMedia>(
             new AvailableMediaQuery(
                 PageIndex,
                 PageSize,
-                mediaNameSearchString
+                QueryString,
+                new UserQueryParameters(User.GetExternalIdentifier()),
+                new SortBy(SortColumn, SortDirection)
             )
         );
     }
@@ -226,10 +243,8 @@ public class Media : PageModel
 
     public record NewMedia
     {
-        [Required]
-        public string WebsiteName { get; set; }
+        [Required] public string WebsiteName { get; set; }
 
-        [Required] 
-        public string RelativePath { get; set; }
+        [Required] public string RelativePath { get; set; }
     }
 }
