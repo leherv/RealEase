@@ -33,7 +33,7 @@ public class Media : PageModel
     public PaginationNavigation PaginationNavigation;
     public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
     
-    private const int PageSize = 2;
+    private const int PageSize = 10;
     private int _totalResultCount = 0;
     
     private readonly IQueryDispatcher _queryDispatcher;
