@@ -1,82 +1,94 @@
 namespace RealEaseApp.Pages.Pagination;
 
-public static class PaginationNavigationBuilder
+internal class PaginationNavigationBuilder
 {
-    public static PaginationNavigation Build(int pageIndex, int pageSize, int totalResultCount)
+    private readonly int _pageIndex;
+    private readonly int _pageSize;
+    private readonly int _totalResultCount;
+    private readonly int _totalPageCount;
+
+    internal PaginationNavigationBuilder(int pageIndex, int pageSize, int totalResultCount)
     {
-        var totalPageCount = TotalPageCount(totalResultCount, pageSize);
+        _pageIndex = pageIndex;
+        _pageSize = pageSize;
+        _totalResultCount = totalResultCount;
+        _totalPageCount = TotalPageCount();
+    }
+
+    internal PaginationNavigation Build()
+    {
         var paginationNavigationItems = new List<NavigationItem>();
 
-        if (!StartPageInRange(pageIndex, totalPageCount))
+        if (!StartPageInRange())
         {
             paginationNavigationItems.Add(new NavigationItem(1, true, false));
         }
 
-        if (StartIsActive(pageIndex))
+        if (StartIsActive())
         {
-            paginationNavigationItems.Add(new NavigationItem(pageIndex, true, true));
-            paginationNavigationItems.Add(new NavigationItem(pageIndex + 1, totalPageCount > 1, false));
-            paginationNavigationItems.Add(new NavigationItem(pageIndex + 2, totalPageCount > 2, false));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex, true, true));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex + 1, _totalPageCount > 1, false));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex + 2, _totalPageCount > 2, false));
         }
-        else if (EndIsActive(pageIndex, totalPageCount))
+        else if (EndIsActive())
         {
-            paginationNavigationItems.Add(new NavigationItem(pageIndex - 2, pageIndex - 2 > 0, false));
-            paginationNavigationItems.Add(new NavigationItem(pageIndex - 1, pageIndex - 1 > 0, false));
-            paginationNavigationItems.Add(new NavigationItem(pageIndex, true, true));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex - 2, _pageIndex - 2 > 0, false));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex - 1, _pageIndex - 1 > 0, false));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex, true, true));
         }
-        else if (pageIndex > 1)
+        else if (_pageIndex > 1)
         {
-            paginationNavigationItems.Add(new NavigationItem(pageIndex - 1, true, false));
-            paginationNavigationItems.Add(new NavigationItem(pageIndex, true, true));
-            paginationNavigationItems.Add(new NavigationItem(pageIndex + 1, totalPageCount > pageIndex, false));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex - 1, true, false));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex, true, true));
+            paginationNavigationItems.Add(new NavigationItem(_pageIndex + 1, _totalPageCount > _pageIndex, false));
         }
 
-        if (!EndPageInRange(pageIndex, totalPageCount))
+        if (!EndPageInRange())
         {
-            paginationNavigationItems.Add(new NavigationItem(totalPageCount, true, false));
+            paginationNavigationItems.Add(new NavigationItem(_totalPageCount, true, false));
         }
 
         return new PaginationNavigation(
-            PreviousActive(pageIndex),
+            PreviousActive(),
             paginationNavigationItems,
-            NextActive(pageIndex, totalPageCount)
+            NextActive()
         );
     }
 
-    private static bool StartPageInRange(int pageIndex, int totalPageCount)
+    private bool StartPageInRange()
     {
-        return pageIndex - 2 <= 1 && EndIsActive(pageIndex, totalPageCount) ||
-               StartIsActive(pageIndex) ||
-               pageIndex - 1 == 1;
+        return _pageIndex - 2 <= 1 && EndIsActive() ||
+               StartIsActive() ||
+               _pageIndex - 1 == 1;
     }
 
-    private static bool EndPageInRange(int pageIndex, int totalPageCount)
+    private bool EndPageInRange()
     {
-        return pageIndex + 2 >= totalPageCount;
+        return _pageIndex + 2 >= _totalPageCount;
     }
 
-    private static bool EndIsActive(int pageIndex, int totalPageCount)
+    private bool EndIsActive()
     {
-        return pageIndex >= totalPageCount;
+        return _pageIndex >= _totalPageCount;
     }
 
-    private static bool StartIsActive(int pageIndex)
+    private bool StartIsActive()
     {
-        return pageIndex == 1;
+        return _pageIndex == 1;
     }
 
-    private static bool NextActive(int pageIndex, int totalPageCount)
+    private bool NextActive()
     {
-        return totalPageCount > pageIndex;
+        return _totalPageCount > _pageIndex;
     }
 
-    private static bool PreviousActive(int pageIndex)
+    private bool PreviousActive()
     {
-        return pageIndex > 1;
+        return _pageIndex > 1;
     }
 
-    private static int TotalPageCount(int totalResultCount, int pageSize)
+    private int TotalPageCount()
     {
-        return (int)Math.Ceiling((double)totalResultCount / pageSize);
+        return (int)Math.Ceiling((double)_totalResultCount / _pageSize);
     }
 }

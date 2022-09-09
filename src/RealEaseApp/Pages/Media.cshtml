@@ -1,5 +1,6 @@
 @page
 @using RealEaseApp.Pages.ViewComponents.Media
+@using Application.UseCases.Media.QueryAvailableMedia
 @model Media
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -7,8 +8,8 @@
 <div class="container-fluid">
     <h2 class="text-center">Available Media</h2>
     <div class="row mb-2">
-        <div class="col-8 col-md-7 col-xl-5">
-            <form method="post" asp-page-handler="Search" onsubmit="showSpinner()">
+        <div class="col-12 col-sm-8 col-md-7 col-xl-5">
+            <form method="get" onsubmit="showSpinner()">
                 <div class="input-group">
                     <input type="text"
                            class="form-control"
@@ -16,8 +17,8 @@
                            placeholder="Search..."
                            aria-label="media name to search for"
                            aria-describedby="media name to search for"
-                           id="mediaNameSearchString"
-                           name="mediaNameSearchString">
+                           id="QueryString"
+                           name="QueryString">
                     <div class="input-group-append">
                         <button class="btn btn-primary"
                                 type="submit"
@@ -26,12 +27,13 @@
                         </button>
                     </div>
                 </div>
-                <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
-                <input type="hidden" name="PageIndex" asp-for="PageIndex" value="0"/>
+                <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
+                <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
+                <input type="hidden" name="PageIndex" asp-for="PageIndex" value="1"/>
                 @Html.AntiForgeryToken()
             </form>
         </div>
-        <div class="col-4 col-md-5 col-xl-7">
+        <div class="col-12 col-sm-4 col-md-5 col-xl-7 mt-1 mt-sm-0">
             <div class="text-right">
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMediaModal">
                     Add media
@@ -47,8 +49,20 @@
                     <thead>
                     <tr>
                         <th scope="col">#</th>
-                        <th scope="col">Name</th>
-                        <th scope="col">Subscribed</th>
+                        <th scope="col">
+                            Name
+                            <a onclick="showSpinner()"
+                               href="/Media?pageIndex=@(Model.PageIndex)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.MediaName)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
+                                <i class="fa fa-sort" aria-hidden="true"></i>
+                            </a>
+                        </th>
+                        <th scope="col">
+                            Subscribed
+                            <a onclick="showSpinner()"
+                               href="/Media?pageIndex=@(Model.PageIndex)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.SubscribeState)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
+                                <i class="fa fa-sort" aria-hidden="true"></i>
+                            </a>
+                        </th>
                         <th scope="col">Actions</th>
                     </tr>
                     </thead>
@@ -72,7 +86,7 @@
                             </td>
                             <td>
                                 <div class="float-left mr-1">
-                                    <a class="btn btn-primary" href="/Media/@mediaViewModel.MediaId">
+                                    <a class="btn btn-primary btn-sm" href="/Media/@mediaViewModel.MediaId">
                                         <i class="fa fa-pencil" aria-hidden="true"></i>
                                     </a>
                                 </div>
@@ -81,14 +95,16 @@
                                     @if (mediaViewModel.UserSubscribed)
                                     {
                                         <form method="post">
-                                            <button class="btn btn-danger"
+                                            <button class="btn btn-danger btn-sm"
                                                     type="submit"
                                                     onclick="showSpinner()"
                                                     asp-page-handler="Unsubscribe">
                                                 Unsubscribe
                                             </button>
 
-                                            <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                            <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                            <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                            <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
                                             <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
                                             <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
                                             @Html.AntiForgeryToken()
@@ -97,14 +113,16 @@
                                     else
                                     {
                                         <form method="post">
-                                            <button class="btn btn-primary"
+                                            <button class="btn btn-primary btn-sm"
                                                     type="submit"
                                                     onclick="showSpinner()"
                                                     asp-page-handler="Subscribe">
                                                 Subscribe
                                             </button>
 
-                                            <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                            <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                            <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                            <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
                                             <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
                                             <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
                                             @Html.AntiForgeryToken()
@@ -116,14 +134,16 @@
                                 {
                                     <div class="float-left">
                                         <form method="post">
-                                            <button class="btn btn-danger"
+                                            <button class="btn btn-danger btn-sm"
                                                     type="submit"
                                                     onclick="showSpinner()"
                                                     asp-page-handler="Delete">
                                                 <i class="fa fa-trash" aria-hidden="true"></i>
                                             </button>
 
-                                            <input type="hidden" id="pageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                            <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                            <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                            <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
                                             <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
                                             <input type="hidden" id="mediaId" name="mediaId" value="@mediaViewModel.MediaId"/>
                                             @Html.AntiForgeryToken()
@@ -139,13 +159,14 @@
 
         </div>
     </div>
+    @* TODO: add get parameters for sortdirection and sortcolumn or refactor to use posts *@
     <div class="row justify-content-center">
         <nav aria-label="Media page navigation">
             <ul class="pagination">
                 <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
                     <a class="page-link"
                        onclick="showSpinner()"
-                       href="/Media?pageIndex=@(Model.PageIndex - 1)&queryString=@(Model.QueryString)"
+                       href="/Media?pageIndex=@(Model.PageIndex - 1)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)"
                        tabindex="-1">
                         Previous
                     </a>
@@ -157,7 +178,7 @@
                         <li class="page-item @(navigationItem.Active ? "active" : "")">
                             <a class="page-link"
                                onclick="showSpinner()"
-                               href="/Media?pageIndex=@(navigationItem.Value)&queryString=@(Model.QueryString)">
+                               href="/Media?pageIndex=@(navigationItem.Value)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
                                 @navigationItem.Value
                             </a>
                         </li>
@@ -166,7 +187,7 @@
                 <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
                     <a class="page-link"
                        onclick="showSpinner()"
-                       href="/Media?pageIndex=@(Model.PageIndex + 1)&queryString=@(Model.QueryString)">
+                       href="/Media?pageIndex=@(Model.PageIndex + 1)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
                         Next
                     </a>
                 </li>

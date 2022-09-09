@@ -1,6 +1,7 @@
 ﻿using Application.UseCases.Base;
 using Application.UseCases.Subscriber.QueryMediaSubscriptions;
 using Discord.Commands;
+using Infrastructure.Discord.Extensions;
 
 namespace Infrastructure.Discord.Commands;
 
@@ -19,7 +20,7 @@ public class ListSubscribed : ModuleBase<SocketCommandContext>
     {
         var mediaSubscriptions =
             await _queryDispatcher.Dispatch<MediaSubscriptionsQuery, MediaSubscriptions>(
-                new MediaSubscriptionsQuery(Context.User.Id.ToString()));
+                new MediaSubscriptionsQuery(Context.GetUserId().ToString()));
 
         var message = mediaSubscriptions.SubscribedToMedia.Any()
             ? $"Subscribed To:\n{string.Join("\n", mediaSubscriptions.SubscribedToMedia.Select(mediaSubscriptionInfo => mediaSubscriptionInfo.MediaName))}"

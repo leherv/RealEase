@@ -17,7 +17,9 @@ public class PaginationNavigationTests
     [InlineData(3, 10, 30, "1 2 (3)")]
     public void Builds_expected_NavigationPages(int pageIndex, int pageSize, int totalResultCount, string expected)
     {
-        var navigationResult = PaginationNavigationBuilder.Build(pageIndex, pageSize, totalResultCount);
+        var paginationNavigationBuilder = new PaginationNavigationBuilder(pageIndex, pageSize, totalResultCount);
+        var navigationResult = paginationNavigationBuilder.Build();
+        
         navigationResult.ToDisplayString().Should().Be(expected);
     }
     
@@ -27,7 +29,9 @@ public class PaginationNavigationTests
     [InlineData(1, 5, 4)]
     public void Previous_should_be_disabled_on_first_page(int pageIndex, int pageSize, int totalResultCount)
     {
-        var navigationResult = PaginationNavigationBuilder.Build(pageIndex, pageSize, totalResultCount);
+        var paginationNavigationBuilder = new PaginationNavigationBuilder(pageIndex, pageSize, totalResultCount);
+        var navigationResult = paginationNavigationBuilder.Build();
+        
         navigationResult.PreviousPossible.Should().BeFalse();
     }
     
@@ -36,7 +40,9 @@ public class PaginationNavigationTests
     [InlineData(2, 4, 5)]
     public void Previous_should_be_enabled_if_not_on_first_page(int pageIndex, int pageSize, int totalResultCount)
     {
-        var navigationResult = PaginationNavigationBuilder.Build(pageIndex, pageSize, totalResultCount);
+        var paginationNavigationBuilder = new PaginationNavigationBuilder(pageIndex, pageSize, totalResultCount);
+        var navigationResult = paginationNavigationBuilder.Build();
+        
         navigationResult.PreviousPossible.Should().BeTrue();
     }
 
@@ -46,7 +52,9 @@ public class PaginationNavigationTests
     [InlineData(2, 10, 20)]
     public void Next_should_be_disabled_if_not_enough_items(int pageIndex, int pageSize, int totalResultCount)
     {
-        var navigationResult = PaginationNavigationBuilder.Build(pageIndex, pageSize, totalResultCount);
+        var paginationNavigationBuilder = new PaginationNavigationBuilder(pageIndex, pageSize, totalResultCount);
+        
+        var navigationResult = paginationNavigationBuilder.Build();
         navigationResult.NextPossible.Should().BeFalse();
     }
     
@@ -56,7 +64,9 @@ public class PaginationNavigationTests
     [InlineData(2, 100, 1000)]
     public void Next_should_be_enabled_if_enough_items(int pageIndex, int pageSize, int totalResultCount)
     {
-        var navigationResult = PaginationNavigationBuilder.Build(pageIndex, pageSize, totalResultCount);
+        var paginationNavigationBuilder = new PaginationNavigationBuilder(pageIndex, pageSize, totalResultCount);
+        
+        var navigationResult = paginationNavigationBuilder.Build();
         navigationResult.NextPossible.Should().BeTrue();
     }
 }
