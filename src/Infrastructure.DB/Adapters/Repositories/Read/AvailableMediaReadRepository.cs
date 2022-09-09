@@ -87,7 +87,7 @@ public class AvailableMediaReadRepository : IAvailableMediaReadRepository
 
         var subscribedToMediaIds = await SubscribedToMediaIdsFor(queryParameters.UserQueryParameters.ExternalIdentifier);
         return sortDirection == SortDirection.Asc
-            ? query.OrderBy(media => subscribedToMediaIds.Contains(media.Id))
-            : query.OrderByDescending(media => subscribedToMediaIds.Contains(media.Id));
+            ? query.OrderBy(media => subscribedToMediaIds.Contains(media.Id)).ThenBy(media => media.Name)
+            : query.OrderByDescending(media => subscribedToMediaIds.Contains(media.Id)).ThenBy(media => media.Name);
     }
 }
