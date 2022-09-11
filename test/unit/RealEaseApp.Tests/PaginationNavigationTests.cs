@@ -15,6 +15,8 @@ public class PaginationNavigationTests
     [InlineData(2, 10, 30, "1 (2) 3")]
     [InlineData(5, 10, 51, "1 4 (5) 6")]
     [InlineData(3, 10, 30, "1 2 (3)")]
+    [InlineData(400, 10, 30, "1 2 (3)")]
+    [InlineData(-1, 10, 30, "(1) 2 3")]
     public void Builds_expected_NavigationPages(int pageIndex, int pageSize, int totalResultCount, string expected)
     {
         var paginationNavigationBuilder = new PaginationNavigationBuilder(pageIndex, pageSize, totalResultCount);
@@ -50,6 +52,7 @@ public class PaginationNavigationTests
     [InlineData(1, 10, 0)]
     [InlineData(1, 10, 10)]
     [InlineData(2, 10, 20)]
+    [InlineData(444, 10, 20)]
     public void Next_should_be_disabled_if_not_enough_items(int pageIndex, int pageSize, int totalResultCount)
     {
         var paginationNavigationBuilder = new PaginationNavigationBuilder(pageIndex, pageSize, totalResultCount);

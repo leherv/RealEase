@@ -19,23 +19,27 @@ namespace RealEaseApp.Pages;
 
 public class Media : PageModel
 {
-    [BindProperty]
-    public int PageIndex { get; set; } = 1;
-    [BindProperty]
-    public string QueryString { get; set; } = "";
-    [BindProperty]
-    public SortDirection SortDirection { get; set; } = SortDirection.Asc;
-    [BindProperty]
-    public SortColumn SortColumn { get; set; } = SortColumn.MediaName;
-    
+    [BindProperty] public int PageIndex { get; set; } = DefaultPageIndex;
+    [BindProperty] public string QueryString { get; set; } = DefaultQueryString;
+    [BindProperty] public int PageSize { get; set; } = DefaultPageSize;
+    [BindProperty] public SortDirection SortDirection { get; set; } = DefaultSortDirection;
+    [BindProperty] public SortColumn SortColumn { get; set; } = DefaultSortColumn;
+
     public IReadOnlyCollection<MediaViewModel> MediaViewModels { get; private set; }
     public int ItemStartNumber => (PageIndex - 1) * PageSize + 1;
     public PaginationNavigation PaginationNavigation;
+    public PageSizes PageSizes;
     public IReadOnlyCollection<WebsiteViewModel> WebsiteViewModels { get; private set; }
-    
-    private const int PageSize = 10;
+
+    private const SortDirection DefaultSortDirection = SortDirection.Asc;
+    private const SortColumn DefaultSortColumn = SortColumn.MediaName;
+    private const string DefaultQueryString = "";
+    private const int DefaultPageIndex = 1;
+    private const int DefaultPageSize = 10;
+
+    private static readonly IReadOnlyCollection<int> DefaultPageSizes = new[] { 5, 10, 20, 50, 100 };
     private int _totalResultCount = 0;
-    
+
     private readonly IQueryDispatcher _queryDispatcher;
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IToastifyService _toastifyService;
@@ -57,16 +61,39 @@ public class Media : PageModel
     public async Task OnGet(
         int? pageIndex,
         string? queryString,
+        int? pageSize,
         SortColumn? sortColumn,
         SortDirection? sortDirection
     )
     {
-        PageIndex = pageIndex is > 0  ? pageIndex.Value : 1;
-        QueryString = queryString ?? "";
-        SortColumn = sortColumn ?? SortColumn.MediaName;
-        SortDirection = sortDirection ?? SortDirection.Asc;
+        PageIndex = pageIndex is > 0 ? pageIndex.Value : DefaultPageIndex;
+        QueryString = queryString ?? DefaultQueryString;
+        PageSize = pageSize is > 0 ? pageSize.Value : DefaultPageSize;
+        SortColumn = sortColumn ?? DefaultSortColumn;
+        SortDirection = sortDirection ?? DefaultSortDirection;
+        
+        var pageSizesBuilder = new PageSizesBuilder(DefaultPageSizes);
+        PageSizes = pageSizesBuilder.Build(PageSize);
+        PageSize = PageSizes.ActivePageSize;
+        
+        var availableMedia = await FetchMedia();
+        _totalResultCount = availableMedia.TotalResultCount;
+        
+        var paginationNavigationBuilder = new PaginationNavigationBuilder(PageIndex, PageSize, _totalResultCount);
+        PaginationNavigation = paginationNavigationBuilder.Build();
+        PageIndex = PaginationNavigation.ActivePageIndex;
+        
+        var subscribedToMedia = await FetchSubscribedToMedia();
+        var availableWebsites = await FetchAvailableWebsites();
 
-        await SetupPage();
+        WebsiteViewModels = availableWebsites.Websites
+            .Select(website => new WebsiteViewModel(website.Id, website.Name, website.Url))
+            .ToList();
+
+        MediaViewModels = BuildMediaViewModels(
+            availableMedia.Media,
+            subscribedToMedia.SubscribedToMedia.Select(subscribedToMedia => subscribedToMedia.MediaId)
+        );
     }
 
     public async Task<IActionResult> OnPostSubscribe(string mediaName)
@@ -82,7 +109,7 @@ public class Media : PageModel
             _toastifyService.Error(BuildSubscribeErrorMessage(subscribeResult));
         }
 
-        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
+        return RedirectToPage(new { PageIndex, QueryString, PageSize, SortColumn, SortDirection });
     }
 
     public async Task<IActionResult> OnPostUnsubscribe(string mediaName)
@@ -98,7 +125,7 @@ public class Media : PageModel
             _toastifyService.Error(BuildUnsubscribeErrorMessage(unsubscribeResult));
         }
 
-        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
+        return RedirectToPage(new { PageIndex, QueryString, PageSize, SortColumn, SortDirection });
     }
 
     public async Task<IActionResult> OnPostNewMedia(NewMedia newMedia)
@@ -120,7 +147,7 @@ public class Media : PageModel
             }
         }
 
-        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
+        return RedirectToPage(new { PageIndex, QueryString, PageSize, SortColumn, SortDirection });
     }
 
     public async Task<IActionResult> OnPostDelete(Guid mediaId)
@@ -134,16 +161,16 @@ public class Media : PageModel
             _toastifyService.Error(BuildDeleteMediaErrorMessage(deleteMediaResult));
         }
 
-        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
+        return RedirectToPage(new { PageIndex, QueryString, PageSize, SortColumn, SortDirection });
     }
 
     public async Task<IActionResult> OnPostSearch(string mediaNameSearchString)
     {
         QueryString = mediaNameSearchString;
-        
-        return RedirectToPage(new { PageIndex, QueryString, SortColumn, SortDirection });
+
+        return RedirectToPage(new { PageIndex, QueryString, PageSize, SortColumn, SortDirection });
     }
-    
+
     private static string BuildAddMediaErrorMessage(Result result) =>
         result.Error.Code switch
         {
@@ -164,27 +191,7 @@ public class Media : PageModel
             Errors.General.NotFoundErrorCode => "Media not found",
             _ => "Something went wrong"
         };
-
-    private async Task SetupPage()
-    {
-        var availableMedia = await FetchMedia();
-        var subscribedToMedia = await FetchSubscribedToMedia();
-        var availableWebsites = await FetchAvailableWebsites();
-
-        WebsiteViewModels = availableWebsites.Websites
-            .Select(website => new WebsiteViewModel(website.Id, website.Name, website.Url))
-            .ToList();
-
-        _totalResultCount = availableMedia.TotalResultCount;
-        MediaViewModels = BuildMediaViewModels(
-            availableMedia.Media,
-            subscribedToMedia.SubscribedToMedia.Select(subscribedToMedia => subscribedToMedia.MediaId)
-        );
-
-        var paginationNavigationBuilder = new PaginationNavigationBuilder(PageIndex, PageSize, _totalResultCount);
-        PaginationNavigation = paginationNavigationBuilder.Build();
-    }
-
+    
     private static string BuildSubscribeErrorMessage(Result result) =>
         result.Error.Code switch
         {
@@ -220,7 +227,7 @@ public class Media : PageModel
         return await _queryDispatcher.Dispatch<MediaSubscriptionsQuery, MediaSubscriptions>(
             new MediaSubscriptionsQuery(externalIdentifier));
     }
-    
+
     private async Task<AvailableWebsites> FetchAvailableWebsites()
     {
         return await _queryDispatcher.Dispatch<AvailableWebsitesQuery, AvailableWebsites>(new AvailableWebsitesQuery());
