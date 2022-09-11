@@ -6,194 +6,214 @@
 
 
 <div class="container-fluid">
-    <h2 class="text-center">Available Media</h2>
-    <div class="row mb-2">
-        <div class="col-12 col-sm-8 col-md-7 col-xl-5">
-            <form method="get" onsubmit="showSpinner()">
-                <div class="input-group">
-                    <input type="text"
-                           class="form-control"
-                           value="@Model.QueryString"
-                           placeholder="Search..."
-                           aria-label="media name to search for"
-                           aria-describedby="media name to search for"
-                           id="QueryString"
-                           name="QueryString">
-                    <div class="input-group-append">
-                        <button class="btn btn-primary"
-                                type="submit"
-                                onclick="showSpinner()">
-                            <i class="fa fa-search" aria-hidden="true"></i>
-                        </button>
-                    </div>
+<h2 class="text-center">Available Media</h2>
+<div class="row mb-2">
+    <div class="col-12 col-sm-8 col-md-7 col-xl-5">
+        <form method="get" onsubmit="showSpinner()">
+            <div class="input-group">
+                <input type="text"
+                       class="form-control"
+                       value="@Model.QueryString"
+                       placeholder="Search..."
+                       aria-label="media name to search for"
+                       aria-describedby="media name to search for"
+                       id="QueryString"
+                       name="QueryString">
+                <div class="input-group-append">
+                    <button class="btn btn-primary"
+                            type="submit"
+                            onclick="showSpinner()">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                    </button>
                 </div>
-                <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
-                <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
-                <input type="hidden" name="PageIndex" asp-for="PageIndex" value="1"/>
-                @Html.AntiForgeryToken()
-            </form>
-        </div>
-        <div class="col-12 col-sm-4 col-md-5 col-xl-7 mt-1 mt-sm-0">
-            <div class="text-right">
-                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMediaModal">
-                    Add media
-                    <i class="fa fa-plus-circle" aria-hidden="true"></i>
-                </button>
             </div>
+            <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
+            <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
+            <input type="hidden" name="PageIndex" asp-for="PageIndex" value="1"/>
+            <input type="hidden" id="PageSize" name="PageSize" asp-for="PageSize" value="@Model.PageSize"/>
+            @Html.AntiForgeryToken()
+        </form>
+    </div>
+    <div class="col-12 col-sm-4 col-md-5 col-xl-7 mt-1 mt-sm-0">
+        <div class="text-right">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#addMediaModal">
+                Add media
+                <i class="fa fa-plus-circle" aria-hidden="true"></i>
+            </button>
         </div>
     </div>
-    <div class="row">
-        <div class="col">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
+</div>
+<div class="row">
+    <div class="col">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">
+                        Name
+                        <a onclick="showSpinner()"
+                           href="/Media?pageIndex=@(Model.PageIndex)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.MediaName)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
+                            <i class="fa fa-sort" aria-hidden="true"></i>
+                        </a>
+                    </th>
+                    <th scope="col">
+                        Subscribed
+                        <a onclick="showSpinner()"
+                           href="/Media?pageIndex=@(Model.PageIndex)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.SubscribeState)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
+                            <i class="fa fa-sort" aria-hidden="true"></i>
+                        </a>
+                    </th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                @for (var i = 0; i < Model.MediaViewModels.Count; i++)
+                {
+                    var mediaViewModel = Model.MediaViewModels.ElementAt(i);
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">
-                            Name
-                            <a onclick="showSpinner()"
-                               href="/Media?pageIndex=@(Model.PageIndex)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.MediaName)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
-                                <i class="fa fa-sort" aria-hidden="true"></i>
-                            </a>
-                        </th>
-                        <th scope="col">
-                            Subscribed
-                            <a onclick="showSpinner()"
-                               href="/Media?pageIndex=@(Model.PageIndex)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.SubscribeState)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
-                                <i class="fa fa-sort" aria-hidden="true"></i>
-                            </a>
-                        </th>
-                        <th scope="col">Actions</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    @for (var i = 0; i < Model.MediaViewModels.Count; i++)
-                    {
-                        var mediaViewModel = Model.MediaViewModels.ElementAt(i);
-                        <tr>
-                            <th scope="row">@(Model.ItemStartNumber + i)</th>
-                            <td>@mediaViewModel.Name</td>
+                        <th scope="row">@(Model.ItemStartNumber + i)</th>
+                        <td>@mediaViewModel.Name</td>
 
-                            <td>
+                        <td>
+                            @if (mediaViewModel.UserSubscribed)
+                            {
+                                <i style="color: green" class="fa fa-check" aria-hidden="true"></i>
+                            }
+                            else
+                            {
+                                <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                            }
+                        </td>
+                        <td>
+                            <div class="float-left mr-1">
+                                <a class="btn btn-primary btn-sm" href="/Media/@mediaViewModel.MediaId">
+                                    <i class="fa fa-pencil" aria-hidden="true"></i>
+                                </a>
+                            </div>
+
+                            <div class="float-left mr-1">
                                 @if (mediaViewModel.UserSubscribed)
                                 {
-                                    <i style="color: green" class="fa fa-check" aria-hidden="true"></i>
+                                    <form method="post">
+                                        <button class="btn btn-danger btn-sm"
+                                                type="submit"
+                                                onclick="showSpinner()"
+                                                asp-page-handler="Unsubscribe">
+                                            Unsubscribe
+                                        </button>
+
+                                        <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                        <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                        <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                        <input type="hidden" id="PageSize" name="PageSize" asp-for="PageSize" value="@Model.PageSize"/>
+                                        <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                        <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
+                                        @Html.AntiForgeryToken()
+                                    </form>
                                 }
                                 else
                                 {
-                                    <i style="color: red" class="fa fa-times" aria-hidden="true"></i>
+                                    <form method="post">
+                                        <button class="btn btn-primary btn-sm"
+                                                type="submit"
+                                                onclick="showSpinner()"
+                                                asp-page-handler="Subscribe">
+                                            Subscribe
+                                        </button>
+
+                                        <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                        <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                        <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                        <input type="hidden" id="PageSize" name="PageSize" asp-for="PageSize" value="@Model.PageSize"/>
+                                        <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                        <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
+                                        @Html.AntiForgeryToken()
+                                    </form>
                                 }
-                            </td>
-                            <td>
-                                <div class="float-left mr-1">
-                                    <a class="btn btn-primary btn-sm" href="/Media/@mediaViewModel.MediaId">
-                                        <i class="fa fa-pencil" aria-hidden="true"></i>
-                                    </a>
+                            </div>
+
+                            @if (User.IsAdmin())
+                            {
+                                <div class="float-left">
+                                    <form method="post">
+                                        <button class="btn btn-danger btn-sm"
+                                                type="submit"
+                                                onclick="showSpinner()"
+                                                asp-page-handler="Delete">
+                                            <i class="fa fa-trash" aria-hidden="true"></i>
+                                        </button>
+
+                                        <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                        <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                        <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                        <input type="hidden" id="PageSize" name="PageSize" asp-for="PageSize" value="@Model.PageSize"/>
+                                        <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                        <input type="hidden" id="mediaId" name="mediaId" value="@mediaViewModel.MediaId"/>
+                                        @Html.AntiForgeryToken()
+                                    </form>
                                 </div>
-
-                                <div class="float-left mr-1">
-                                    @if (mediaViewModel.UserSubscribed)
-                                    {
-                                        <form method="post">
-                                            <button class="btn btn-danger btn-sm"
-                                                    type="submit"
-                                                    onclick="showSpinner()"
-                                                    asp-page-handler="Unsubscribe">
-                                                Unsubscribe
-                                            </button>
-
-                                            <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
-                                            <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
-                                            <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                            <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
-                                            <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
-                                            @Html.AntiForgeryToken()
-                                        </form>
-                                    }
-                                    else
-                                    {
-                                        <form method="post">
-                                            <button class="btn btn-primary btn-sm"
-                                                    type="submit"
-                                                    onclick="showSpinner()"
-                                                    asp-page-handler="Subscribe">
-                                                Subscribe
-                                            </button>
-
-                                            <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
-                                            <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
-                                            <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                            <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
-                                            <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
-                                            @Html.AntiForgeryToken()
-                                        </form>
-                                    }
-                                </div>
-
-                                @if (User.IsAdmin())
-                                {
-                                    <div class="float-left">
-                                        <form method="post">
-                                            <button class="btn btn-danger btn-sm"
-                                                    type="submit"
-                                                    onclick="showSpinner()"
-                                                    asp-page-handler="Delete">
-                                                <i class="fa fa-trash" aria-hidden="true"></i>
-                                            </button>
-
-                                            <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
-                                            <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
-                                            <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                            <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
-                                            <input type="hidden" id="mediaId" name="mediaId" value="@mediaViewModel.MediaId"/>
-                                            @Html.AntiForgeryToken()
-                                        </form>
-                                    </div>
-                                }
-                            </td>
-                        </tr>
-                    }
-                    </tbody>
-                </table>
-            </div>
-
-        </div>
-    </div>
-    @* TODO: add get parameters for sortdirection and sortcolumn or refactor to use posts *@
-    <div class="row justify-content-center">
-        <nav aria-label="Media page navigation">
-            <ul class="pagination">
-                <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
-                    <a class="page-link"
-                       onclick="showSpinner()"
-                       href="/Media?pageIndex=@(Model.PageIndex - 1)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)"
-                       tabindex="-1">
-                        Previous
-                    </a>
-                </li>
-                @foreach (var navigationItem in Model.PaginationNavigation.NavigationItems)
-                {
-                    @if (navigationItem.Visible)
-                    {
-                        <li class="page-item @(navigationItem.Active ? "active" : "")">
-                            <a class="page-link"
-                               onclick="showSpinner()"
-                               href="/Media?pageIndex=@(navigationItem.Value)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
-                                @navigationItem.Value
-                            </a>
-                        </li>
-                    }
+                            }
+                        </td>
+                    </tr>
                 }
-                <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
+                </tbody>
+            </table>
+        </div>
+
+    </div>
+</div>
+
+<div class="position-relative text-center">
+    <nav class="position-absolute" aria-label="Number of entries">
+        <ul class="pagination pagination-sm">
+            @foreach (var (value, active) in Model.PageSizes.PageSizeItems)
+            {
+                <li class="page-item @(active ? "active" : "")">
                     <a class="page-link"
-                       onclick="showSpinner()"
-                       href="/Media?pageIndex=@(Model.PageIndex + 1)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
-                        Next
+                       tabindex="-1"
+                       href="/Media?pageIndex=@(Model.PageIndex - 1)&pageSize=@value&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
+                        @value
                     </a>
                 </li>
-            </ul>
-        </nav>
-    </div>
+            }
+        </ul>
+    </nav>
+
+    <nav class="d-inline-block" aria-label="Media page navigation">
+        <ul class="pagination">
+            <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
+                <a class="page-link"
+                   onclick="showSpinner()"
+                   href="/Media?pageIndex=@(Model.PageIndex - 1)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)"
+                   tabindex="-1">
+                    Previous
+                </a>
+            </li>
+            @foreach (var navigationItem in Model.PaginationNavigation.NavigationItems)
+            {
+                @if (navigationItem.Visible)
+                {
+                    <li class="page-item @(navigationItem.Active ? "active" : "")">
+                        <a class="page-link"
+                           onclick="showSpinner()"
+                           href="/Media?pageIndex=@(navigationItem.Value)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
+                            @navigationItem.Value
+                        </a>
+                    </li>
+                }
+            }
+            <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
+                <a class="page-link"
+                   onclick="showSpinner()"
+                   href="/Media?pageIndex=@(Model.PageIndex + 1)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
+                    Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
 </div>
 
 @await Component.InvokeAsync(typeof(AddMediaViewComponent))

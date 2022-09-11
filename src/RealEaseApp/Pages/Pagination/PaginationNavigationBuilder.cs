@@ -9,10 +9,10 @@ internal class PaginationNavigationBuilder
 
     internal PaginationNavigationBuilder(int pageIndex, int pageSize, int totalResultCount)
     {
-        _pageIndex = pageIndex;
         _pageSize = pageSize;
         _totalResultCount = totalResultCount;
         _totalPageCount = TotalPageCount();
+        _pageIndex = GetAdjustedPageIndex(pageIndex);
     }
 
     internal PaginationNavigation Build()
@@ -53,6 +53,15 @@ internal class PaginationNavigationBuilder
             paginationNavigationItems,
             NextActive()
         );
+    }
+
+    private int GetAdjustedPageIndex(int pageIndex)
+    {
+        if (pageIndex <= 1)
+            return 1;
+        return pageIndex > _totalPageCount ? 
+            _totalPageCount : 
+            pageIndex;
     }
 
     private bool StartPageInRange()
