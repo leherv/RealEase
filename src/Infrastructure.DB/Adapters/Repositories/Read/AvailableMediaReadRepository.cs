@@ -28,11 +28,11 @@ public class AvailableMediaReadRepository : IAvailableMediaReadRepository
             mediaQuery = FilterMediaName(mediaQuery, queryParameters.MediaNameSearchString);
 
         var totalCount = await mediaQuery.CountAsync();
-
-        mediaQuery = HandlePagination(mediaQuery, queryParameters);
-
+        
         mediaQuery = await HandleOrdering(mediaQuery, queryParameters);
 
+        mediaQuery = HandlePagination(mediaQuery, queryParameters);
+        
         var media = await mediaQuery
             .Select(media => new MediaInformation(media.Id, media.Name))
             .ToListAsync();
