@@ -164,56 +164,58 @@
     </div>
 </div>
 
-<div class="position-relative text-center">
-    <nav class="position-absolute" aria-label="Number of entries">
-        <ul class="pagination pagination-sm">
-            @foreach (var (value, active) in Model.PageSizes.PageSizeItems)
-            {
-                <li class="page-item @(active ? "active" : "")">
-                    <a class="page-link"
-                       tabindex="-1"
-                       href="/Media?pageIndex=@(Model.PageIndex - 1)&pageSize=@value&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
-                        @value
-                    </a>
-                </li>
-            }
-        </ul>
-    </nav>
-
-    <nav class="d-inline-block" aria-label="Media page navigation">
-        <ul class="pagination">
-            <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
-                <a class="page-link"
-                   onclick="showSpinner()"
-                   href="/Media?pageIndex=@(Model.PageIndex - 1)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)"
-                   tabindex="-1">
-                    Previous
-                </a>
-            </li>
-            @foreach (var navigationItem in Model.PaginationNavigation.NavigationItems)
-            {
-                @if (navigationItem.Visible)
+<div class="row">
+    <div class="col-12">
+        <nav  aria-label="Number of entries">
+            <ul class="pagination pagination-sm mb-1">
+                @foreach (var (value, active) in Model.PageSizes.PageSizeItems)
                 {
-                    <li class="page-item @(navigationItem.Active ? "active" : "")">
+                    <li class="page-item @(active ? "active" : "")">
                         <a class="page-link"
-                           onclick="showSpinner()"
-                           href="/Media?pageIndex=@(navigationItem.Value)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
-                            @navigationItem.Value
+                           tabindex="-1"
+                           href="/Media?pageIndex=@(Model.PageIndex - 1)&pageSize=@value&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
+                            @value
                         </a>
                     </li>
                 }
-            }
-            <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
-                <a class="page-link"
-                   onclick="showSpinner()"
-                   href="/Media?pageIndex=@(Model.PageIndex + 1)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
-                    Next
-                </a>
-            </li>
-        </ul>
-    </nav>
+            </ul>
+        </nav>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+        <nav aria-label="Media page navigation">
+            <ul class="pagination">
+                <li class="page-item @(Model.PaginationNavigation.PreviousPossible ? "" : "disabled")">
+                    <a class="page-link"
+                       onclick="showSpinner()"
+                       href="/Media?pageIndex=@(Model.PageIndex - 1)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)"
+                       tabindex="-1">
+                        Previous
+                    </a>
+                </li>
+                @foreach (var navigationItem in Model.PaginationNavigation.NavigationItems)
+                {
+                    @if (navigationItem.Visible)
+                    {
+                        <li class="page-item @(navigationItem.Active ? "active" : "")">
+                            <a class="page-link"
+                               onclick="showSpinner()"
+                               href="/Media?pageIndex=@(navigationItem.Value)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
+                                @navigationItem.Value
+                            </a>
+                        </li>
+                    }
+                }
+                <li class="page-item @(Model.PaginationNavigation.NextPossible ? "" : "disabled")">
+                    <a class="page-link"
+                       onclick="showSpinner()"
+                       href="/Media?pageIndex=@(Model.PageIndex + 1)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(Model.SortColumn)&sortDirection=@(Model.SortDirection)">
+                        Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>
-
 </div>
 
 @await Component.InvokeAsync(typeof(AddMediaViewComponent))
