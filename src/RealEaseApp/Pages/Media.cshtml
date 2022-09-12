@@ -51,18 +51,22 @@
                 <tr>
                     <th scope="col">#</th>
                     <th scope="col">
-                        Name
-                        <a onclick="showSpinner()"
-                           href="/Media?pageIndex=@(Model.PageIndex)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.MediaName)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
-                            <i class="fa fa-sort" aria-hidden="true"></i>
-                        </a>
+                        <div class="text-nowrap">
+                            Name
+                            <a onclick="showSpinner()"
+                               href="/Media?pageIndex=@(Model.PageIndex)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.MediaName)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
+                                <i class="fa fa-sort" aria-hidden="true"></i>
+                            </a>
+                        </div>
                     </th>
                     <th scope="col">
-                        Subscribed
-                        <a onclick="showSpinner()"
-                           href="/Media?pageIndex=@(Model.PageIndex)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.SubscribeState)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
-                            <i class="fa fa-sort" aria-hidden="true"></i>
-                        </a>
+                        <div class="text-nowrap">
+                            Subscribed
+                            <a onclick="showSpinner()"
+                               href="/Media?pageIndex=@(Model.PageIndex)&pageSize=@(Model.PageSize)&queryString=@(Model.QueryString)&sortColumn=@(SortColumn.SubscribeState)&sortDirection=@(Model.SortDirection == SortDirection.Asc ? SortDirection.Desc : SortDirection.Asc)">
+                                <i class="fa fa-sort" aria-hidden="true"></i>
+                            </a>
+                        </div>
                     </th>
                     <th scope="col">Actions</th>
                 </tr>
@@ -100,7 +104,7 @@
                                                 type="submit"
                                                 onclick="showSpinner()"
                                                 asp-page-handler="Unsubscribe">
-                                            Unsubscribe
+                                            <i class="fa fa-bell-slash" aria-hidden="true"></i>
                                         </button>
 
                                         <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
@@ -119,7 +123,7 @@
                                                 type="submit"
                                                 onclick="showSpinner()"
                                                 asp-page-handler="Subscribe">
-                                            Subscribe
+                                            <i class="fa fa-bell" aria-hidden="true"></i>
                                         </button>
 
                                         <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
@@ -166,7 +170,7 @@
 
 <div class="row">
     <div class="col-12">
-        <nav  aria-label="Number of entries">
+        <nav aria-label="Number of entries">
             <ul class="pagination pagination-sm mb-1">
                 @foreach (var (value, active) in Model.PageSizes.PageSizeItems)
                 {
