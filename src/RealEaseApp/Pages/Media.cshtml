@@ -1,5 +1,4 @@
 @page
-@using RealEaseApp.Pages.ViewComponents.Media
 @using Application.UseCases.Media.QueryAvailableMedia
 @model Media
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
@@ -27,10 +26,10 @@
                     </button>
                 </div>
             </div>
-            <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
-            <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
-            <input type="hidden" name="PageIndex" asp-for="PageIndex" value="1"/>
-            <input type="hidden" id="PageSize" name="PageSize" asp-for="PageSize" value="@Model.PageSize"/>
+            <input type="hidden" asp-for="SortColumn" value="@Model.SortColumn"/>
+            <input type="hidden" asp-for="SortDirection" value="@Model.SortDirection"/>
+            <input type="hidden" asp-for="PageIndex" value="1"/>
+            <input type="hidden" asp-for="PageSize" value="@Model.PageSize"/>
             @Html.AntiForgeryToken()
         </form>
     </div>
@@ -107,11 +106,11 @@
                                             <i class="fa fa-bell-slash" aria-hidden="true"></i>
                                         </button>
 
-                                        <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
-                                        <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
-                                        <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                        <input type="hidden" id="PageSize" name="PageSize" asp-for="PageSize" value="@Model.PageSize"/>
-                                        <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                        <input type="hidden" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                        <input type="hidden" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                        <input type="hidden" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                        <input type="hidden" asp-for="PageSize" value="@Model.PageSize"/>
+                                        <input type="hidden" asp-for="QueryString" value="@Model.QueryString"/>
                                         <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
                                         @Html.AntiForgeryToken()
                                     </form>
@@ -119,18 +118,18 @@
                                 else
                                 {
                                     <form method="post">
-                                        <button class="btn btn-primary btn-sm"
+                                        <button class="btn btn-success btn-sm"
                                                 type="submit"
                                                 onclick="showSpinner()"
                                                 asp-page-handler="Subscribe">
                                             <i class="fa fa-bell" aria-hidden="true"></i>
                                         </button>
 
-                                        <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
-                                        <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
-                                        <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                        <input type="hidden" id="PageSize" name="PageSize" asp-for="PageSize" value="@Model.PageSize"/>
-                                        <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                        <input type="hidden" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                        <input type="hidden" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                        <input type="hidden" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                        <input type="hidden" asp-for="PageSize" value="@Model.PageSize"/>
+                                        <input type="hidden" asp-for="QueryString" value="@Model.QueryString"/>
                                         <input type="hidden" id="mediaName" name="mediaName" value="@mediaViewModel.Name"/>
                                         @Html.AntiForgeryToken()
                                     </form>
@@ -148,11 +147,11 @@
                                             <i class="fa fa-trash" aria-hidden="true"></i>
                                         </button>
 
-                                        <input type="hidden" name="SortColumn" asp-for="SortColumn" value="@Model.SortColumn"/>
-                                        <input type="hidden" name="SortDirection" asp-for="SortDirection" value="@Model.SortDirection"/>
-                                        <input type="hidden" id="PageIndex" name="PageIndex" asp-for="PageIndex" value="@Model.PageIndex"/>
-                                        <input type="hidden" id="PageSize" name="PageSize" asp-for="PageSize" value="@Model.PageSize"/>
-                                        <input type="hidden" name="QueryString" asp-for="QueryString" value="@Model.QueryString"/>
+                                        <input type="hidden" asp-for="SortColumn" value="@Model.SortColumn"/>
+                                        <input type="hidden" asp-for="SortDirection" value="@Model.SortDirection"/>
+                                        <input type="hidden" asp-for="PageIndex" value="@Model.PageIndex"/>
+                                        <input type="hidden" asp-for="PageSize" value="@Model.PageSize"/>
+                                        <input type="hidden" asp-for="QueryString" value="@Model.QueryString"/>
                                         <input type="hidden" id="mediaId" name="mediaId" value="@mediaViewModel.MediaId"/>
                                         @Html.AntiForgeryToken()
                                     </form>
@@ -222,4 +221,4 @@
 </div>
 </div>
 
-@await Component.InvokeAsync(typeof(AddMediaViewComponent))
+@{await Html.RenderPartialAsync("PartialViews/Media/_AddMediaModal", Model);}

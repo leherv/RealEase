@@ -1,5 +1,4 @@
 @page "/Media/{id:Guid}"
-@using RealEaseApp.Pages.ViewComponents.Media
 @model MediaDetailsModel
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
@@ -115,4 +114,4 @@
     </div>
 </div>
 
-@await Component.InvokeAsync(typeof(AddScrapeTargetViewComponent))
+@{await Html.RenderPartialAsync("PartialViews/Media/_AddScrapeTargetModal", Model);}
