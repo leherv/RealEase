@@ -41,7 +41,25 @@ public class MediaDetailsModel : PageModel
 
     public async Task OnGet()
     {
-        await SetupPage();
+        var mediaDetailsResult = await FetchMediaDetails();
+        if (mediaDetailsResult.IsFailure)
+        {
+            _logger.LogError(mediaDetailsResult.Error.ToString());
+            _toastifyService.Error(BuildErrorMessage(mediaDetailsResult));
+            MediaDetailsViewModel = new MediaDetailsViewModel(
+                Guid.NewGuid(),
+                "",
+                "",
+                "",
+                new List<ScrapeTargetDetailsViewModel>());
+            WebsiteViewModels = new List<WebsiteViewModel>();
+        }
+        else
+        {
+            var mediaDetails = mediaDetailsResult.Value;
+            MediaDetailsViewModel = BuildMediaDetailsViewModel(mediaDetails);
+            WebsiteViewModels = await BuildWebsiteViewModel(mediaDetails);
+        }
     }
 
     public async Task<IActionResult> OnPostNewScrapeTarget(NewScrapeTarget newScrapeTarget)
@@ -67,8 +85,7 @@ public class MediaDetailsModel : PageModel
             }
         }
 
-        await SetupPage();
-        return Page();
+        return RedirectToPage();
     }
 
     public async Task<IActionResult> OnPostDelete(Guid mediaId, Guid scrapeTargetId)
@@ -86,8 +103,7 @@ public class MediaDetailsModel : PageModel
             _toastifyService.Error(BuildDeleteScrapeTargetErrorMessage(deleteScrapeTargetResult));
         }
         
-        await SetupPage();
-        return Page();
+        return RedirectToPage();
     }
 
     private static string BuildDeleteScrapeTargetErrorMessage(Result result) =>
@@ -108,30 +124,7 @@ public class MediaDetailsModel : PageModel
             Errors.Media.ScrapeTargetReferencesOtherMediaErrorCode => "ScrapeTarget references different media",
             _ => "Something went wrong"
         };
-
-    private async Task SetupPage()
-    {
-        var mediaDetailsResult = await FetchMediaDetails();
-        if (mediaDetailsResult.IsFailure)
-        {
-            _logger.LogError(mediaDetailsResult.Error.ToString());
-            _toastifyService.Error(BuildErrorMessage(mediaDetailsResult));
-            MediaDetailsViewModel = new MediaDetailsViewModel(
-                Guid.NewGuid(),
-                "",
-                "",
-                "",
-                new List<ScrapeTargetDetailsViewModel>());
-            WebsiteViewModels = new List<WebsiteViewModel>();
-        }
-        else
-        {
-            var mediaDetails = mediaDetailsResult.Value;
-            MediaDetailsViewModel = BuildMediaDetailsViewModel(mediaDetails);
-            WebsiteViewModels = await BuildWebsiteViewModel(mediaDetails);
-        }
-    }
-
+    
     private static string BuildErrorMessage(Result<MediaDetails> mediaDetailsResult)
     {
         return mediaDetailsResult.Error.Code == Errors.General.NotFoundErrorCode

@@ -20,7 +20,7 @@ namespace RealEaseApp.Pages;
 public class Media : PageModel
 {
     [BindProperty] public int PageIndex { get; set; } = DefaultPageIndex;
-    [BindProperty] public string QueryString { get; set; } = DefaultQueryString;
+    [BindProperty] public string? QueryString { get; set; } = DefaultQueryString;
     [BindProperty] public int PageSize { get; set; } = DefaultPageSize;
     [BindProperty] public SortDirection SortDirection { get; set; } = DefaultSortDirection;
     [BindProperty] public SortColumn SortColumn { get; set; } = DefaultSortColumn;
@@ -145,6 +145,10 @@ public class Media : PageModel
             {
                 _toastifyService.Success("Added media successfully");
             }
+        }
+        else
+        {
+            _toastifyService.Error("Model is invalid");
         }
 
         return RedirectToPage(new { PageIndex, QueryString, PageSize, SortColumn, SortDirection });

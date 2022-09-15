@@ -1,14 +1,19 @@
-﻿<div class="modal" id="addMediaModal" tabindex="-1" role="dialog">
+﻿@using RealEaseApp.Pages;
+@model MediaDetailsModel;
+
+<div class="modal" id="addScrapeTargetModal" tabindex="-1" role="dialog">
     <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">Add new media</h5>
+                <h5 class="modal-title">Add new Scrape Target</h5>
                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-
-            <form method="post" class="w-100" action="/Media?handler=NewMedia" name="addMediaForm">
+            <form method="post"
+                  class="w-100"
+                  action="/Media/@Model.Id?handler=NewScrapeTarget"
+                  name="addScrapeTargetForm">
                 <div class="modal-body">
                     <div class="container-fluid">
                         <div class="row">
@@ -16,15 +21,15 @@
                                 <div class="form-group">
                                     <label for="websiteName">Website</label>
                                     <select class="form-control"
-                                            id="websiteName"
                                             required
-                                            name="newMedia.WebsiteName">
+                                            id="websiteName"
+                                            name="newScrapeTarget.websiteName">
                                         @foreach (var website in Model.WebsiteViewModels)
                                         {
                                             <option value="@website.Name">@(website.Name + " - " + website.Url)</option>
                                         }
                                     </select>
-                                    @Html.ValidationMessage("newMedia.WebsiteName")
+                                    @Html.ValidationMessage("newScrapeTarget.websiteName")
                                 </div>
                             </div>
                             <div class="col-12 col-lg">
@@ -33,10 +38,10 @@
                                     <input type="text"
                                            class="form-control"
                                            required
-                                           name="newMedia.RelativePath"
+                                           name="newScrapeTarget.relativePath"
                                            id="relativePath"
                                            placeholder="manga/hunter-x-hunter">
-                                    @Html.ValidationMessage("newMedia.RelativePath")
+                                    @Html.ValidationMessage("newScrapeTarget.relativePath")
                                 </div>
                             </div>
                         </div>
@@ -46,10 +51,11 @@
                     <button class="btn btn-success"
                             type="submit"
                             onclick="return formValidate()">
-                        Add Media
+                        Add Scrape Target
                     </button>
                     <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
                 </div>
+                <input type="hidden" name="newScrapeTarget.mediaName" value="@Model.MediaDetailsViewModel.MediaName"/>
                 @Html.AntiForgeryToken()
             </form>
         </div>
@@ -58,12 +64,12 @@
 
 <script>
     function formValidate() {
-        let addMediaForm = document.forms.namedItem("addMediaForm");   
-        if (addMediaForm.checkValidity()) {
+        let addScrapeTargetForm = document.forms.namedItem("addScrapeTargetForm");   
+        if (addScrapeTargetForm.checkValidity()) {
             showSpinner()
             return true;    
         } else {
-            addMediaForm.reportValidity();
+            addScrapeTargetForm.reportValidity();
             return false;
         }
     }
