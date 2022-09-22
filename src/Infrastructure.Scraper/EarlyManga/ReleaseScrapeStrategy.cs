@@ -11,14 +11,14 @@ internal class ReleaseScrapeStrategy : IReleaseScrapeStrategy
 {
     public async Task<Result<ScrapedMediaRelease>> Execute(IPage page, ScrapeInstruction scrapeInstruction)
     {
-        var container = await page.WaitForSelectorAsync("div.chapter-container", new PageWaitForSelectorOptions
+        var container = await page.WaitForSelectorAsync("div.chapterList", new PageWaitForSelectorOptions
         {
             State = WaitForSelectorState.Visible
         });
         if (container == null)
             return Errors.Scraper.ScrapeFailedError("Element containing chapters did not appear.");
 
-        var newestLink = await container.QuerySelectorAsync("div.chapter-row >> div.col >> a");
+        var newestLink = await container.QuerySelectorAsync("div.chapter-row >> a.chapter");
         if (newestLink == null)
             return Errors.Scraper.ScrapeFailedError("Newest chapter link element could not be selected.");
 
