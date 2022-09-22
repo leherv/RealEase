@@ -61,6 +61,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RealEaseApp.Tests", "test\unit\RealEaseApp.Tests\RealEaseApp.Tests.csproj", "{1C2C479D-4C04-4097-9B36-F75798129DE3}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Scraper.Tests", "test\integration\Infrastructure.Scraper.Tests\Infrastructure.Scraper.Tests.csproj", "{125042E8-8FC6-44C9-92D2-56E530F01C70}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -119,6 +121,10 @@ Global
 		{1C2C479D-4C04-4097-9B36-F75798129DE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1C2C479D-4C04-4097-9B36-F75798129DE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1C2C479D-4C04-4097-9B36-F75798129DE3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{125042E8-8FC6-44C9-92D2-56E530F01C70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{125042E8-8FC6-44C9-92D2-56E530F01C70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{125042E8-8FC6-44C9-92D2-56E530F01C70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{125042E8-8FC6-44C9-92D2-56E530F01C70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,6 +146,7 @@ Global
 		{FE931D1E-E986-4A1A-A1A7-0E9C2D9D1EDE} = {0CEFA7DF-6DB8-4CD2-948A-9989CF0A4CBD}
 		{F1217747-8148-44F9-A420-DEBAEF8CF18C} = {377C3338-F3E4-4386-AE72-C20EB19BDC0C}
 		{1C2C479D-4C04-4097-9B36-F75798129DE3} = {377C3338-F3E4-4386-AE72-C20EB19BDC0C}
+		{125042E8-8FC6-44C9-92D2-56E530F01C70} = {C3A25137-787F-4F68-A9DD-159518147C74}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {B7EC3C59-1E7D-450E-976C-3598BD5E8088}
