@@ -17,11 +17,11 @@
 ## Get started
 
 ## Mutual server with bot
-Add the bot to one of your servers if you are not already in a server with it. You can do this via the invite url here: ![Invitation Link](https://discord.com/api/oauth2/authorize?client_id=962068918686609520&permissions=2048&redirect_uri=http%3A%2F%2Frealease.viktorleher.at%2Fsignin-discord&response_type=code&scope=identify%20bot)
-You can also do this via the **![offical website](https://realease.viktorleher.at)**.
+Add the bot to one of your servers if you are not already in a server with it. You can do this via the invite url here: [Invitation Link](https://discord.com/api/oauth2/authorize?client_id=962068918686609520&permissions=2048&redirect_uri=http%3A%2F%2Frealease.viktorleher.at%2Fsignin-discord&response_type=code&scope=identify%20bot)
+You can also do this via the **[offical website](https://realease.viktorleher.at)**.
 
 ## Manage subscriptions
-Either use the **![offical website](https://realease.viktorleher.at)(recommended)** to manage your subscriptions or just directly chat with the bot by using his **built in commands** (for all available commands type "re!h").
+Either use the **[offical website](https://realease.viktorleher.at)(recommended)** to manage your subscriptions or just directly chat with the bot by using his **built in commands** (for all available commands type "re!h").
 To use the official website you have to log in by using your Discord-Account (you will be redirected to Discord).
 You can then:
 * Subscribe to and unsubscribe from different media
